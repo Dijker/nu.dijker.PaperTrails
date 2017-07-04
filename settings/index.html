@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>PaperTrails - Advaned Logging and Log management</h1>
+   <top>
+     <fieldset style="top:0px; margin: 5px; width: 96%">
+       <legend>Settings</legend>
+       <div class="field row">
+            <input id="scrollToEnd" class="left" type="checkbox" onChange="saveAppendLog()" value="scrollToEnd" style="width:30px"/>
+            <label for="scrollToEnd" class="left"> Scroll To End </label>
+            <input id="appendLog"  class="left" type="checkbox" onChange="saveAppendLog()" value="appendLog"  style="width:30px"/>
+            <label for="appendLog" style="width:135px" class="left">Append logging |</label>
+            <label for="intervalS" style="width:145px" class="left">Refresh interval (Sec.):</label>
+            <input id="intervalS" value="2" onChange="updateInterval()" type="number" step=1 min=1 max=99 style="width:44px"/>
+            <label for="maxLogLength" style="width:135px">Max. lines for Log:</label>
+            <input id="maxLogLength" value="1024" onChange="saveMaxLogLength()" type="number" step=1 min=1 max=10240 style="width:58px" />
+            <button id="clear_simpleLOG" class="right" onclick="clear_simpleLOG()">Clear Log</button>
+            <button id="download_PaperTrails" class="right" onclick="download_PaperTrails()">Download</button>
+        </div>
+      </fieldset></top>
+      <fieldset style="top:0; margin: 5px; width: 96%; height:auto">
+        <legend>Log</legend>
+        <textarea id="logtextarea" style="margin: 2px; width: 98%; height:530px"></textarea>
+      </fieldset>
+        <script type="text/javascript">
+            Date.prototype.yyyymmddHHMMss = function() {
+                var mm = this.getMonth() + 1; // getMonth() is zero-based
+                var dd = this.getDate();
+                var HH = this.getHours();
+                var MM = this.getMinutes();
+                var ss = this.getSeconds();
+                return [this.getFullYear(),
+                        (mm>9 ? '' : '0') + mm,
+                        (dd>9 ? '' : '0') + dd,
+                        (HH>9 ? '' : '0') + HH,
+                        (MM>9 ? '' : '0') + MM,
+                        (ss>9 ? '' : '0') + ss,
+                       ].join('');
+                 };
+            var textarea = document.getElementById('logtextarea');
+            textarea.scrollTop = textarea.scrollHeight;
+            var _myLog = '';
+            var intervalS = 5;
+            document.getElementById("intervalS").value = intervalS;
+            var appendLog ;
+            var interval ;
+            var maxLogLength =1029;
+
+            function onHomeyReady(){
+                Homey.get('appendLog', function(err, appendLog ) {
+                  var set = false;
+                  if (err) {
+                    console.error(err)
+                  } else {
+                    if (appendLog === undefined) {
+                      appendLog = true
+                      set = true
+                    }
+                    document.getElementById("appendLog").checked = appendLog;
+                    document.getElementById("scrollToEnd").checked = appendLog;
+                    if (set) { saveAppendLog() }
+                  }
+              } )
+              Homey.get('maxLogLength', function(err, maxLogLength) {
+                var set = false;
+                if (err) {
+                  console.error(err)
+                } else {
+                  if (maxLogLength === undefined) {
+                    maxLogLength = 1024;
+                    set = true
+                  }
+                  document.getElementById("maxLogLength").value = maxLogLength;
+                  if (set) { saveMaxLogLength() }
+                }
+              } )
+              Homey.get('intervalS', function(err, intervalS ) {
+                var set = false;
+                if (err) {
+                  console.error(err)
+                } else {
+                  if (intervalS === undefined) {
+                    intervalS = 10;
+                    set = true
+                  }
+                  document.getElementById("intervalS").value = intervalS;
+                  if (set) { updateInterval() }
+                }
+              } )
+              interval = setInterval( function(){ show_log() } , intervalS * 1000);
+              show_log();
+              Homey.ready();
+            };
+            function updateInterval() {
+              clearInterval(interval);
+              intervalS = document.getElementById("intervalS").value;
+              interval = setInterval( function(){ show_log() }, intervalS * 1000);
+              Homey.set('intervalS', intervalS );
+            };
+            // updateMaxLogLength
+            function saveMaxLogLength() {
+              Homey.set('maxLogLength', document.getElementById('maxLogLength').value );
+            };
+            function saveAppendLog(){
+                Homey.set('appendLog', document.getElementById('appendLog').checked );
+            };
+            function clear_simpleLOG(){
+                Homey.set('myLog', '-=-=- Log Cleared from Settings page -=-=-');
+            };
+            function download_PaperTrails(){
+                var date = new Date();
+                date.yyyymmddHHMMss();
+                download('PaperTrails-'+ date.yyyymmddHHMMss() +'.txt', document.getElementById('logtextarea').value);
+            };
+            function download(filename, text) {
+                var pom = document.createElement('a');
+                pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                pom.setAttribute('download', filename);
+
+                if (document.createEvent) {
+                    var event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    pom.dispatchEvent(event);
+                } else {
+                    pom.click();
+                };
+            };
+            function show_log() {
+                Homey.get('myLog', function(err, myLog){
+                    if( err ) return console.error('Could not get log', err);
+                    if (_myLog !== myLog){
+                        _myLog = myLog
+                        document.getElementById('logtextarea').value = myLog;
+                    };
+                    var scrollToEnd = document.getElementById('scrollToEnd').checked;
+                    if ( scrollToEnd ) {
+                        textarea.scrollTop = textarea.scrollHeight;
+                      } ;
+                });
+              }
+        </script>
+    </body>
+</html>

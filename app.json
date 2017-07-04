@@ -1,0 +1,157 @@
+{
+	"id": "nu.dijker.papertrails",
+	"name": { "en": "PaperTrails"},
+  "description": { "en": "This app creates a text log trail" },
+  "category": "tools",
+  "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
+	"version": "0.1.1",
+	"compatibility": "1.x",
+	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
+	"contributors": {
+  "developers": [
+      { "name": "Geurt Dijker",
+        "email": "Homey.Apps@dijker.nu",
+				"website": "http://www.dijker.nu"}]},
+  "tags": { "en": [ "Log", "Tools"] },
+	"flow": {
+		"triggers": [
+        {
+            "id": "programmatic_trigger",
+            "title": {
+								"en" : "PaperTrails-This Flow is triggered.",
+								"nl" : "PaperTrails-Deze Flow is geactiveerd."
+            },
+						"hint": { "en": "Use this card to create a Flow that can be triggered from another Flow. Use the PaperTrails-'Trigger a Flow' card in the 'Then' column in the other Flow." ,
+											"nl" : "Gebruik dit kaartje om een Flow te maken die geactiveerd kan worden vanuit een andere Flow. Gebruik in de andere Flow het PaperTrials-'Activeer een Flow' kaartje in de 'Dan' kolom."},
+						"tokens": [
+								{
+										"name": "logLength",
+										"type": "number",
+										"title": {
+												"en": "length",
+												"nl": "lengte"
+										},
+										"example": "1024"
+								},
+                {
+                    "name": "Log",
+                    "type": "string",
+                    "title": {
+                        "en": "Logfile",
+												"nl": "Logbestand"
+                    },
+                    "example": "Log File content"
+                }
+        		]},
+						{
+		            "id": "max_loglines",
+		            "title": {
+										"en" : "PaperTrails at max configured Lines",
+										"nl" : "De log heeft max. aantal regels"
+		            },
+								"tokens": [
+		                {
+		                    "name": "logLength",
+		                    "type": "number",
+		                    "title": {
+		                        "en": "length",
+														"nl": "lengte"
+		                    },
+		                    "example": "1024"
+		                },
+										{
+												"name": "Log",
+												"type": "string",
+												"title": {
+														"en": "Logfile",
+														"nl": "Logbestand"
+												},
+												"example": "Log File content"
+										}
+		        		]},
+								{
+				            "id": "Custom_LogLines",
+				            "title": {
+												"en" : "Trail gt # lines",
+												"nl" : "De log groter dan # regels"
+				            },
+										"tokens": [
+				                {
+				                    "name": "logLength",
+				                    "type": "number",
+				                    "title": {
+				                        "en": "length",
+																"nl": "lengte"
+				                    },
+				                    "example": "1024"
+				                },
+												{
+														"name": "Log",
+														"type": "string",
+														"title": {
+																"en": "Logfile",
+																"nl": "Logbestand"
+														},
+														"example": "Log File content"
+												}
+				        		],
+	                  "args": [
+	                    {
+	                        "name": "logLength",
+	                        "type": "number"
+	                    }
+	                ]}
+							],
+		"actions": [
+			{
+				"id": "Input_date_time_log",
+				"title": {
+					"en": "Timestamp add to the log.",
+					"nl": "Voeg met tijd toe aan de log."
+				},
+				"args": [{
+					"name": "log",
+					"type": "text"
+					}]
+				},
+			{
+			"id": "Input_log",
+			"title": {
+				"en": "Add textline to the log.",
+				"nl": "Voeg tekstregel toe aan de log."
+			},
+			"args": [{
+				"name": "log",
+				"type": "text"
+			}]
+		},
+		{
+			"id": "Clear_log",
+			"title": {
+				"en": "clear log data.",
+				"nl": "Verwijder log data."
+			}
+		},
+		{
+			"id": "programmatic_trigger",
+			"title": {
+				"en" : "PaperTrail-Trigger a Flow",
+				"nl" : "PaperTrail-Activeer een Flow" },
+				"hint" :{ "en": "Trigger a Flow with a PaperTrail-'This Flow is Triggerd card in the 'When' column.",
+									"nl" : "Activeer een Flow met een PaperTrail-'Deze Flow is geactiveerd' kaartje in de 'Als' kolom." }
+			},
+			{
+				"id": "truncate_log",
+				"title": {
+					"en": "Remove Log older than (hours)",
+					"nl": "Verwijder Log ouder dan (uren)"
+				},
+				"args": [{
+					"name": "removeHours",
+					"type":"number",
+					"example": "20"
+				}]
+			}
+		]
+	}
+}
