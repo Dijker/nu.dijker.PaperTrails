@@ -5,6 +5,7 @@ function init() {
 }
 module.exports.init = init;
 
+var hostname =require('os').hostname();
 var appendLog = Homey.manager('settings').get( 'appendLog' );
 if (appendLog === undefined) {
 	appendLog = true;
@@ -12,7 +13,6 @@ if (appendLog === undefined) {
 }
 var lastAppendLogSetting = appendLog;
 // Homey.log(' lastAppendLogSetting ' + lastAppendLogSetting);
-var hostname =require('os').hostname();
 var maxLogLength;
 var intervalS;
 if (intervalS === undefined) {
@@ -87,7 +87,8 @@ function truncateLog(logOld, infoMsg,  deleteItems) {
 	var logLength = removedLog.length;
 	var removedLog2 = removedLog.join('\n');
 	var tokens = { 'logLength': logLength,
-								 'Log': removedLog2 };
+								 'Log': removedLog2,
+							 		'infoMsg': infoMsg };
 	Homey.log('function truncate Log: Deleted:' + logLength);
 	Homey.log('function truncate Log: Deleted:' + tokens);
 	// console.log(tokens);
@@ -130,7 +131,7 @@ function updateLog(logMsg) {
 		var deleteItems = parseInt( maxLogLength*0.2 );
 		Homey.log('Log logLength gt  Max, remove ' + deleteItems );
 		var logArray = logNew.split(/\r\n|\r|\n/);
-		var infoMsg = "-=-=- " + deleteItems + " removed -=-=- " + getDateTime(new Date()) ;
+		var infoMsg = "-=-=- Max. LogLength " + maxLogLength + " reached! Deleting " + deleteItems + " lines at :" + getDateTime(new Date()) + " -=-=-";
 		if ( appendLog === true ) {
 			var removedLog = logArray.splice(0,deleteItems, infoMsg );
 		} else {
@@ -152,7 +153,7 @@ function updateLog(logMsg) {
 // truncate_log by Geurt Dijker v0.0.8
 Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 	var date1 = new Date();
-	var truncMsg = "-=-=- Truncate Log for " + hostname + " from Flow at -=-=- " + getDateTime(date1)+" -=-=- " ;
+	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removeHours  + " hours from Flow at: " + getDateTime(date1)+" -=-=- " ;
 	// removeHours
 	var logOld = Homey.manager('settings').get( 'myLog' );
 	var timeNow = getDateTime( date1 );
@@ -182,12 +183,11 @@ Homey.manager('flow').on('action.Input_log', function( callback, args ) {
     callback( null, true );
 });
 
-// Input_date_time_log by Geurt Dijker v0.0.6
+// Input_date_time_log by Geurt Dijker
 Homey.manager('flow').on('action.Input_date_time_log', function( callback, args ) {
 		updateLog( getDateTime(new Date()) + " " + args.log);
     callback( null, true );
 });
-
 
 Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 		var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " + getDateTime(new Date());
@@ -200,10 +200,13 @@ Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 		// Trigger the programmatic_trigger
 	  Homey.log('Trigger the Trigger 1 ');
-	  var logNew = Homey.manager('settings').get( 'myLog' );
-		var logLength = logNew.split(/\n/).length;
-		var tokens = { 'logLength': logLength,
-									 'Log': logNew };
+		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + getDateTime(new Date())+" -=-=- " ;
+
+	  var logOld = Homey.manager('settings').get( 'myLog' );
+		var logLength = logOld.split(/\n/).length;
+		var tokens = { 	'logLength': logLength,
+									 	'Log': logOld,
+							 			'infoMsg': infoMsg };
 		// console.log(tokens);
 		Homey.manager('flow').trigger('programmatic_trigger', tokens, null,  function(err, result){
   	if( err ) {

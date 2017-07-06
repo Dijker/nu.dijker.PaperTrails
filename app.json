@@ -4,14 +4,15 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"compatibility": "1.x",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
   "developers": [
       { "name": "Geurt Dijker",
         "email": "Homey.Apps@dijker.nu",
-				"website": "http://www.dijker.nu"}]},
+				"website": "http://www.dijker.nu"},
+				{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
   "tags": { "en": [ "Log", "Tools"] },
 	"flow": {
 		"triggers": [
@@ -41,8 +42,17 @@
 												"nl": "Logbestand"
                     },
                     "example": "Log File content"
+                },
+								{
+                    "name": "infoMsg",
+                    "type": "string",
+                    "title": {
+                        "en": "Info Message",
+												"nl": "Info bericht."
+                    },
+                    "example": "Why you test this"
                 }
-        		]},
+	        		]},
 						{
 		            "id": "max_loglines",
 		            "title": {

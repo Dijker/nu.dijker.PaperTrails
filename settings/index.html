@@ -1,9 +1,10 @@
 <!doctype html>
+<link rel="stylesheet" href="/manager/webserver/assets/font/fontawesome/fontawesome.css">
 <html>
     <head>
     </head>
     <body>
-        <h1>PaperTrails - Advaned Logging and Log management</h1>
+        <h1>PaperTrails - Advanced Logging and Log management</h1>
    <top>
      <fieldset style="top:0px; margin: 5px; width: 96%">
        <legend>Settings</legend>
@@ -11,10 +12,9 @@
             <input id="scrollToEnd" class="left" type="checkbox" onChange="saveAppendLog()" value="scrollToEnd" style="width:30px"/>
             <label for="scrollToEnd" class="left"> Scroll To End </label>
             <input id="appendLog"  class="left" type="checkbox" onChange="saveAppendLog()" value="appendLog"  style="width:30px"/>
-            <label for="appendLog" style="width:135px" class="left">Append logging |</label>
-            <label for="intervalS" style="width:145px" class="left">Refresh interval (Sec.):</label>
+            <label for="appendLog" style="width:275px" class="left">Append logging |  Refresh interval (Sec.):</label>
             <input id="intervalS" value="2" onChange="updateInterval()" type="number" step=1 min=1 max=99 style="width:44px"/>
-            <label for="maxLogLength" style="width:135px">Max. lines for Log:</label>
+            <label for="maxLogLength" style="width:145px">  Max. lines for Log:</label>
             <input id="maxLogLength" value="1024" onChange="saveMaxLogLength()" type="number" step=1 min=1 max=10240 style="width:58px" />
             <button id="clear_simpleLOG" class="right" onclick="clear_simpleLOG()">Clear Log</button>
             <button id="download_PaperTrails" class="right" onclick="download_PaperTrails()">Download</button>
@@ -81,8 +81,8 @@
                 if (err) {
                   console.error(err)
                 } else {
-                  if (intervalS === undefined) {
-                    intervalS = 10;
+                  if ((intervalS === undefined) || (intervalS)) {
+                    intervalS = +10;
                     set = true
                   }
                   document.getElementById("intervalS").value = intervalS;
@@ -91,6 +91,7 @@
               } )
               interval = setInterval( function(){ show_log() } , intervalS * 1000);
               show_log();
+
               Homey.ready();
             };
             function updateInterval() {

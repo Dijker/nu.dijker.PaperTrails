@@ -1,9 +1,10 @@
-# PaperTrails - Advaned Logging and Log management.
+# PaperTrails - Advanced Logging and Log management.
 
 This app makes it possible to add time based logging to your flow's.
+For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
-You may leave me a donation if you love my work.
-****
+## Version 0.1.2
+* Fixed errors, typo's, contributors and donation button.
 
 ## Version 0.1.1
 * Enable Save settings Refresh interval
@@ -11,6 +12,9 @@ You may leave me a donation if you love my work.
 * Added Trigger the Trigger for processing/sending Logs
 * Added configurable Refresh interval (Sec.)
 * Added Timestamping Logs in the form of YYYY-MM-DD HH:MM.ss [LogText]
-* Added option to reverse Logging
 
 ## Features
+
+* Logging with Timestamp
+* Logging without Timestamp
+* Maximize the Log length (lines)
