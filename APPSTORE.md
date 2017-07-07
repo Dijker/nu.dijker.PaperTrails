@@ -44,3 +44,7 @@ If you like my work, Buy me a beer!
 
 ## Licensing
 PaperTrails is free for non-commercial use only. If you wish to use the app in a company or commercially, you must purchase a site-license by contacting the Author.
+
+<font color="#009900" face="Webdings" size="4">P</font><font
+  color="#009900" face="verdana,arial,helvetica" size="2"> <strong>Please
+consider the environment before printing your virtual Papertrails</strong></font>
