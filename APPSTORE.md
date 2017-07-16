@@ -2,10 +2,8 @@
 
 This app makes it possible to add time based logging to your flow's.
 
-You may leave me a donation if you love my work.
-****
 
-## Version 0.1.2
+## Version 0.1.3
 * Fixed errors, typo's, contributors and donation button.
 
 ## Version 0.1.1
@@ -17,7 +15,7 @@ You may leave me a donation if you love my work.
 
 ## Features
 
-For more information and examples go to the forum (*Link to be inserted*) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
+For more information and examples go to the forum (https://forum.athom.com/discussion/3473/) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
 
 If you like my work, Buy me a beer!
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
@@ -30,7 +28,7 @@ If you like my work, Buy me a beer!
 
 
 ##Version History:
-* 0.1.2 (20170707)
+* 0.1.3 (20170707)
   Various fixes
 
 * Previous Updates
@@ -44,3 +42,7 @@ If you like my work, Buy me a beer!
 
 ## Licensing
 PaperTrails is free for non-commercial use only. If you wish to use the app in a company or commercially, you must purchase a site-license by contacting the Author.
+
+<font color="#009900" face="Webdings" size="4">P</font><font
+  color="#009900" face="verdana,arial,helvetica" size="2"> <strong>Please
+consider the environment before printing your virtual Papertrails</strong></font>
