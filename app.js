@@ -1,7 +1,7 @@
 "use strict";
 
 function init() {
-		Homey.log("Hello world!");
+		// Homey.log("Hello world!");
 }
 module.exports.init = init;
 
@@ -22,18 +22,23 @@ if (intervalS === undefined) {
 
 // Trigger on programmatic_trigger
 Homey.manager('flow').on('trigger.programmatic_trigger', function( callback, args, state) {} );
+// logTruncated
+Homey.manager('flow').on('trigger.logTruncated', function( callback, args, state) {} );
+// logCleared
+Homey.manager('flow').on('trigger.logCleared', function( callback, args, state) {} );
 // Trigger on max_loglines
 Homey.manager('flow').on('trigger.max_loglines', onMax_loglines );
 // Trigger on Custom_LogLines
 Homey.manager('flow').on('trigger.Custom_LogLines', onCustom_LogLines );
 
 function onCustom_LogLines(callback, args, state) {
-	Homey.log(' onCustom_LogLines got Triggered ');
-	console.log(args);
-	console.log(state);
+  // *** debuging ***
+	// Homey.log(' onCustom_LogLines got Triggered ' );
+	// Homey.log( args );
+	// Homey.log( state);
 	if( args.logLength <= state.logLength  ) {
-			Homey.log(' onCustom_LogLines got Triggered 2 ');
-			callback( null, true ); // If true, this flow should run. The callback is (err, result)-style.
+			// Homey.log(' onCustom_LogLines got Triggered 2 ');
+			callback( null, true );
 	} else {
 			callback( null, false );
 		}
@@ -41,10 +46,10 @@ function onCustom_LogLines(callback, args, state) {
 
 // **** Cleanup to do !
 function onMax_loglines(callback, args, state) {
-	Homey.log(' onMax_loglines got Triggered ');
+	// Homey.log(' onMax_loglines got Triggered ');
 	console.log(args);
 	if( true ) {
-			Homey.log(' onMax_loglines got Triggered2 ');
+			// Homey.log(' onMax_loglines got Triggered2 ');
 			callback( null, true ); // If true, this flow should run. The callback is (err, result)-style.
 	} else {
 			callback( null, false );
@@ -72,15 +77,16 @@ function reverseLog(logOld) {
 	return logArray.reverse()
 }
 
-function truncateLog(logOld, infoMsg,  deleteItems) {
-	Homey.log('function truncate Log: Delete  Items' + deleteItems);
+// truncateLog
+function truncateLog(logOld, infoMsg,  index) {
+	// Homey.log('function truncate Log: Delete  Items' + index);
 	var logArray = logOld.split(/\n/);
 	var logLength = logArray.length;
 	if ( appendLog === true ) {
-		var removedLog = logArray.splice(0,deleteItems, infoMsg );
+		var removedLog = logArray.splice(0,index, infoMsg );
 		var logNew = logArray.join('\n');
-	} else {
-		var removedLog = logArray.splice(-1*(logLength-deleteItems), (logLength-deleteItems), infoMsg );
+	} else {                        // *******
+		var removedLog = logArray.splice(index, (logLength - index), infoMsg );
 		var logNew = logArray.join('\n');
 	}
 	// var logNew = Homey.manager('settings').get( 'myLog' );
@@ -88,17 +94,18 @@ function truncateLog(logOld, infoMsg,  deleteItems) {
 	var removedLog2 = removedLog.join('\n');
 	var tokens = { 'logLength': logLength,
 								 'Log': removedLog2,
-							 		'infoMsg': infoMsg };
-	Homey.log('function truncate Log: Deleted:' + logLength);
-	Homey.log('function truncate Log: Deleted:' + tokens);
+							 	 'infoMsg': infoMsg };
+	// Homey.log('function truncate Log: Deleted:' + logLength);
+	// Homey.log( tokens);
 	// console.log(tokens);
-	Homey.manager('flow').trigger('programmatic_trigger', tokens, null,  function(err, result){
+	Homey.manager('flow').trigger('logTruncated', tokens, null,  function(err, result){
 	if( err ) {
 			return Homey.error(err)}
 	} );
 	return logNew;
 }
 
+// Add somthing to the Log *** OK
 function updateLog(logMsg) {
 	appendLog = Homey.manager('settings').get( 'appendLog' );
 	maxLogLength = Homey.manager('settings').get( 'maxLogLength' );
@@ -112,7 +119,7 @@ function updateLog(logMsg) {
 		logOld = reverseLog(logOld).join('\n');
 	}
 	var logLength = logOld.split(/\r\n|\r|\n/).length;
-	Homey.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
+	// Homey.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
 	if ( appendLog === true ) {
 		logNew = logOld + "\n" + logMsg;
 	} else {
@@ -129,7 +136,7 @@ function updateLog(logMsg) {
 	if ( (+maxLogLength + +3) < logLength ) {
 
 		var deleteItems = parseInt( maxLogLength*0.2 );
-		Homey.log('Log logLength gt  Max, remove ' + deleteItems );
+		// Homey.log('Log logLength gt  Max, remove ' + deleteItems );
 		var logArray = logNew.split(/\r\n|\r|\n/);
 		var infoMsg = "-=-=- Max. LogLength " + maxLogLength + " reached! Deleting " + deleteItems + " lines at :" + getDateTime(new Date()) + " -=-=-";
 		if ( appendLog === true ) {
@@ -141,7 +148,7 @@ function updateLog(logMsg) {
 	}
 	// Check for Max logLength to trigger
 	if (logLength > (maxLogLength)) {
-		Homey.log('Log logLength gt Max, Trigger ');
+		// Homey.log('Log logLength gt Max, Trigger ');
 		Homey.manager('flow').trigger('max_loglines', tokens, state, function(err, result){
 			if( err ) {
 				return Homey.error(err)} ;
@@ -150,7 +157,7 @@ function updateLog(logMsg) {
 	Homey.manager('settings').set( 'myLog', logNew );
 };
 
-// truncate_log by Geurt Dijker v0.0.8
+// truncate_log
 Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 	var date1 = new Date();
 	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removeHours  + " hours from Flow at: " + getDateTime(date1)+" -=-=- " ;
@@ -177,6 +184,29 @@ Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 	callback( null, true );
 });
 
+// truncate_log_pct **** ??
+Homey.manager('flow').on('action.truncate_log_pct', function( callback, args ) {
+	var date1 = new Date();
+	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removePct  + " % from Flow at: " + getDateTime(date1)+" -=-=- " ;
+	var logOld = Homey.manager('settings').get( 'myLog' );
+	var timeNow = getDateTime( date1 );
+	var logArray = logOld.split(/\n/);
+	var appendLog = Homey.manager('settings').get( 'appendLog' );
+
+	if (appendLog) {
+		var index = logArray.length * (args.removePct/100)
+	} else {
+		var index = logArray.length - parseInt(logArray.length * (args.removePct/100))
+	}
+	if (index > 0) {
+		Homey.log (' index ' + index );
+		var logNew = truncateLog( logOld, truncMsg, index);
+		Homey.manager('settings').set( 'myLog', logNew );
+	};
+	callback( null, true );
+});
+
+
 // for Original v0.0.5 logging
 Homey.manager('flow').on('action.Input_log', function( callback, args ) {
 		updateLog( args.log);
@@ -189,18 +219,24 @@ Homey.manager('flow').on('action.Input_date_time_log', function( callback, args 
     callback( null, true );
 });
 
+// action.Clear_log *** 2 Check
 Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
-		var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " + getDateTime(new Date());
-    Homey.manager('settings').set( 'myLog', logNew );
-    Homey.log (' Action.Clear_log     The log data is cleared.');
-    callback( null, true );
+		var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " + getDateTime(new Date()) +" -=-=- ";
+		var logOld = Homey.manager('settings').get( 'myLog' );
+		var logLength = logOld.split(/\n/).length;
+		var tokens = { 	'logLength': logLength,
+									 	'Log': logOld,
+							 			'infoMsg': logNew };
+		Homey.manager('flow').trigger('logCleared', tokens, null,  function(err, result) {});
+  	Homey.manager('settings').set( 'myLog', logNew );
+  	Homey.log (' Action.Clear_log     The log data is cleared.');
+  	callback( null, true );
 });
 
-// for Trigger-the-trigger
+// action.programmatic_trigger ***OK
 Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
-		// Trigger the programmatic_trigger
-	  Homey.log('Trigger the Trigger 1 ');
-		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + getDateTime(new Date())+" -=-=- " ;
+	  // Homey.log('Trigger the action.programmatic_trigger');
+		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + getDateTime(new Date()) +" -=-=- " ;
 
 	  var logOld = Homey.manager('settings').get( 'myLog' );
 		var logLength = logOld.split(/\n/).length;

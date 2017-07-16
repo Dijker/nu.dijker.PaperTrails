@@ -3,7 +3,7 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
-## Version 0.1.2
+## Version 0.1.3
 * Fixed errors, typo's, contributors and donation button.
 
 ## Version 0.1.1
