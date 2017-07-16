@@ -1,7 +1,7 @@
 "use strict";
 
 function init() {
-		// Homey.log("Hello world!");
+		Homey.log("Hello world!");
 }
 module.exports.init = init;
 
@@ -14,9 +14,9 @@ if (appendLog === undefined) {
 var lastAppendLogSetting = appendLog;
 // Homey.log(' lastAppendLogSetting ' + lastAppendLogSetting);
 var maxLogLength;
-var intervalS;
+var intervalS = Homey.manager('settings').get( 'intervalS');
 if (intervalS === undefined) {
-	intervalS = true;
+	intervalS = 13;
 	Homey.manager('settings').set( 'intervalS', intervalS);
 }
 

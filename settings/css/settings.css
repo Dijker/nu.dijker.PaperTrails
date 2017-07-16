@@ -1,0 +1,93 @@
+/* Overrule top margin bootstrap */
+h2 {
+  margin-top: 0px !important;
+  margin-bottom: 10px !important;
+}
+
+.panel-button {
+  margin-top: 0px !important;
+}
+
+/* Tree view padding */
+.list-group-item {
+  padding: 4px 10px !important;
+  font-size: 12px;
+}
+
+/* Badges in tree view */
+#treeview-checkable span.badge {
+  font-weight: 300;
+}
+
+.token {
+  display: inline-block
+}
+
+/* Slider alignment */
+.slider {
+  margin-left: 30px;
+}
+
+#slider-system-interval {
+	width: 210px;
+}
+
+#slider-insights-interval {
+	width: 280px;
+}
+
+#slider-insights-interval .slider-rangeHighlight {
+	background: #f2dede;
+}
+
+#slider-insights-interval .slider-track {
+	background: #dff0d8;
+}
+
+
+
+/* Input form fields */
+.code {
+  font-family: monospace;
+}
+
+/* Messages */
+body {
+  position: relative;
+}
+
+/* Debug log table */
+table#logs tr th.datetime,
+table#logs tr td.datetime {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+  padding: 3px;
+  font-size: 12px;
+  width: 120px;
+  white-space: nowrap;
+}
+table#logs tr th.entry,
+table#logs tr th.data,
+table#logs tr td.entry {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+  padding: 3px;
+  font-size:12px;
+  white-space: normal;
+  word-break: break-all;
+}
+
+table#logs tr td.data {
+  font-family: monospace;
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+  padding: 3px;
+  font-size:12px;
+  white-space: normal;
+  word-break: break-all;
+}
+
+/* logging popout dialog */
+.popout-dialog .modal-dialog {
+  width: 440px;
+}
