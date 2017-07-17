@@ -2,7 +2,8 @@
 
 This app makes it possible to add time based logging to your flow's.
 
-Use it fe with the updated Email.sender v0.1.6 to send plain text logs. (https://apps.athom.com/app/email.sender)
+Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
+( https://apps.athom.com/app/email.sender )
 
 
 ## Version 0.1.8
@@ -21,7 +22,8 @@ Use it fe with the updated Email.sender v0.1.6 to send plain text logs. (https:/
 
 ## Features
 
-For more information and examples go to the forum (https://forum.athom.com/discussion/3473/) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
+For more information and examples go to the forum
+( https://forum.athom.com/discussion/3473/ ) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
 
 If you like my work, Buy me a beer!
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
