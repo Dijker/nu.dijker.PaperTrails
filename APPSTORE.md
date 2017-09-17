@@ -2,20 +2,28 @@
 
 This app makes it possible to add time based logging to your flow's.
 
+Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
+( https://apps.athom.com/app/email.sender )
 
-## Version 0.1.3
+
+## Version 0.1.8
+* re-designed Settings page
+* Added Actions with corresponding triggers:
+* A: Clear the Log - T: The log is Cleared
+* A: Trigger a Flow - T: This Flow is Tiggered
+* A: Remove oldest % of Log / A: Remove log older than # Hours - T: The log is Truncated
+* T: PaperTrails at Max. configured Lines
+* T: PaperTrails greater than ## Lines
+
+## older verions
 * Fixed errors, typo's, contributors and donation button.
-
-## Version 0.1.1
-* Enable Save settings Refresh interval
 * Configurable max. number of loglines
-* Added Trigger the Trigger for processing/sending Logs
-* Added configurable Refresh interval (Sec.)
 * Added Timestamping Logs in the form of YYYY-MM-DD HH:MM.ss [LogText]
 
 ## Features
 
-For more information and examples go to the forum (https://forum.athom.com/discussion/3473/) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
+For more information and examples go to the forum
+( https://forum.athom.com/discussion/3473/ ) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
 
 If you like my work, Buy me a beer!
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
