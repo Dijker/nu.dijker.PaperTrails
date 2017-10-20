@@ -5,7 +5,7 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
@@ -14,6 +14,14 @@
         "email": "Homey.Apps@dijker.nu",
 				"website": "http://www.dijker.nu"},
 				{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
+	"contributing":{
+     "donate":{
+        "paypal":{
+           "email":"Geurt@Dijker.nu",
+           "currency":"EUR"
+        }
+     }
+  },
   "tags": { "en": [ "Log", "Tools"] },
 	"flow": {
 		"triggers": [
