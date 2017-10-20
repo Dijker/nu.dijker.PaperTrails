@@ -1,12 +1,16 @@
 /* global $, Homey */
-  var _myLog = '';
-  var intervalS = +8;
-  var appendLog ;
-  var interval ;
-  var maxLogLength = 1029;
+var Homey;
+var _myLog = '';
+var intervalS = +8;
+var appendLog;
+var interval;
+var maxLogLength = 1029;
 
-  function onHomeyReady(){
-    Homey.get('appendLog', function(err, appendLog ) {
+
+function onHomeyReady( homeyReady ){
+  Homey = homeyReady;
+  Homey.ready();
+  Homey.get('appendLog', function(err, appendLog ) {
       var set = false;
       if (err) {
         console.error(err)
@@ -19,7 +23,6 @@
       if (set) { saveAppendLog() }
       }
     } );
-
   Homey.get('scrollToEnd', function(err, scrollToEnd ) {
     var set = false;
     if (err) {
@@ -33,7 +36,6 @@
       if (set) { saveScrollToEnd() }
     }
   } );
-
   Homey.get('maxLogLength', function(err, maxLogLength) {
     var set = false;
     if (err) {
@@ -47,7 +49,6 @@
       if (set) { saveMaxLogLength() }
     }
   } )
-
   Homey.get('intervalS', function(err, intervalS) {
     var set = false;
     if (err) {
@@ -68,7 +69,6 @@
   var logtextarea = document.getElementById('logtextarea');
   logtextarea.scrollTop = logtextarea.scrollHeight;
   showPanel(1);
-  Homey.ready();
 };
 
 Date.prototype.yyyymmddHHMMss = function() {

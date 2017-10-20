@@ -3,6 +3,12 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
+## Version 0.2.0 beta
+* Updated for SDK2
+* Again re-designed Settings page, now for Mobile
+* Added Condition logging:
+* C: Add to the Log (Condition is always True)
+
 ## Version 0.1.8
 * re-designed Settings page
 * Added Actions with corresponding triggers:
