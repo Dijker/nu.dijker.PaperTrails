@@ -32,3 +32,6 @@ For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu
 * Logging with Timestamp
 * Logging without Timestamp
 * Maximize the Log length (lines)
+
+Feedback:
+Any requests please post them in the [PaperTrails topic on the Athom Forum] (https://forum.athom.com/discussion/3473/)
