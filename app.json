@@ -1,11 +1,12 @@
 {
 	"id": "nu.dijker.papertrails",
+	"sdk": 2,
 	"name": { "en": "PaperTrails"},
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.1.6",
-	"compatibility": "1.x",
+	"version": "0.2.1",
+	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
   "developers": [
@@ -13,6 +14,14 @@
         "email": "Homey.Apps@dijker.nu",
 				"website": "http://www.dijker.nu"},
 				{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
+	"contributing":{
+     "donate":{
+        "paypal":{
+           "email":"Geurt@Dijker.nu",
+           "currency":"EUR"
+        }
+     }
+  },
   "tags": { "en": [ "Log", "Tools"] },
 	"flow": {
 		"triggers": [
@@ -197,12 +206,31 @@
 							}
 						}
 		],
+    "conditions": [
+		{
+				"id": "condition_date_time_log",
+				"title": {
+					"en": "Add to the log.",
+					"nl": "Voeg toe aan de log."
+				},
+				"args": [
+					{
+						"name": "log",
+						"type": "text",
+						"placeholder" : "Text..."
+					}
+				],
+				"hint" : {
+					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
+					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
+				}
+		}],
 		"actions": [
 			{
 				"id": "Input_date_time_log",
 				"title": {
-					"en": "Timestamp add to the log.",
-					"nl": "Voeg met tijd toe aan de log."
+					"en": "Add to the log.",
+					"nl": "Voeg toe aan de log."
 				},
 				"args": [
 					{
@@ -217,28 +245,10 @@
 				}
 			},
 			{
-				"id": "Input_log",
-				"title": {
-					"en": "Add textline to the log.",
-					"nl": "Voeg tekstregel toe aan de log."
-				},
-				"args": [
-					{
-						"name": "log",
-						"type": "text",
-						"placeholder" : "Text..."
-					}
-				],
-				"hint" : {
-					"en" : "Add the line below to the log.  Yourtext ...",
-					"nl" : "Voeg de regel toe aan de log.  Jouw tekst ..."
-				}
-			},
-			{
 				"id": "programmatic_trigger",
 				"title": {
-					"en" : "PaperTrail-Trigger a Flow",
-					"nl" : "PaperTrail-Activeer een Flow" },
+					"en" : "PaperTrails-Trigger a Flow",
+					"nl" : "PaperTrails-Activeer een Flow" },
 				"hint" : {
 					"en" : "Trigger a Flow with a 'PaperTrails-This Flow is Triggerd' card in the 'When...' column.",
 					"nl" : "Activeer een Flow met een 'PaperTrails-Deze Flow is geactiveerd' kaartje in de 'Als...' kolom."}
@@ -249,8 +259,8 @@
 					"en": "Clear log data.",
 					"nl": "Wis de log." },
 				"hint": {
-					"en": "Clear the PaperTrail Log. A Trigger 'Log is Cleared' in the 'When...' column is Triggerd.",
-					"nl" : "Wis de PaperTrail Log. Een flow met 'Log is gewist' in de 'Als...' kolom wordt geactiveerd." }
+					"en": "Clear the PaperTrails Log. A Trigger 'Log is Cleared' in the 'When...' column is Triggerd.",
+					"nl" : "Wis de PaperTrails Log. Een flow met 'Log is gewist' in de 'Als...' kolom wordt geactiveerd." }
 			},
 			{
 				"id": "truncate_log",
@@ -291,6 +301,24 @@
 				"hint" : {
 					"en" : "Remove the oldest % of the Log. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column.",
 					"nl" : "Verwijder het oudste % van de Log. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom."}
+			},
+			{
+				"id": "Input_log",
+				"title": {
+					"en": "[deprecated] Add textline to the log. (without timestamp)",
+					"nl": "[verouderd] Voeg tekstregel toe aan de log. (Zonder tijd)"
+				},
+				"args": [
+					{
+						"name": "log",
+						"type": "text",
+						"placeholder" : "Text..."
+					}
+				],
+				"hint" : {
+					"en" : "[deprecated] Add the line below to the log.  Yourtext ...",
+					"nl" : "[verouderd] Voeg de regel toe aan de log.  Jouw tekst ..."
+				}
 			}
 		]
 	}

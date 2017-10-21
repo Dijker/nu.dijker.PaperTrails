@@ -1,0 +1,26 @@
+/*  Geurt Dijker  checked 20170719*/
+/* ok */
+.button {
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 1px 6px;
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+/* ok */
+.panel-button {
+  margin-top: 0px !important;
+}
+
+/* Messages */
+body {
+  position: relative;
+}
+
+/* logging popout dialog */
+.popout-dialog .modal-dialog {
+  width: 440px;
+}
