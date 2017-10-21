@@ -3,6 +3,13 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
+## Version 0.2.1 beta
+* Updated for SDK2
+* Again re-designed Settings page, now for Mobile
+* Logging time with milliseconds
+* Added Condition logging:
+* C: Add to the Log (Condition is always True)
+
 ## Version 0.1.8
 * re-designed Settings page
 * Added Actions with corresponding triggers:
@@ -26,3 +33,6 @@ For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu
 * Logging with Timestamp
 * Logging without Timestamp
 * Maximize the Log length (lines)
+
+Feedback:
+Any requests please post them in the [PaperTrails topic on the Athom Forum] (https://forum.athom.com/discussion/3473/)

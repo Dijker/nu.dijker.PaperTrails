@@ -5,6 +5,12 @@ This app makes it possible to add time based logging to your flow's.
 Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
+## Version 0.2.1 beta
+* Updated for SDK2
+* Again re-designed Settings page, now for Mobile
+* Logging time with milliseconds
+* Added Condition logging:
+* C: Add to the Log (Condition is always True)
 
 ## Version 0.1.8
 * re-designed Settings page
@@ -26,22 +32,8 @@ For more information and examples go to the forum
 ( https://forum.athom.com/discussion/3473/ ) and create Issues (bug reports, feature requests) on Github ( https://github.com/Dijker/nu.dijker.PaperTrails/issues )  
 
 If you like my work, Buy me a beer!
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-<input type="image" src="https://www.paypalobjects.com/nl_NL/NL/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal, de veilige en complete manier van online betalen.">
-<img alt="" border="0" src="https://www.paypalobjects.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
-</form>
-
 
 ##Version History:
-* 0.1.3 (20170707)
-  Various fixes
-
-* Previous Updates
-
-
   Online Version History https://github.com/Dijker/nu.dijker.PaperTrails/wiki/Release-Notes
 
 ## To Do
