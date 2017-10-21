@@ -56,6 +56,14 @@
               <br><br><br>
               <label for="maxLogLength" style="width:250px; padding: 5px 10px;" >  Maximum number of lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveMaxLogLength()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 1px 10px;" />
+              <br><br><br>
+              <label for="timeStampFormat" style="width:250px; padding: 5px 10px;" >  Timestamp format: </label>
+              <select id="timeStampFormat" onChange="saveTimeStampFormat()">
+                <option  value="Sec">Normal Seconds</option>
+                <option value="mSec">Precise mSec.</option>
+                <option value="Zulu">Geek [Zulu Time]</option>
+              </select>
+
            </div>
          </fieldset>
        </top>
