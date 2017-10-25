@@ -36,6 +36,8 @@ if (appendLog === undefined) {
 }
 var lastAppendLogSetting = appendLog;
 // Homey.log(' lastAppendLogSetting ' + lastAppendLogSetting);
+var timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
+console.log('timeStampFormat :' + timeStampFormat );
 var maxLogLength;
 var intervalS = Homey.ManagerSettings.get( 'intervalS');
 if (intervalS === undefined) {
@@ -75,6 +77,13 @@ let Custom_LogLines  = new  Homey.FlowCardTrigger('Custom_LogLines');
 		.register()
 		.registerRunListener( onCustom_LogLines )
 
+/*
+let updateTimeStampFormat = new Homey.MamagerSettings.get('set', () => {
+		timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
+		console.log( 'timeStampFormat ' + timeStampFormat);
+})
+*/
+
 function onCustom_LogLines( args, state, callback ) {
   // *** debuging ***
 	// Homey.log(' onCustom_LogLines got Triggered ' );
@@ -103,11 +112,21 @@ function onMax_loglines( args, state, callback) {
 function addZero(i) { return ("0"+i).slice(-2);};
 function getDateTime(date) {
     //var date = new Date();
-    var hour = addZero (date.getHours()); var min = addZero (date.getMinutes()); var sec = addZero (date.getSeconds());
-    var year = date.getFullYear(); var month = addZero (date.getMonth()+1); var day  = addZero (date.getDate());
-		var msec = ("00" + date.getMilliseconds()).slice(-3)
-    return year + "-" + month + "-" + day + " " + hour + ":" + min + "." + sec + "." + msec;
+		// toISOString
+		if (timeStampFormat === "Zulu") {
+			return '[' + date.toISOString() + ']';
+		}	else {
+	    var hour = addZero (date.getHours()); var min = addZero (date.getMinutes()); var sec = addZero (date.getSeconds());
+	    var year = date.getFullYear(); var month = addZero (date.getMonth()+1); var day  = addZero (date.getDate());
+			var msec = ("00" + date.getMilliseconds()).slice(-3)
+	    if (timeStampFormat === "mSec") {
+				return year + "-" + month + "-" + day + " " + hour + ":" + min + "." + sec + "." + msec;
+			} else {
+				return year + "-" + month + "-" + day + " " + hour + ":" + min + "." + sec;
+		}
+	}
 };
+
 Date.prototype.addHours = function(h) {
    this.setTime(this.getTime() + (h*60*60*1000));
    return this;
