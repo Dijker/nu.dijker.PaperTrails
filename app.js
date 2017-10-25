@@ -23,7 +23,7 @@ const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_ti
 
 class paperTrails extends Homey.App {
 	onInit() {
-		this.log('init paperTrails')
+		this.log('init paperTrails');
 	}
 }
 module.exports = paperTrails;
