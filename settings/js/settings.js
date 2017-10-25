@@ -140,7 +140,11 @@ function saveAppendLog(){
 };
 
 function clear_simpleLOG(){
+  var confirmationMessage = "Click OK to clear the Logfile on Homey.";
+  Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+    if( !yes ) return;
     Homey.set('myLog', '-=-=- Log Cleared from Settings page -=-=-');
+  })
 };
 
 function download_PaperTrails(){
