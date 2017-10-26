@@ -235,13 +235,10 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	var cutDate = getDateTime( date1.addHours( -1*args.removeHours) );
 	var logArray = logOld.split(/\n/);
 	var appendLog = Homey.ManagerSettings.get( 'appendLog' );
+	var strStart = cutDate.substring(0, 3);
 
-	// **** appendLog = true!
 	var logline = logArray.find(function (el) {
-			// must start with 201... so it is a Date,
-			// maybe I created the first Decenium problem for Homey,
-			// have to look into that later
-	    return ((el.substring(0, 3) === '201') && (((el > cutDate)&& appendLog) || ((el < cutDate)&& !appendLog)));
+	    return ((el.substring(0, 3) === strStart) && (((el > cutDate)&& appendLog) || ((el < cutDate)&& !appendLog)));
 	});
 	var nr = logArray.indexOf( logline );
 	if (nr > 0) {
