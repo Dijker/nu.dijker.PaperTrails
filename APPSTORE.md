@@ -5,6 +5,13 @@ This app makes it possible to add time based logging to your flow's.
 Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
+## Version 0.2.3
+* Confirm msg on delete from Settings
+* Choose between time format
+** Normal Seconds
+** Precise milliseconds
+** Geek format Zulu Time
+
 ## Version 0.2.1 beta
 * Updated for SDK2
 * Again re-designed Settings page, now for Mobile

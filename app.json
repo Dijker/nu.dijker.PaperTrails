@@ -5,24 +5,27 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.2.1",
+	"version": "0.2.4",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
   "developers": [
-      { "name": "Geurt Dijker",
-        "email": "Homey.Apps@dijker.nu",
-				"website": "http://www.dijker.nu"},
+      { "name": "Geurt Dijker" },
 				{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
-	"contributing":{
-     "donate":{
-        "paypal":{
-           "email":"Geurt@Dijker.nu",
-           "currency":"EUR"
+	"contributing": {
+    "donate": {
+        "paypal": {
+            "username": "Dijker"
         }
-     }
+    }
+  },
+  "bugs": {
+      "url": "https://github.com/Dijker/nu.dijker.PaperTrails/issues"
   },
   "tags": { "en": [ "Log", "Tools"] },
+	"permissions": [
+    "homey:wireless:zwave",
+		"homey:manager:api" ],
 	"flow": {
 		"triggers": [
 					{

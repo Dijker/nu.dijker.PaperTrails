@@ -5,7 +5,7 @@ var intervalS = +8;
 var appendLog;
 var interval;
 var maxLogLength = 1029;
-
+var timeStampFormat;
 
 function onHomeyReady( homeyReady ){
   Homey = homeyReady;
@@ -48,7 +48,25 @@ function onHomeyReady( homeyReady ){
      document.getElementById('maxLogLength').value = maxLogLength;
       if (set) { saveMaxLogLength() }
     }
-  } )
+  } );
+
+// timeStampformat
+  Homey.get('timeStampFormat', function(err, timeStampFormat) {
+    var set = false;
+    if (err) {
+      console.error(err)
+    } else {
+      if (timeStampFormat === null) {
+        set = true
+        var timeStampFormat = "Sec" ;
+      }
+      console.log( timeStampFormat );
+      document.getElementById('timeStampFormat').value = timeStampFormat;
+    if (set) { saveTimeStampFormat() }
+    }
+  } );
+  document.getElementById('intervalS').value = intervalS ;
+
   Homey.get('intervalS', function(err, intervalS) {
     var set = false;
     if (err) {
@@ -63,8 +81,8 @@ function onHomeyReady( homeyReady ){
     if (set) { saveIntervalS() }
     }
   } );
-
   document.getElementById('intervalS').value = intervalS ;
+
   interval = setInterval( function(){ show_log() } , intervalS * 1000);
   var logtextarea = document.getElementById('logtextarea');
   logtextarea.scrollTop = logtextarea.scrollHeight;
@@ -86,6 +104,7 @@ Date.prototype.yyyymmddHHMMss = function() {
            ].join('');
 };
 
+// change update interval
 function updateIntervalS() {
   clearInterval(interval);
   intervalS = document.getElementById('intervalS').value;
@@ -93,9 +112,19 @@ function updateIntervalS() {
   interval = setInterval( function(){ show_log() }, intervalS * 1000);
 };
 
+function updateTimeStampformat() {
+  timeStampformat = document.getElementById('timeStampformat').value;
+  Homey.set('timeStampformat', timeStampformat );
+};
+
 // updateMaxLogLength
 function saveScrollToEnd() {
   Homey.set('scrollToEnd',document.getElementById('scrollToEnd').value );
+};
+
+// saveTimeStampformat
+function saveTimeStampFormat() {
+  Homey.set('timeStampFormat',document.getElementById('timeStampFormat').value );
 };
 
 function saveIntervalS() {
@@ -111,7 +140,11 @@ function saveAppendLog(){
 };
 
 function clear_simpleLOG(){
+  var confirmationMessage = "Click OK to clear the Logfile on Homey.";
+  Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+    if( !yes ) return;
     Homey.set('myLog', '-=-=- Log Cleared from Settings page -=-=-');
+  })
 };
 
 function download_PaperTrails(){
