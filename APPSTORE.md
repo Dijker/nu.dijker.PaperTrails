@@ -5,6 +5,9 @@ This app makes it possible to add time based logging to your flow's.
 Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
+## Version 0.2.5
+* Added api /log to Log something from fe HomeyScript
+
 ## Version 0.2.3
 * Confirm msg on delete from Settings
 * Choose between time format

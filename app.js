@@ -24,6 +24,63 @@ const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_ti
 class paperTrails extends Homey.App {
 	onInit() {
 		this.log('init paperTrails');
+	};
+	// Add somthing to the Log *** OK
+	updateLog(logMsg) {
+		appendLog = Homey.ManagerSettings.get( 'appendLog' );
+		maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
+		var logNew = '';
+		var logOld = Homey.ManagerSettings.get( 'myLog' );
+		// Homey.log('Log Old' + logOld);
+		if ((logOld === null ) || (logOld.length === 0)) {
+			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + getDateTime(new Date()) ;
+		};
+		if (lastAppendLogSetting !== appendLog) {
+			logOld = reverseLog(logOld).join('\n');
+		}
+		var logLength = logOld.split(/\r\n|\r|\n/).length;
+		// Homey.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
+		if ( appendLog === true ) {
+			logNew = logOld + "\n" + logMsg;
+		} else {
+			logNew = logMsg + "\n" + logOld;
+		};
+		var logLength = logNew.split(/\r\n|\r|\n/).length;
+		var tokens = { 'logLength': logLength,
+									 'Log': logNew };
+	  var state = { 'logLength': logLength };
+	//	Homey.manager('flow').trigger('Custom_LogLines', tokens, state, function(err, result){
+		Custom_LogLines.trigger( tokens, state, function(err, result){
+			if( err ) {
+				return Homey.error(err)} ;
+			} )
+		if ( (+maxLogLength + +3) < logLength ) {
+
+			var deleteItems = parseInt( maxLogLength*0.2 );
+			// Homey.log('Log logLength gt  Max, remove ' + deleteItems );
+			var logArray = logNew.split(/\r\n|\r|\n/);
+			var infoMsg = "-=-=- Max. LogLength " + maxLogLength + " reached! Deleting " + deleteItems + " lines at :" + getDateTime(new Date()) + " -=-=-";
+			if ( appendLog === true ) {
+				var removedLog = logArray.splice(0,deleteItems, infoMsg );
+			} else {
+				var removedLog = logArray.splice(-1* deleteItems, deleteItems, infoMsg );
+			}
+			logNew = logArray.join('\n');
+		}
+		// Check for Max logLength to trigger
+		if (logLength > (maxLogLength)) {
+			// Homey.log('Log logLength gt Max, Trigger ');
+			// Homey.manager('flow').trigger('max_loglines', tokens, state, function(err, result){
+				max_loglines.trigger(tokens, state, function(err, result){
+				if( err ) {
+					return Homey.error(err)} ;
+				} )
+			}
+		Homey.ManagerSettings.set( 'myLog', logNew );
+	};
+
+	getDateTime2(date) {
+		return getDateTime(date)
 	}
 }
 module.exports = paperTrails;
@@ -170,60 +227,6 @@ function truncateLog(logOld, infoMsg,  index) {
 	return logNew;
 }
 
-// Add somthing to the Log *** OK
-function updateLog(logMsg) {
-	appendLog = Homey.ManagerSettings.get( 'appendLog' );
-	maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
-	var logNew = '';
-	var logOld = Homey.ManagerSettings.get( 'myLog' );
-	// Homey.log('Log Old' + logOld);
-	if ((logOld === null ) || (logOld.length === 0)) {
-		logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + getDateTime(new Date()) ;
-	};
-	if (lastAppendLogSetting !== appendLog) {
-		logOld = reverseLog(logOld).join('\n');
-	}
-	var logLength = logOld.split(/\r\n|\r|\n/).length;
-	// Homey.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
-	if ( appendLog === true ) {
-		logNew = logOld + "\n" + logMsg;
-	} else {
-		logNew = logMsg + "\n" + logOld;
-	};
-	var logLength = logNew.split(/\r\n|\r|\n/).length;
-	var tokens = { 'logLength': logLength,
-								 'Log': logNew };
-  var state = { 'logLength': logLength };
-//	Homey.manager('flow').trigger('Custom_LogLines', tokens, state, function(err, result){
-	Custom_LogLines.trigger( tokens, state, function(err, result){
-		if( err ) {
-			return Homey.error(err)} ;
-		} )
-	if ( (+maxLogLength + +3) < logLength ) {
-
-		var deleteItems = parseInt( maxLogLength*0.2 );
-		// Homey.log('Log logLength gt  Max, remove ' + deleteItems );
-		var logArray = logNew.split(/\r\n|\r|\n/);
-		var infoMsg = "-=-=- Max. LogLength " + maxLogLength + " reached! Deleting " + deleteItems + " lines at :" + getDateTime(new Date()) + " -=-=-";
-		if ( appendLog === true ) {
-			var removedLog = logArray.splice(0,deleteItems, infoMsg );
-		} else {
-			var removedLog = logArray.splice(-1* deleteItems, deleteItems, infoMsg );
-		}
-		logNew = logArray.join('\n');
-	}
-	// Check for Max logLength to trigger
-	if (logLength > (maxLogLength)) {
-		// Homey.log('Log logLength gt Max, Trigger ');
-		// Homey.manager('flow').trigger('max_loglines', tokens, state, function(err, result){
-			max_loglines.trigger(tokens, state, function(err, result){
-			if( err ) {
-				return Homey.error(err)} ;
-			} )
-		}
-	Homey.ManagerSettings.set( 'myLog', logNew );
-};
-
 // truncate_log
 // Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 actionTruncateLog.register().on('run', ( args, state, callback ) => {
@@ -279,22 +282,21 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 // for Original v0.0.5 logging
 // ** Homey.manager('flow').on('action.Input_log', function( callback, args ) {
 actionInputLog.register().on('run', ( args, state, callback ) => {
-		updateLog( args.log);
+		Homey.app.updateLog( args.log);
     callback( null, true );
 });
 
 // condition_date_time_log by Geurt Dijker
-conditionInputDateTimeLog
-		.register()
+conditionInputDateTimeLog.register()
 		.on('run', ( args, state, callback ) => {
-				updateLog( getDateTime(new Date()) + " " + args.log);
+				Homey.app.updateLog( getDateTime(new Date()) + " " + args.log);
 		    callback( null, true );
 		});
 
 // Input_date_time_log by Geurt Dijker
 // Homey.manager('flow').on('action.Input_date_time_log', function( callback, args ) {
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-		updateLog( getDateTime(new Date()) + " " + args.log);
+		Homey.app.updateLog( getDateTime(new Date()) + " " + args.log);
     callback( null, true );
 });
 
