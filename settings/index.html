@@ -23,15 +23,14 @@
     <ul class="nav nav-tabs">
       <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)">PaperTrails</a></li>
       <li id="panel-button-2" class="h5 panel-button"><a href="javascript:showPanel(2)">Configuration</a></li>
-      <!-- <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)">Something tbd</a></li>
-      -->
+      <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)">Maintenance</a></li>
     </ul>
     <!-- Logging panel -->
     <div id="panel-1" class="panel">
        &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 2px; width: 96%;height: 40px">
           <div class="field row">
-               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveScrollToEnd()" value="scrollToEnd" style="width:40px"/>
+               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
                <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
            </div>
          </fieldset>
@@ -46,20 +45,20 @@
         &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
           <div class="field row">
-              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateIntervalS()"/>
+              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateResfresh()"/>
               <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
-              <input id="appendLog"  class="left" type="checkbox" onChange="saveAppendLog()" value="appendLog"  style="width:40px"/>
+              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px"/>
               <label for="appendLog" style="width:128px; padding: 1px 10px;" class="left"> Append logging</label>
               <br><br><br>
               <label for="maxLogLength" style="width:250px; padding: 5px 10px;" >  Maximum number of lines for Log</label>
-              <input id="maxLogLength" class="right" value="1024" onChange="saveMaxLogLength()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 1px 10px;" />
+              <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 1px 10px;" />
               <br><br><br>
               <label for="timeStampFormat" style="width:250px; padding: 5px 10px;" >  Timestamp format: </label>
-              <select id="timeStampFormat" onChange="saveTimeStampFormat()">
-                <option  value="Sec">Normal Seconds</option>
+              <select id="timeStampFormat" onChange="saveSettings()">
+                <option value="Sec">Normal Seconds</option>
                 <option value="mSec">Precise mSec.</option>
                 <option value="Zulu">Geek [Zulu Time]</option>
               </select>
@@ -67,14 +66,17 @@
            </div>
          </fieldset>
        </top>
-
-
     </div>
-    <!-- Performance panel -->
+    <!-- Maintenance panel -->
     <div id="panel-3" class="panel">
-      <h5>Something tbd</h5>
-      <p>
-
+        <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+        <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
+        <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+        <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
+        <br><br>
+        <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
+        <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
+        <br><br>
     </div>
   </body>
 </html>
