@@ -62,7 +62,7 @@ class paperTrails extends Homey.App {
 		lastAppendLogSetting = appSettings.appendLog;
 	};
 	// Add somthing to the Log *** OK
-	updateLog(logMsg) {
+	updateLog( logMsg ) {
 		// appendLog = Homey.ManagerSettings.get( 'appendLog' );
 		// maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
 		var logNew = '';
@@ -426,11 +426,11 @@ function truncateLog(logOld, infoMsg,  index) {
 // Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	var date1 = new Date();
-	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removeHours  + " hours from Flow at: " + getDateTime(date1)+" -=-=- " ;
+	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removeHours  + " hours from Flow at: " +Homey.app.getDateTime(date1)+" -=-=- " ;
 	// removeHours
 	var logOld = Homey.ManagerSettings.get( 'myLog' );
-	var timeNow = getDateTime( date1 );
-	var cutDate = getDateTime( date1.addHours( -1*args.removeHours) );
+	var timeNow =Homey.app.getDateTime( date1 );
+	var cutDate =Homey.app.getDateTime( date1.addHours( -1*args.removeHours) );
 	var logArray = logOld.split(/\n/);
 	// ****
 	var appendLog = Homey.ManagerSettings.get( 'appendLog' );
@@ -452,9 +452,9 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 // Homey.manager('flow').on('action.truncate_log_pct', function( callback, args ) {
 actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 	var date1 = new Date();
-	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removePct  + " % from Flow at: " + getDateTime(date1)+" -=-=- " ;
+	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removePct  + " % from Flow at: " +Homey.app.getDateTime(date1)+" -=-=- " ;
 	var logOld = Homey.ManagerSettings.get( 'myLog' );
-	var timeNow = getDateTime( date1 );
+	var timeNow =Homey.app.getDateTime( date1 );
 	var logArray = logOld.split(/\n/);
 	var appendLog = Homey.ManagerSettings.get( 'appendLog' );
 
@@ -474,27 +474,27 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 // for Original v0.0.5 logging
 // ** Homey.manager('flow').on('action.Input_log', function( callback, args ) {
 actionInputLog.register().on('run', ( args, state, callback ) => {
-		Homey.app.updateLog( args.log);
+		Homey.app.updateLog( args.log );
     callback( null, true );
 });
 
 // condition_date_time_log by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-				Homey.app.updateLog( getDateTime(new Date()) + " " + args.log);
+				Homey.app.updateLog(Homey.app.getDateTime(new Date()) + " " + args.log);
 		    callback( null, true );
 		});
 
 // Input_date_time_log by Geurt Dijker
 // Homey.manager('flow').on('action.Input_date_time_log', function( callback, args ) {
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-		Homey.app.updateLog( getDateTime(new Date()) + " " + args.log);
+		Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " " + args.log);
     callback( null, true );
 });
 
 // action.Clear_log *** 2 Check
 // Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 actionClearLog.register().on('run', ( args, state, callback ) => {
-	  var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " + getDateTime(new Date()) +" -=-=- ";
+	  var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " +Homey.app.getDateTime(new Date()) +" -=-=- ";
 		var logOld = Homey.ManagerSettings.get( 'myLog' );
 		var logLength = logOld.split(/\n/).length;
 		var tokens = { 	'logLength': logLength,
@@ -510,7 +510,7 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
 // Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 	  // Homey.log('Trigger the action.programmatic_trigger');
-		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + getDateTime(new Date()) +" -=-=- " ;
+		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " +Homey.app.getDateTime(new Date()) +" -=-=- " ;
 	  var logOld = Homey.ManagerSettings.get( 'myLog' );
 		var logLength = logOld.split(/\n/).length;
 		var tokens = { 	'logLength': logLength,

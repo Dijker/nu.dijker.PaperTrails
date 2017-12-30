@@ -19,7 +19,8 @@
         }
     }
   },
-  "tags": { "en": [ "Log", "Tools"] },
+  "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"],
+						"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"] },
 	"permissions": [ "homey:manager:api" ],
 	"flow": {
 		"triggers": [

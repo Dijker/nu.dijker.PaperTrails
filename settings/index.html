@@ -28,15 +28,9 @@
     <!-- Logging panel -->
     <div id="panel-1" class="panel">
        &nbsp;&nbsp;
-        <fieldset style="top:0px; margin: 2px; width: 96%;height: 40px">
-          <div class="field row">
-               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
-               <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
-           </div>
-         </fieldset>
          <fieldset style="top:0; margin: 5px">
            <legend>Log</legend>
-           <textarea id="logtextarea" style="margin: 2px;  width: -webkit-fill-available; height: -webkit-fill-available"></textarea>
+           <textarea id="logtextarea" style="margin: 2px;  width: -webkit-fill-available; height: 74vh"></textarea>
          </fieldset>
     </div>
     <!-- Configuration panel -->
@@ -45,6 +39,9 @@
         &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
           <div class="field row">
+              <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
+              <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
+              <br><br><br>
               <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateResfresh()"/>
               <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
@@ -69,14 +66,34 @@
     </div>
     <!-- Maintenance panel -->
     <div id="panel-3" class="panel">
-        <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-        <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
-        <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-        <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
-        <br><br>
-        <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
-        <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
-        <br><br>
+      &nbsp;&nbsp;
+        <fieldset style="top:0px; margin: 5px; width: 96%">
+        <div class="field row">
+           <legend>Warning</legend>
+           <h1>Warning:</h1><br>
+           This Feature is experimental, it modifies all your flows!<br>
+           Please make a backup using <a rel="nofollow" target="_blank" href="https://apps.athom.com/app/nl.regoor.flowbackup">Flow Backups </a><br>
+           before each use! If this feature is not working please contact me by sending an App Log and the backup file to analyze.
+           <br>
+           Go to Settings - Apps: Hold the ALT key and click <i>Send Log to Developer</i>)
+           <button id="sendLogtoDeveloper" class="button" style= "float: right;" onclick="sendLogtoDeveloper()">Send Log to Developer</button>
+       </div>
+       </fieldset>
+       <br>
+      <fieldset style="top:0px; margin: 5px; width: 96%">
+         <div class="field row">
+          <legend>Experimental</legend>
+           <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+           <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
+           <br><br>
+           <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+           <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
+           <br><br>
+           <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
+           <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
+           <br><br>
+         </div>
+         </fieldset>
     </div>
   </body>
 </html>
