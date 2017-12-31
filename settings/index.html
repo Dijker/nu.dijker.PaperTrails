@@ -42,24 +42,29 @@
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
               <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
               <br><br><br>
-              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateResfresh()"/>
+              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateResfresh(appSettings)"/>
               <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
-              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px"/>
-              <label for="appendLog" style="width:128px; padding: 1px 10px;" class="left"> Append logging</label>
-              <br><br><br>
               <label for="maxLogLength" style="width:250px; padding: 5px 10px;" >  Maximum number of lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 1px 10px;" />
               <br><br><br>
+            </div>
+          </fieldset>
+          <fieldset style="top:0px; margin: 5px; width: 96%">
+            <div class="field row">
+              <legend>Configuration Settings (Restart App required)</legend>
+              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px"/>
+              <label for="appendLog" style="width:128px; padding: 1px 10px;" class="left"> Append logging</label>
+              <br><br><br>
               <label for="timeStampFormat" style="width:250px; padding: 5px 10px;" >  Timestamp format: </label>
-              <select id="timeStampFormat" onChange="saveSettings()">
+              <select id="timeStampFormat" onChange="">
                 <option value="Sec">Normal Seconds</option>
                 <option value="mSec">Precise mSec.</option>
                 <option value="Zulu">Geek [Zulu Time]</option>
               </select>
-
+              <button id="saveConfig" class="button" style= "float: right;" onclick="saveConfig()">Save Config settings</button>
            </div>
          </fieldset>
        </top>
@@ -70,10 +75,11 @@
         <fieldset style="top:0px; margin: 5px; width: 96%">
         <div class="field row">
            <legend>Warning</legend>
-           <h1>Warning:</h1><br>
+           <h1>Warning:</h1>
            This Feature is experimental, it modifies all your flows!<br>
-           Please make a backup using <a rel="nofollow" target="_blank" href="https://apps.athom.com/app/nl.regoor.flowbackup">Flow Backups </a><br>
-           before each use! If this feature is not working please contact me by sending an App Log and the backup file to analyze.
+           Please make a backup using <a rel="nofollow" target="_blank" href="https://apps.athom.com/app/nl.regoor.flowbackup">Flow Backups</a>
+           before each use! <br>
+           If this feature is not working please contact me by sending an App Log and the backup file to analyze.<br>
            <br>
            Go to Settings - Apps: Hold the ALT key and click <i>Send Log to Developer</i>)
            <button id="sendLogtoDeveloper" class="button" style= "float: right;" onclick="sendLogtoDeveloper()">Send Log to Developer</button>
@@ -83,15 +89,25 @@
       <fieldset style="top:0px; margin: 5px; width: 96%">
          <div class="field row">
           <legend>Experimental</legend>
-           <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-           <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
-           <br><br>
+          <br>
+          This option adds a "Add to the Log" card to the ...Then Column of every flow, and every Else when in use. The text will be the Name of the Flow, with the prefix below.
+
+          <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+          <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
+          <br><br>
            <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
            <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
            <br><br>
            <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
-           <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
            <br><br>
+           This option Removes added "Add to the Log" cards from all Flows. (with same prefix)<br><br>
+           <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
+           <input id="removeAllOccurrences"  class="right" type="checkbox"  value="removeAllOccurrences"  style="width:40px"/>
+           <label for="removeAllOccurrences" style="width:180px; padding: 1px 10px;" class="right">Remove All Occurrences</label>
+
+           <br><br>
+           Migrate cards from Simple Log to PaperTrails<br><br>
+           <button id="migrate2PaperTrails" class="button" style= "float: right;" onclick="migrate2PaperTrails()">Migrate from Simple Log</button>
          </div>
          </fieldset>
     </div>

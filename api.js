@@ -22,7 +22,20 @@ module.exports = [
 			allflows.then( function(result) {
 				return allflows
 			})
-			callback( null, null);
+			callback( null, "OK");
+		}
+	},
+	{
+		method: 'PUT',
+		path: '/migrate2PaperTrails',
+		public: false,
+		fn: (args, callback) => {
+			console.log(args.body.log);
+			var allflows = Homey.app.migrate2PaperTrails();
+			allflows.then( function(result) {
+				return allflows
+			})
+			callback( null, "OK");
 		}
 	},
 	{
@@ -31,11 +44,11 @@ module.exports = [
 		public: false,
 		fn: (args, callback) => {
 			console.log(args.body.log);
-			var allflows = Homey.app.removePaperTrailsfAllFlows();
+			var allflows = Homey.app.removePaperTrailsfAllFlows( args );
 			allflows.then( function(result) {
 				return allflows
 			})
-			callback( null, null);
+			callback( null, "OK");
 		}
 	}
 ]

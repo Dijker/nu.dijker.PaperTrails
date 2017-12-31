@@ -1,48 +1,70 @@
 /* global $, Homey */
 var Homey;
 var _myLog = '';
-var intervalS = +8;
-var appendLog;
+var intervalS = 3;
+// var appendLog;
 var interval;
-var maxLogLength = 10238;
+// var maxLogLength = 10123;
 var timeStampFormat = 'Sec';
-var appSettings = {};
+var scrollToEnd;
+var appSettings = {
+        'refresh': "5",
+        'timeStampFormat': 'Sec',
+        'maxLogLength': "10240",
+        'appendLog': true,
+        'autoPrefixThen':'!',
+        'autoPrefixElse':'!',
+        'scrollToEnd':true };
+var appConfig = {};
+var migrated;
 
 function onHomeyReady( homeyReady ){
   Homey = homeyReady;
-  Homey.ready();
-  Homey.get('settings', function(err, appSettings ) {
-      var set = false;
+  // Homey.ready();
+  console.log('appSettings.' );
+  console.log( appSettings );
+  Homey.get('settings', function(err, appSettings1 ) {
       if (err) {
         console.error(err)
       } else {
-        if (appSettings === null) {
-          // Should not happen.....
-          console.log( 'Why??' );
-          appSettings = {
-            'refresh': 5,
-            'timeStampFormat': 'Sec',
-            'maxLogLength': 10240,
-            'appendLog': true,
-          }
-          set = true
+        console.log('appSettings-in' );
+        console.log( appSettings1 );
+        if (appSettings1 != (null || undefined)) {
+          appSettings = appSettings1;
+          console.log('appSettings-in2' );
+          console.log( appSettings );
+          document.getElementById('intervalS').value = appSettings.refresh;
+          document.getElementById('maxLogLength').value = appSettings.maxLogLength;
+          document.getElementById('scrollToEnd').checked = appSettings.scrollToEnd;
+          scrollToEnd = appSettings.scrollToEnd;
+          document.getElementById('autoPrefixThen').value = appSettings.autoPrefixThen;
+          document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
+          interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
+          migrated = appSettings.migrated;
+          // document.getElementById('timeStampFormat').value = appSettings.timeStampFormat;
+          // document.getElementById('appendLog').checked = appSettings.appendLog;
+          // Homey.ready();
         }
-        console.log('appSettings' + appSettings);
-        document.getElementById('appendLog').checked = appSettings.appendLog;
-        document.getElementById('intervalS').value = appSettings.refresh;
-        document.getElementById('maxLogLength').value = appSettings.maxLogLength;
-        document.getElementById('timeStampFormat').value = appSettings.timeStampFormat;
-        document.getElementById('scrollToEnd').checked = appSettings.scrollToEnd;
-        document.getElementById('autoPrefixThen').value = appSettings.autoPrefixThen;
-        document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
-        if (set) { saveSettings() }
+      }});
+    //  console.log('appSettings0' );
+    //  console.log( appSettings );
+    Homey.get('config', function(err, appConfig1 ) {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log('appConfig-in' );
+      console.log( appConfig1 );
+      if (appConfig1 != (null || undefined)) {
+        appConfig = appConfig1;
+        console.log('appConfig-in2' );
+        console.log( appConfig );
+        document.getElementById('timeStampFormat').value = appConfig.timeStampFormat;
+        document.getElementById('appendLog').checked = appConfig.appendLog;
+        Homey.ready();
       }
-    } );
+    }});
 
-  //interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
-  interval = setInterval( function(){ show_log() } , 3 * 1000);
-  var logtextarea = document.getElementById('logtextarea');
-  logtextarea.scrollTop = logtextarea.scrollHeight;
+  // logtextarea.scrollTop = logtextarea.scrollHeight;
   showPanel(1);
 };
 
@@ -64,21 +86,41 @@ Date.prototype.yyyymmddHHMMss = function() {
 // change update interval
 function updateResfresh() {
   clearInterval(interval);
+  var appSettings = {};
   appSettings.refresh = document.getElementById('intervalS').value;
-  saveSettings();
+  // saveSettings();
   interval = setInterval( function(){ show_log() }, appSettings.refresh * 1000);
 };
 
 function saveSettings(){
+   console.log('Voor 1 update');
+   console.log(appSettings);
+   //var appSettings = {};
     appSettings.refresh = document.getElementById('intervalS').value;
-    appSettings.appendLog = document.getElementById('appendLog').checked;
+    // appSettings.appendLog = document.getElementById('appendLog').checked;
     appSettings.maxLogLength = document.getElementById('maxLogLength').value;
-    appSettings.timeStampFormat = document.getElementById('timeStampFormat').value;
+    // appSettings.timeStampFormat = document.getElementById('timeStampFormat').value;
     appSettings.scrollToEnd = document.getElementById('scrollToEnd').checked;
+    scrollToEnd = document.getElementById('scrollToEnd').checked;
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
+    appSettings.migrated = migrated;
+    console.log('Na update');
+    console.log(appSettings);
     Homey.set('settings', appSettings );
 };
+
+function saveConfig(){
+   console.log('Voor 1 update');
+   console.log(appConfig);
+   //var appSettings = {};
+    appConfig.appendLog = document.getElementById('appendLog').checked;
+    appConfig.timeStampFormat = document.getElementById('timeStampFormat').value;
+    console.log('Na update');
+    console.log(appConfig);
+    Homey.set('config', appConfig );
+};
+
 
 function clear_simpleLOG(){
   var confirmationMessage = "Click OK to clear the Logfile on Homey.";
@@ -119,7 +161,7 @@ function show_log(){
             _myLog = myLog
            document.getElementById('logtextarea').value = myLog;
         };
-        var scrollToEnd =document.getElementById('scrollToEnd').checked;
+        var scrollToEnd = document.getElementById('scrollToEnd').checked;
         if ( scrollToEnd ) {
             logtextarea.scrollTop = logtextarea.scrollHeight;
         };
@@ -136,22 +178,43 @@ function showPanel (panel) {
 
 // addPaperTrails2AllFlows
 function addPaperTrails2AllFlows(){
+  var confirmationMessage = "Click OK to Add PaperTrails Logging to ALL your Flows.";
+  Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+    if( !yes ) return;
     Homey.api('PUT', '/addPaperTrails2AllFlows',  { 'foo': 'bar' }, function( err, result ) {
       if( err ) return Homey.alert(err);
     })
+  })
+};
+
+// migrate2PaperTrails
+function migrate2PaperTrails(){
+  var confirmationMessage = "Click OK to replace Simple Log cards to PaperTrails in ALL your Flows.";
+  Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+    if( !yes ) return;
+    Homey.api('PUT', '/migrate2PaperTrails',  { 'foo': 'bar' }, function( err, result ) {
+      if( err ) return Homey.alert(err);
+    })
+  })
 };
 
 // removePaperTrailsfAllFlows
 function removePaperTrailsfAllFlows(){
-    Homey.api('DELETE', '/removePaperTrailsfAllFlows',  { 'foo': 'bar' }, function( err, result ) {
+  var removeAllOccurrences = document.getElementById('removeAllOccurrences').checked;
+  var confirmationMessage = "Click OK to Remove PaperTrails Logging from ALL your Flows.";
+  if (removeAllOccurrences) { confirmationMessage += " ALL! "}
+  Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+    if( !yes ) return;
+    Homey.api('DELETE', '/removePaperTrailsfAllFlows',  { 'removeAllOccurrences': removeAllOccurrences }, function( err, result ) {
       if( err ) return Homey.alert(err);
     })
+  })
 };
 
 // sendLogtoDeveloper
 function sendLogtoDeveloper(){
   //  Homey.api( 'POST', '../../manager/apps/app/nu.dijker.papertrails/crashlog',  { }, function( err, result ) {
-  post('../../manager/apps/app/nu.dijker.papertrails/crashlog', {});
+  post('/api/manager/apps/app/nu.dijker.papertrails/crashlog', {});
 };
 
 function post(path, params, method) {
