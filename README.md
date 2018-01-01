@@ -3,8 +3,8 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
-## Version 0.3.2
-* Added Magic! Adding & Removing Logging to All Flows.
+## Version 0.3.3
+* Added Magic! Adding & Removing Logging to All Flows with a PreFix.
 * Migrating Flows from Simple Log
 * Added api /log to Log something from fe HomeyScript
 * Converted Settings to one Object & some Cleanup

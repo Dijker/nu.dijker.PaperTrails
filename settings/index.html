@@ -38,25 +38,25 @@
       <top>
         &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
-          <div class="field row">
+          <div class="field row" style="padding: 5px 10px;">
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
               <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
               <br><br><br>
-              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 1px 10px;" onChange="updateResfresh(appSettings)"/>
+              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
               <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
               <label for="maxLogLength" style="width:250px; padding: 5px 10px;" >  Maximum number of lines for Log</label>
-              <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 1px 10px;" />
+              <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 5px 10px;" />
               <br><br><br>
             </div>
           </fieldset>
           <fieldset style="top:0px; margin: 5px; width: 96%">
-            <div class="field row">
+            <div class="field row" style="padding: 5px 10px;">
               <legend>Configuration Settings (Restart App required)</legend>
-              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px"/>
-              <label for="appendLog" style="width:128px; padding: 1px 10px;" class="left"> Append logging</label>
+              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
+              <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left"> Append logging</label>
               <br><br><br>
               <label for="timeStampFormat" style="width:250px; padding: 5px 10px;" >  Timestamp format: </label>
               <select id="timeStampFormat" onChange="">
@@ -73,7 +73,7 @@
     <div id="panel-3" class="panel">
       &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
-        <div class="field row">
+        <div class="field row" style="padding: 5px 10px;">
            <legend>Warning</legend>
            <h1>Warning:</h1>
            This Feature is experimental, it modifies all your flows!<br>
@@ -87,7 +87,7 @@
        </fieldset>
        <br>
       <fieldset style="top:0px; margin: 5px; width: 96%">
-         <div class="field row">
+         <div class="field row" style="padding: 5px 10px;">
           <legend>Experimental</legend>
           <br>
           This option adds a "Add to the Log" card to the ...Then Column of every flow, and every Else when in use. The text will be the Name of the Flow, with the prefix below.

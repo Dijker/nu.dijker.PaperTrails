@@ -5,7 +5,7 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {

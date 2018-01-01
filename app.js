@@ -28,83 +28,74 @@ const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_ti
 var appSettings ;
 var appConfig ;
 var lastAppendLogSetting;
-var hostname =require('os').hostname();
+var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
-		async onInit() {
-			process.on('unhandledRejection', error => {
-	            console.error(error.stack);
-	        }
-				);
-		this.log('Start init paperTrails');
-		appSettings = Homey.ManagerSettings.get('settings');
-		this.log('Current appSettings: \n', appSettings);
-		if (appSettings == (null || undefined)) {
-			this.log('Initializing settings ...')
-			appSettings = {
-				'refresh': '5',
-				'maxLogLength': '10123',
-				'migrated': false
-			}
-		};
-		appConfig = Homey.ManagerSettings.get('config');
-		this.log('Current appConfig: \n', appConfig);
-		if (appConfig == (null || undefined)) {
-			this.log('Initializing config ...')
-			appConfig = {
-				'timeStampFormat': 'Sec',
-				'appendLog': true,
-				'lastAppendLogSetting' : true
-			}
-		};
-		this.log('Current appConfig: \n', appConfig);
-
-		if (!appSettings.migrated) {
-			this.log('Migrating App Settings ....');
-			appSettings.maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
-			appSettings.migrated = true;
- 			appConfig.timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
-			appConfig.appendLog = Homey.ManagerSettings.get( 'appendLog' );
-		};
-		// Update afer migrations
-		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10124" }
-		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'A! Then - ' }
-		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'A! Else - ' }
-		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' }
-		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true }
-		// save if updated
-		Homey.ManagerSettings.set('settings', appSettings);
-		// *****
-		if (appConfig.lastAppendLogSetting != appConfig.appendLog) {
-			// Reverse Log !! *****
-			this.log('Reversing Log... Append:' , appConfig.appendLog )
-			var logOld = Homey.ManagerSettings.get( 'myLog' );
-			var logNew = this.reverseLog(logOld).join('\n');
-			Homey.ManagerSettings.set( 'myLog', logNew );
-			appConfig.lastAppendLogSetting = appConfig.appendLog;
+	async onInit() {
+		process.on('unhandledRejection', error => {
+  	console.error(error.stack);
+  });
+	this.log('Start init paperTrails');
+	this.log('Hostnanme' + hostname );
+	appSettings = Homey.ManagerSettings.get('settings');
+	this.log('Current appSettings: \n', appSettings);
+	if (appSettings == (null || undefined)) {
+		this.log('Initializing settings ...')
+		appSettings = {
+			'refresh': '5',
+			'maxLogLength': '10123',
+			'migrated': false
 		}
-		Homey.ManagerSettings.set('config', appConfig);
-		this.log('End of onInit \nCurrent appSettings :\n', appSettings);
-		this.log('Current appConfig :\n', appConfig);
+	};
+	appConfig = Homey.ManagerSettings.get('config');
+	this.log('Current appConfig: \n', appConfig);
+	if (appConfig == (null || undefined)) {
+		this.log('Initializing config ...')
+		appConfig = {
+			'timeStampFormat': 'Sec',
+			'appendLog': true,
+			'lastAppendLogSetting' : true
+		}};
+	// this.log('Current appConfig: \n', appConfig);
 
+	if (!appSettings.migrated) {
+		this.log('Migrating App Settings ....');
+		appSettings.maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
+		appSettings.migrated = true;
+		appConfig.timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
+		appConfig.appendLog = Homey.ManagerSettings.get( 'appendLog' );
+	};
+	// Update afer migrations
+	if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" }
+	if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' }
+	if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' }
+	if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' }
+	if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true }
+	// save if updated
+	Homey.ManagerSettings.set('settings', appSettings);
+	// *****
+	if (appConfig.lastAppendLogSetting != appConfig.appendLog) {
+		// Reverse Log !! *****
+		this.log('Reversing Log... Append:' , appConfig.appendLog )
+		var logOld = Homey.ManagerSettings.get( 'myLog' );
+		var logNew = this.reverseLog(logOld).join('\n');
+		Homey.ManagerSettings.set( 'myLog', logNew );
+		appConfig.lastAppendLogSetting = appConfig.appendLog;
+	};
+	Homey.ManagerSettings.set('config', appConfig);
+	this.log('End of onInit \nCurrent appSettings :\n', appSettings);
+	this.log('Current appConfig :\n', appConfig);
 	}; // End of onInit()
 
 	// Add somthing to the Log *** OK
 	updateLog( logMsg ) {
-		// appendLog = Homey.ManagerSettings.get( 'appendLog' );
-		// maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
 		var logNew = '';
 		var logOld = Homey.ManagerSettings.get( 'myLog' );
-		// Homey.log('Log Old' + logOld);
 		if ((logOld === null ) || (logOld.length === 0)) {
 			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
 		};
-		// ******
-		// if (lastAppendLogSetting !== appConfig.appendLog) {
-
-		//}
 		var logLength = logOld.split(/\r\n|\r|\n/).length;
-		// Homey.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
+		// this.log('Log logLength and Msg: ' + maxLogLength + ' : ' + logLength + ' : ' + logMsg);
 		if ( appConfig.appendLog === true ) {
 			logNew = logOld + "\n" + logMsg;
 		} else {
@@ -119,7 +110,7 @@ class paperTrails extends Homey.App {
 		Custom_LogLines.trigger( tokens, state, function(err, result){
 			if( err ) {
 				return Homey.error(err)} ;
-			} )
+			});
 		if ( (appSettings.maxLogLength + 3) < logLength ) {
 			var deleteItems = parseInt( maxLogLength*0.2 );
 			// Homey.log('Log logLength gt  Max, remove ' + deleteItems );
@@ -492,7 +483,6 @@ Date.prototype.addHours = function(h) {
    return this;
 }
 
-
 // truncateLog
 function truncateLog(logOld, infoMsg,  index) {
 	// Homey.log('function truncate Log: Delete  Items' + index);
@@ -532,7 +522,6 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	var timeNow =Homey.app.getDateTime( date1 );
 	var cutDate =Homey.app.getDateTime( date1.addHours( -1*args.removeHours) );
 	var logArray = logOld.split(/\n/);
-	// ****
 	// var appendLog = Homey.ManagerSettings.get( 'appendLog' );
 	var strStart = cutDate.substring(0, 3);
 
@@ -548,7 +537,7 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	callback( null, true );
 });
 
-// truncate_log_pct **** ??
+// truncate_log_pct
 // Homey.manager('flow').on('action.truncate_log_pct', function( callback, args ) {
 actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 	var date1 = new Date();
@@ -572,7 +561,7 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 });
 
 // for Original v0.0.5 logging
-// ** Homey.manager('flow').on('action.Input_log', function( callback, args ) {
+// Homey.manager('flow').on('action.Input_log', function( callback, args ) {
 actionInputLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( args.log );
     callback( null, true );
@@ -591,7 +580,7 @@ actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
     callback( null, true );
 });
 
-// action.Clear_log *** 2 Check
+// action.Clear_log
 // Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 actionClearLog.register().on('run', ( args, state, callback ) => {
 	  var logNew = "-=-=- Log for " + hostname + " cleared from Flow -=-=- " + Homey.app.getDateTime(new Date()) +" -=-=- ";
@@ -616,7 +605,7 @@ actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 		var tokens = { 	'logLength': logLength,
 									 	'Log': logOld,
 							 			'infoMsg': infoMsg };
-		// console.log(tokens);
+
 		// Homey.manager('flow').trigger('programmatic_trigger', tokens, null,  function(err, result){
 		programmatic_trigger.trigger( tokens, null,  function(err, result){
   	if( err ) {

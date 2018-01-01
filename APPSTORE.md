@@ -12,8 +12,12 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
 
-## Version 0.2.5
+## Version 0.3.3
+* Added Magic! Adding & Removing Logging to All Flows with a PreFix.
+* Migrating Flows from Simple Log
 * Added api /log to Log something from fe HomeyScript
+* Converted Settings to two Objects & some Cleanup
+* Fixed "Report an issue" Link to Own GitHub
 
 ## Version 0.2.3
 * Confirm msg on delete from Settings
