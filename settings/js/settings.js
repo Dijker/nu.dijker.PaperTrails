@@ -187,7 +187,11 @@ function migrate2PaperTrails(){
 function removePaperTrailsfAllFlows(){
   var removeAllOccurrences = document.getElementById('removeAllOccurrences').checked;
   var confirmationMessage = "Click OK to Remove PaperTrails Logging from ALL your Flows.";
-  if (removeAllOccurrences) { confirmationMessage += " ALL! "}
+  if (removeAllOccurrences) {
+    confirmationMessage += " (Independent from Prefixes)"
+  } else {
+    confirmationMessage += " (with same Prefixes)"    
+  }
   Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
     if( !yes ) return;
     Homey.api('DELETE', '/removePaperTrailsfAllFlows',  { 'removeAllOccurrences': removeAllOccurrences }, function( err, result ) {
