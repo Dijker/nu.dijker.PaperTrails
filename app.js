@@ -151,58 +151,42 @@ class paperTrails extends Homey.App {
 	    // Init loop
 	    var modFlowChanged = false;
 	    var modFlowThen = -1;
+			var ThenPPT = false;
 	    var modFlowElse = -1;
-			for(var myIndex = modFlow.actions.length-1 ; myIndex >=0 ; myIndex-- ) {
+			var ElsePPT = false;
+			for(var myIndex = 0 ; myIndex < modFlow.actions.length ; myIndex++ ) {
+					if ((modFlow.actions[ myIndex ].id === 'Input_date_time_log')
+							&& (modFlow.actions[ myIndex ].uri === 'homey:app:nu.dijker.papertrails' )) {
+						if (modFlow.actions[ myIndex ].group === 'then') { ThenPPT = true };
+						if (modFlow.actions[ myIndex ].group === 'else') { ElsePPT = true };
+					}
+			};
 	    // for(var myIndex in modFlow.actions ) { //fails on inserting to reach the end.
-	        if  ( -1 === modFlowThen ) {
-	            if (modFlow.actions[ myIndex ].group === 'then') {
-	                if ( (modFlow.actions[ myIndex ].id === 'Input_date_time_log') && (modFlow.actions[ myIndex ].uri === 'homey:app:nu.dijker.papertrails' ) ) {
-	                    modFlowThen = myIndex;
-	                    this.log( 'Then Already exists '+  myIndex);
-	                } else {
-	                    modFlow.actions.splice( myIndex, 0, newLogCardT );
-	                    modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixThen + modFlow.title;
-	                    modFlowThen = myIndex;
-	                    modFlowChanged = true;
-	                    this.log( 'Then added '+  myIndex);
-	                }
-	            }
-	        } else {
-	            if (modFlow.actions[ myIndex ].group === 'then') {
-	                if ( (modFlow.actions[ myIndex ].id === 'Input_date_time_log') && (modFlow.actions[ myIndex ].uri === 'homey:app:nu.dijker.papertrails' ) ) {
-	                    this.log( 'Then Duplicate removed ' +  myIndex);
-	                    modFlow.actions[ modFlowThen ].args.log = modFlow.actions[ myIndex ].args.log;
-	                    modFlow.actions.splice( myIndex, 1);
-	                    modFlowChanged = true;
-	                }
-	            }
-	        }
-	    }
-	    for(var myIndex in modFlow.actions ) {
-	        if  (modFlowElse === -1) {
-	            if (modFlow.actions[ myIndex ].group === 'else') {
-	                if ( (modFlow.actions[ myIndex ].id === 'Input_date_time_log') && (modFlow.actions[ myIndex ].uri === 'homey:app:nu.dijker.papertrails' ) ) {
-	                    modFlowElse = myIndex;
-	                    this.log( 'Else already exists '+  myIndex);
-	                } else {
-	                    modFlow.actions.splice( myIndex, 0, newLogCardE );
-	                    modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixElse + modFlow.title ;
-	                    modFlowElse = myIndex;
-	                    modFlowChanged = true;
-	                    this.log( 'Else  added '+  myIndex);
-	                }
-	            }
-	        } else {
-	            if (modFlow.actions[ myIndex ].group === 'else') {
-	                if ( (modFlow.actions[ myIndex ].id === 'Input_date_time_log') && (modFlow.actions[ myIndex ].uri === 'homey:app:nu.dijker.papertrails' ) ) {
-	                    this.log( 'Else Duplicate removed '+  myIndex);
-	                    modFlow.actions[ modFlowElse ].args.log = modFlow.actions[ myIndex ].args.log;
-	                    modFlow.actions.splice( myIndex, 1);
-	                    modFlowChanged = true;
-	                }
-	            }
-	        }
-	    }
+			for(var myIndex = 0 ; myIndex < modFlow.actions.length ; myIndex++ ) {
+        if (modFlow.actions[ myIndex ].group === 'then') {
+          if ( (modFlow.actions[ myIndex ].id != 'Input_date_time_log')
+								&& (modFlow.actions[ myIndex ].uri != 'homey:app:nu.dijker.papertrails' )
+								&& !ThenPPT ) {
+            modFlow.actions.splice( myIndex, 0, newLogCardT );
+            modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixThen + modFlow.title;
+            ThenPPT = true;
+            modFlowChanged = true;
+            this.log( 'Then added '+  myIndex);
+          }
+				} else {
+					if (modFlow.actions[ myIndex ].group === 'else') {
+						if ( (modFlow.actions[ myIndex ].id != 'Input_date_time_log')
+						&& (modFlow.actions[ myIndex ].uri != 'homey:app:nu.dijker.papertrails' )
+						&& !ElsePPT) {
+							modFlow.actions.splice( myIndex, 0, newLogCardE );
+							modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixElse + modFlow.title ;
+							ElsePPT = true;
+							modFlowChanged = true;
+							this.log( 'Else  added '+  myIndex);
+						}
+					}
+				}
+			}
 	    return modFlowChanged;
 	};
 
