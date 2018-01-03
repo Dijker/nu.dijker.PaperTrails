@@ -41,20 +41,23 @@
           <div class="field row" style="padding: 5px 10px;">
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
               <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
-              <br><br><br>
-              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
-              <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
+              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
+              <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
+              <br><br><br>
+              By default Logs are truncated by 20% each time the maximum is reached.<br>
               <label for="maxLogLength" style="width:250px; padding: 5px 10px;" >  Maximum number of lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=1 max=10240 style="width:80px; padding: 5px 10px;" />
-              <br><br><br>
+              <br><br>
             </div>
           </fieldset>
           <fieldset style="top:0px; margin: 5px; width: 96%">
             <div class="field row" style="padding: 5px 10px;">
-              <legend>Configuration Settings (Restart App required)</legend>
+              <legend>Configuration (Restart App required)</legend>
+              Choose your prefered logging direction and date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.
+              Reversing the direction is handled on a restart of the App.<br><br>
               <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
               <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left"> Append logging</label>
               <br><br><br>
@@ -63,8 +66,8 @@
                 <option value="Sec">Normal Seconds</option>
                 <option value="mSec">Precise mSec.</option>
                 <option value="Zulu">Geek [Zulu Time]</option>
-              </select>
-              <button id="saveConfig" class="button" style= "float: right;" onclick="saveConfig()">Save Config settings</button>
+              </select><br>
+              <button id="saveConfig" class="button" style= "float: right;" onclick="saveConfig()">Save Config</button>
            </div>
          </fieldset>
        </top>
@@ -74,42 +77,40 @@
       &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
         <div class="field row" style="padding: 5px 10px;">
-           <legend>Warning</legend>
-           <h1>Warning:</h1>
-           This Feature is experimental, it modifies all your flows!<br>
+           <h1>Warning!</h1>
+           The Feature below is experimental, it modifies all your flows!<br>
            Please make a backup using <a rel="nofollow" target="_blank" href="https://apps.athom.com/app/nl.regoor.flowbackup">Flow Backups</a>
            before each use! <br>
            If this feature is not working please contact me by sending an App Log and the backup file to analyze.<br>
            <br>
-           Go to Settings - Apps: Hold the ALT key and click <i>Send Log to Developer</i>)
+           To Send a Log press the button
            <button id="sendLogtoDeveloper" class="button" style= "float: right;" onclick="sendLogtoDeveloper()">Send Log to Developer</button>
+           or Go to Settings - Apps: Hold the ALT key and click <i>Send Log to Developer</i>
        </div>
        </fieldset>
        <br>
       <fieldset style="top:0px; margin: 5px; width: 96%">
          <div class="field row" style="padding: 5px 10px;">
-          <legend>Experimental</legend>
-          <br>
-          This option adds a "Add to the Log" card to the ...Then Column of every flow, and every Else when in use. The text will be the Name of the Flow, with the prefix below.
-
+          <legend>Flow Management</legend>
+          This option adds a "Add to the Log" card to the ...Then Column of every flow, and every Else when in use. The text will be the Name of the Flow, with the prefix below.<br>
           <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-          <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label>
+          <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label><br>
+          <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+          <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
           <br><br>
-           <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-           <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
-           <br><br>
-           <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
-           <br><br>
-           This option Removes added "Add to the Log" cards from all Flows. (with same prefix)<br><br>
-           <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
-           <input id="removeAllOccurrences"  class="right" type="checkbox"  value="removeAllOccurrences"  style="width:40px"/>
-           <label for="removeAllOccurrences" style="width:180px; padding: 1px 10px;" class="right">Remove All Occurrences</label>
-
-           <br><br>
-           Migrate cards from Simple Log to PaperTrails<br><br>
-           <button id="migrate2PaperTrails" class="button" style= "float: right;" onclick="migrate2PaperTrails()">Migrate from Simple Log</button>
-         </div>
-         </fieldset>
+          <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
+          <br><br>
+          <legend>Remove Papertrails Logging</legend>
+          This option Removes added "Add to the Log" cards from all Flows. (with same prefix)<br><br>
+          <button id="removePaperTrailsfAllFlows" class="button" style= "float: right;" onclick="removePaperTrailsfAllFlows()">Remove PaperTrails from AllFlows</button>
+          <input id="removeAllOccurrences"  class="right" type="checkbox"  value="removeAllOccurrences"  style="width:40px"/>
+          <label for="removeAllOccurrences" style="width:180px; padding: 1px 10px;" class="right">Remove All Occurrences</label>
+          <br><br>
+          <legend>Simple Log Migration</legend>
+          Migrate cards from Simple Log to PaperTrails<br><br>
+          <button id="migrate2PaperTrails" class="button" style= "float: right;" onclick="migrate2PaperTrails()">Migrate from Simple Log</button>
+        </div>
+        </fieldset>
     </div>
   </body>
 </html>

@@ -2,27 +2,22 @@
 var Homey;
 var _myLog = '';
 var intervalS = 3;
-// var appendLog;
 var interval;
-// var maxLogLength = 10123;
 var timeStampFormat = 'Sec';
-var scrollToEnd;
 var appSettings = {
         'refresh': "5",
-        'timeStampFormat': 'Sec',
-        'maxLogLength': "10240",
-        'appendLog': true,
+        'maxLogLength': "10239",
         'autoPrefixThen':'!',
         'autoPrefixElse':'!',
         'scrollToEnd':true };
-var appConfig = {};
+var appConfig = {
+  'timeStampFormat': 'Sec',
+  'appendLog': true };
 var migrated;
+var scrollToEnd;
 
 function onHomeyReady( homeyReady ){
   Homey = homeyReady;
-  // Homey.ready();
-  console.log('appSettings.' );
-  console.log( appSettings );
   Homey.get('settings', function(err, appSettings1 ) {
       if (err) {
         console.error(err)
@@ -31,8 +26,6 @@ function onHomeyReady( homeyReady ){
         console.log( appSettings1 );
         if (appSettings1 != (null || undefined)) {
           appSettings = appSettings1;
-          console.log('appSettings-in2' );
-          console.log( appSettings );
           document.getElementById('intervalS').value = appSettings.refresh;
           document.getElementById('maxLogLength').value = appSettings.maxLogLength;
           document.getElementById('scrollToEnd').checked = appSettings.scrollToEnd;
@@ -41,19 +34,12 @@ function onHomeyReady( homeyReady ){
           document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
           interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
           migrated = appSettings.migrated;
-          // document.getElementById('timeStampFormat').value = appSettings.timeStampFormat;
-          // document.getElementById('appendLog').checked = appSettings.appendLog;
-          // Homey.ready();
         }
       }});
-    //  console.log('appSettings0' );
-    //  console.log( appSettings );
     Homey.get('config', function(err, appConfig1 ) {
     if (err) {
       console.error(err)
     } else {
-      console.log('appConfig-in' );
-      console.log( appConfig1 );
       if (appConfig1 != (null || undefined)) {
         appConfig = appConfig1;
         console.log('appConfig-in2' );
@@ -88,37 +74,36 @@ function updateResfresh() {
   clearInterval(interval);
   var appSettings = {};
   appSettings.refresh = document.getElementById('intervalS').value;
-  // saveSettings();
   interval = setInterval( function(){ show_log() }, appSettings.refresh * 1000);
 };
 
 function saveSettings(){
-   console.log('Voor 1 update');
-   console.log(appSettings);
-   //var appSettings = {};
     appSettings.refresh = document.getElementById('intervalS').value;
-    // appSettings.appendLog = document.getElementById('appendLog').checked;
     appSettings.maxLogLength = document.getElementById('maxLogLength').value;
-    // appSettings.timeStampFormat = document.getElementById('timeStampFormat').value;
     appSettings.scrollToEnd = document.getElementById('scrollToEnd').checked;
     scrollToEnd = document.getElementById('scrollToEnd').checked;
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
-    console.log('Na update');
-    console.log(appSettings);
     Homey.set('settings', appSettings );
 };
 
 function saveConfig(){
-   console.log('Voor 1 update');
-   console.log(appConfig);
-   //var appSettings = {};
-    appConfig.appendLog = document.getElementById('appendLog').checked;
+    var lastAppendLogSetting = appConfig.appendLog;
+    appConfig.newAppendLog = document.getElementById('appendLog').checked;
     appConfig.timeStampFormat = document.getElementById('timeStampFormat').value;
-    console.log('Na update');
-    console.log(appConfig);
-    Homey.set('config', appConfig );
+    var confirmationMessage ;
+    var yes = false;
+    if (lastAppendLogSetting != appConfig.newAppendLog) {
+      confirmationMessage = "Click OK to Reverse PaperTrails Logging and Restart the App.";
+    } else {
+      confirmationMessage = "Click OK to Change Configuration and Restart the App.";
+    };
+    Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
+      if( !yes ) return yes;
+      Homey.set('config', appConfig );
+      setTimeout( function() { post('/api/manager/apps/app/nu.dijker.papertrails/restart', {enabled:true}) },3000 )
+    });
 };
 
 
