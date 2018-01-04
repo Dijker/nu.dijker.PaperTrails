@@ -5,27 +5,23 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.2.3",
+	"version": "0.3.5",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
   "developers": [
-      { "name": "Geurt Dijker",
-        "email": "Homey.Apps@dijker.nu",
-				"website": "http://www.dijker.nu"},
-				{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
-	"contributing":{
-     "donate":{
-        "paypal":{
-           "email":"Geurt@Dijker.nu",
-           "currency":"EUR"
+      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"},
+			{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
+	"contributing": {
+    "donate": {
+        "paypal": {
+            "username": "Dijker"
         }
-     }
+    }
   },
-  "tags": { "en": [ "Log", "Tools"] },
-	"permissions": [
-    "homey:wireless:zwave",
-		"homey:manager:api" ],
+  "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"],
+						"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"] },
+	"permissions": [ "homey:manager:api" ],
 	"flow": {
 		"triggers": [
 					{
@@ -44,7 +40,7 @@
 									"en": "length",
 									"nl": "lengte"
 								},
-								"example": "1024"
+								"example": 1024
 							},
 							{
 								"name": "Log",
@@ -82,7 +78,7 @@
 									"en": "length",
 									"nl": "lengte"
 								},
-								"example": "1024"
+								"example": 1024
 							},
 							{
 								"name": "Log",
@@ -120,7 +116,7 @@
 									"en": "length",
 									"nl": "lengte"
 								},
-								"example": "1024"
+								"example": 1024
 							},
 							{
 								"name": "Log",
@@ -156,7 +152,7 @@
                   "en": "length",
 									"nl": "lengte"
               	},
-                "example": "1024"
+                "example": 1024
               },
 							{
 								"name": "Log",
@@ -187,7 +183,7 @@
                   	"en": "length",
 										"nl": "lengte"
                 	},
-                	"example": "1024"
+                	"example": 1024
                 },
 								{
 									"name": "Log",
@@ -295,7 +291,7 @@
 					{
 						"name" : "removePct",
 						"type" :"number",
-						"example" : "20",
+						"example" : 20,
 						"min" : 1,
 			 			"max" : 99,
 			 			"step" : 1
