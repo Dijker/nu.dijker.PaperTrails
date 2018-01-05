@@ -11,6 +11,8 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
+## Version 0.5.0 alpha
+* Added option to send to syslog.
 
 ## Version 0.3.4
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.

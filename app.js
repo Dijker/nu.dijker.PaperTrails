@@ -93,7 +93,7 @@ class paperTrails extends Homey.App {
 		var syslogOptions = {
 				syslogHostname: hostname,
 				transport: syslog.Transport.Udp,
-				facility: syslog.Facility.user,
+				facility: syslog.Facility.User,
 				severity : syslog.Severity.Error,
 				port: appSettings.syslogPort
 			};
