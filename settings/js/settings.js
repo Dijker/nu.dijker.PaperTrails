@@ -34,6 +34,12 @@ function onHomeyReady( homeyReady ){
           document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
           interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
           migrated = appSettings.migrated;
+          //syslogServer
+          document.getElementById('syslogServer').value = appSettings.syslogServer;
+          //syslogPort
+          document.getElementById('syslogPort').value = appSettings.syslogPort;
+          //enableSyslogAll
+          document.getElementById('enableSyslogAll').checked = appSettings.enableSyslogAll;
         }
       }});
     Homey.get('config', function(err, appConfig1 ) {
@@ -85,6 +91,12 @@ function saveSettings(){
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
+    //syslogServer
+    appSettings.syslogServer = document.getElementById('syslogServer').value;
+    //syslogPort
+    appSettings.syslogPort = document.getElementById('syslogPort').value;
+    //enableSyslogAll
+    appSettings.enableSyslogAll = document.getElementById('enableSyslogAll').checked;
     Homey.set('settings', appSettings );
 };
 
@@ -190,7 +202,7 @@ function removePaperTrailsfAllFlows(){
   if (removeAllOccurrences) {
     confirmationMessage += " (Independent from Prefixes)"
   } else {
-    confirmationMessage += " (with same Prefixes)"    
+    confirmationMessage += " (with same Prefixes)"
   }
   Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
     if( !yes ) return;

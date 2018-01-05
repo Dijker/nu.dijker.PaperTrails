@@ -1,6 +1,7 @@
 "use strict";
 const { HomeyAPI } = require('athom-api');
 const Homey = require('homey');
+const syslog = require("syslog-client");
 
 // Define new Log Card to Add to All Flows in Then and Else
 var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
@@ -27,6 +28,7 @@ const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_ti
 
 var appSettings = {};
 var appConfig = {};
+var syslogClient;
 var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
@@ -67,6 +69,9 @@ class paperTrails extends Homey.App {
 		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" };
 		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' };
 		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' };
+		if (appSettings.syslogPort  == (null || undefined)) {appSettings.syslogPort  = '514' };
+		if (appSettings.syslogServer  == (null || undefined)) {appSettings.syslogServer  = '127.0.0.1' };
+		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
 		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' };
 		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true };
 
@@ -84,10 +89,24 @@ class paperTrails extends Homey.App {
 			appConfig.appendLog = appConfig.newAppendLog;
 			Homey.ManagerSettings.set('config', appConfig)
 		};
+
+		var syslogOptions = {
+				syslogHostname: hostname,
+				transport: syslog.Transport.Udp,
+				facility: syslog.Facility.user,
+				severity : syslog.Severity.Error,
+				port: appSettings.syslogPort
+			};
+
+		//var client = syslog.createClient("logs.papertrailapp.com", options);
+		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
+
 		this.log('End of onInit \nCurrent appSettings :\n', appSettings);
 		this.log('Current appConfig :\n', appConfig);
 	}; // End of onInit()
 
+	// mySysLog
+	mySysLog(logMsg) {syslogClient.log( logMsg );}
 	// Add somthing to the Log
 	updateLog( logMsg ) {
 		var logNew = '';
@@ -501,18 +520,28 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 // for Original v0.0.5 logging
 actionInputLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( args.log );
+		// Testing ***
+		Homey.app.mySysLog( args.log );
     callback( null, true );
 });
 
 // condition_date_time_log by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 				Homey.app.updateLog(Homey.app.getDateTime(new Date()) + " " + args.log);
+				if (appSettings.enableSyslogAll) {
+					// console.log('mySysLog ' + args.log );
+					Homey.app.mySysLog( args.log );
+				};
 		    callback( null, true );
 		});
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " " + args.log);
+		if (appSettings.enableSyslogAll) {
+			// console.log('mySysLog ' + args.log );
+			Homey.app.mySysLog( args.log );
+		};
     callback( null, true );
 });
 

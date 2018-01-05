@@ -24,6 +24,7 @@
       <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)">PaperTrails</a></li>
       <li id="panel-button-2" class="h5 panel-button"><a href="javascript:showPanel(2)">Config</a></li>
       <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)">Maintenance</a></li>
+      <li id="panel-button-4" class="h5 panel-button"><a href="javascript:showPanel(4)">SysLog</a></li>
     </ul>
     <!-- Logging panel -->
     <div id="panel-1" class="panel">
@@ -110,6 +111,30 @@
           <legend>Simple Log Migration</legend>
           Migrate cards from Simple Log to PaperTrails<br><br>
           <button id="migrate2PaperTrails" class="button" style= "float: right;" onclick="migrate2PaperTrails()">Migrate from Simple Log</button>
+        </div>
+        </fieldset>
+    </div>
+    <!-- Maintenance panel -->
+    <div id="panel-4" class="panel">
+      &nbsp;&nbsp;
+        <fieldset style="top:0px; margin: 5px; width: 96%">
+        <div class="field row" style="padding: 5px 10px;">
+           <h1>Experimental!</h1>
+           The Feature below is experimental,
+       </div>
+       </fieldset>
+       <br>
+      <fieldset style="top:0px; margin: 5px; width: 96%">
+         <div class="field row" style="padding: 5px 10px;">
+          <legend>SysLog Configuration</legend>
+          Enable log forwarding to this SysLog server.<br>
+          <input id="syslogServer" class="right" value="127.0.0.1" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+          <label for="syslogServer" style="width:350px; padding: 5px 10px;" >SysLog Server:</label><br>
+          <input id="syslogPort" class="right" value="514" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
+          <label for="syslogPort" style="width:350px; padding: 5px 10px;" >SysLog Port:</label>
+          <input id="enableSyslogAll" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettings()"style="width:40px"/>
+          <label for="enableSyslogAll" style="width:180px; padding: 1px 10px;" class="right">Enable Syslog for All Log Additions</label>
+          <br><br>
         </div>
         </fieldset>
     </div>
