@@ -31,9 +31,6 @@ var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
 	async onInit() {
-		process.on('unhandledRejection', error => {
-  		console.error(error.stack);
-  	});
 		this.log('Start init paperTrails');
 		this.log('HostName: ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
