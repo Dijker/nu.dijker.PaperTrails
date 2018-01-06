@@ -14,12 +14,13 @@ _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 ## Version 0.5.0 alpha
 * Added option to send to syslog.
 
-## Version 0.3.4
+## Version 0.3.7
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.
 * Migrating Flows from Simple Log
 * Added api /log to Log something from fe HomeyScript
 * Converted Settings to two Objects & some Cleanup
 * Fixed "Report an issue" Link to Own GitHub
+* Magnetic Snap on Scroll to end
 
 ## Version 0.2.3
 * Confirm msg on delete from Settings

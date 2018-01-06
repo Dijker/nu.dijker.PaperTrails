@@ -44,7 +44,12 @@ function onHomeyReady( homeyReady ){
             document.getElementById('TCP').checked = true;
           } else {document.getElementById('UDP').checked = true};
 
+          document.getElementById('enablerfc5424').checked = appSettings.enablerfc5424;
+
           document.getElementById('enableSyslogAll').checked = appSettings.enableSyslogAll;
+          document.getElementById('syslogappName').value = appSettings.syslogappName;
+          document.getElementById('syslogseverity').value = appSettings.syslogseverity;
+          document.getElementById('syslogfacility').value = appSettings.syslogfacility;
         }
       }});
     Homey.get('config', function(err, appConfig1 ) {
@@ -105,8 +110,14 @@ function saveSettings(){
     if (document.getElementById('TCP').checked) {
       appSettings.transport = 'TCP';
     } else {appSettings.transport = 'UDP'};
-    //enableSyslogAll
+
+    appSettings.enablerfc5424 = document.getElementById('enablerfc5424').checked;
     appSettings.enableSyslogAll = document.getElementById('enableSyslogAll').checked;
+
+    appSettings.syslogappName = document.getElementById('syslogappName').value;
+    appSettings.syslogseverity = document.getElementById('syslogseverity').value;
+    appSettings.syslogfacility = document.getElementById('syslogfacility').value;
+
     Homey.set('settings', appSettings );
 };
 
