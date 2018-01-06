@@ -75,7 +75,7 @@
             <div class="field row" style="padding: 5px 10px;">
              <legend>SysLog Configuration</legend>
              Enable log forwarding to this <a rel="nofollow" target="_blank" href="https://en.wikipedia.org/wiki/Syslog">syslog server</a>:
-             <input id="enableSyslog" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettings()"style="width:40px"/><br><br>
+             <input id="enableSyslog" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettingsenableSyslog()"style="width:40px"/><br><br>
              <input id="syslogServer" class="right" value="127.0.0.1" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
              <label for="syslogServer" style="width:130px; padding: 5px 10px;" >SysLog Server:</label><br>
              <label for="syslogPort" style="width:130px; padding: 5px 10px;" >SysLog Port:</label>
@@ -87,21 +87,34 @@
              <legend>Syslog for All Log Additions</legend>
              <label for="enableSyslogAll" style="width:240px; padding: 5px 10px;">Enable Syslog for All Log Additions</label>
              <input id="enableSyslogAll" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettings()" style="width:40px"/><br>
-             <label for="syslogappName" style="width:162px; padding: 5px 10px;" >Syslog application name:</label>
+             <label for="syslogappName" style="width:182px; padding: 5px 10px;" >Syslog application name:</label>
              <input id="syslogappName" class="right" value="PaperTrails" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" /><br>
 
              <label for="syslogseverity" style="width:140px; padding: 5px 10px;" > Default severity: </label>
              <select id="syslogseverity" class="right" onChange="saveSettings()">
-               <option value="5">Notice</option>
-               <option value="6">Informational</option>
-               <option value="7">Debug</option>
+               <option value=0>Emergency</option>
+               <option value=1>Alert</option>
+               <option value=2>Critical</option>
+               <option value=3>Error</option>
+               <option value=4>Warning</option>
+               <option value=5>Notice</option>
+               <option value=6>Informational</option>
+               <option value=7>Debug</option>
              </select><br>
 
              <label for="syslogfacility" style="width:140px; padding: 5px 10px;" > Default facility: </label>
              <select id="syslogfacility" class="right" onChange="saveSettings()">
                <option value="1">User</option>
+               <option value="13">Audit</option>
+               <option value="14">Alert</option>
                <option value="16">Local0</option>
                <option value="17">Local1</option>
+               <option value="18">Local2</option>
+               <option value="19">Local3</option>
+               <option value="20">Local4</option>
+               <option value="21">Local5</option>
+               <option value="22">Local6</option>
+               <option value="23">Local7</option>
              </select><br>
 
              <br><br>

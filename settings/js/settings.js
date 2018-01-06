@@ -34,7 +34,7 @@ function onHomeyReady( homeyReady ){
           document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
           interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
           migrated = appSettings.migrated;
-          document.getElementById('enableSyslog').checked = appSettings.enableSyslog;
+          // document.getElementById('enableSyslog').checked = appSettingsenableSyslog;
           //syslogServer
           document.getElementById('syslogServer').value = appSettings.syslogServer;
           //syslogPort
@@ -52,6 +52,9 @@ function onHomeyReady( homeyReady ){
           document.getElementById('syslogfacility').value = appSettings.syslogfacility;
         }
       }});
+    Homey.get('appSettingsenableSyslog', function(err, appSettingsenableSyslog) {
+      document.getElementById('enableSyslog').checked = appSettingsenableSyslog;
+    });
     Homey.get('config', function(err, appConfig1 ) {
     if (err) {
       console.error(err)
@@ -94,6 +97,12 @@ function updateResfresh() {
   interval = setInterval( function(){ show_log() }, appSettings.refresh * 1000);
 };
 
+// appSettingsenableSyslog
+function saveSettingsenableSyslog(){
+  appSettingsenableSyslog = document.getElementById('enableSyslog').checked;
+  Homey.set('appSettingsenableSyslog', appSettingsenableSyslog );
+};
+
 function saveSettings(){
     appSettings.refresh = document.getElementById('intervalS').value;
     appSettings.maxLogLength = document.getElementById('maxLogLength').value;
@@ -102,7 +111,6 @@ function saveSettings(){
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
-    appSettings.enableSyslog = document.getElementById('enableSyslog').checked;
     //syslogServer
     appSettings.syslogServer = document.getElementById('syslogServer').value;
     //syslogPort transport
@@ -115,8 +123,8 @@ function saveSettings(){
     appSettings.enableSyslogAll = document.getElementById('enableSyslogAll').checked;
 
     appSettings.syslogappName = document.getElementById('syslogappName').value;
-    appSettings.syslogseverity = document.getElementById('syslogseverity').value;
-    appSettings.syslogfacility = document.getElementById('syslogfacility').value;
+    appSettings.syslogseverity = parseInt( document.getElementById('syslogseverity').value);
+    appSettings.syslogfacility = parseInt( document.getElementById('syslogfacility').value);
 
     Homey.set('settings', appSettings );
 };

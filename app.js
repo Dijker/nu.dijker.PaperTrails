@@ -28,6 +28,7 @@ const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_ti
 
 var appSettings = {};
 var appConfig = {};
+var appSettingsenableSyslog ;
 var syslogClient;
 var hostname = require('os').hostname();
 
@@ -69,11 +70,21 @@ class paperTrails extends Homey.App {
 		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" };
 		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' };
 		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' };
-		if (appSettings.syslogPort  == (null || undefined)) {appSettings.syslogPort  = '514' };
 		if (appSettings.syslogServer  == (null || undefined)) {appSettings.syslogServer  = '127.0.0.1' };
-		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
+		if (appSettings.syslogPort  == (null || undefined)) {appSettings.syslogPort  = '514' };
+		if (appSettings.transport  == (null || undefined)) {appSettings.transport  = 'UDP' };
+		if (appSettings.enablerfc5424  == (null || undefined)) {appSettings.enablerfc5424  = false };
+
+		if (appSettingsenableSyslog  == (null || undefined)) {appSettingsenableSyslog  = false };
+
+		if (appSettings.syslogappName  == (null || undefined)) {appSettings.syslogappName  = 'PaperTrials' };
+		if (appSettings.syslogseverity  == (null || undefined)) {appSettings.syslogseverity  = '6' };
+		if (appSettings.syslogfacility  == (null || undefined)) {appSettings.syslogfacility  = '6' };
+
 		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' };
 		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true };
+
+		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
 
 		// save if updated / Just save!
 		Homey.ManagerSettings.set('settings', appSettings);
@@ -89,21 +100,31 @@ class paperTrails extends Homey.App {
 			appConfig.appendLog = appConfig.newAppendLog;
 			Homey.ManagerSettings.set('config', appConfig)
 		};
-
-		var syslogOptions = {
-				syslogHostname: hostname,
-				transport: syslog.Transport.Udp,
-				facility: syslog.Facility.User,
-				severity : syslog.Severity.Error,
-				port: appSettings.syslogPort
-			};
-
-		//var client = syslog.createClient("logs.papertrailapp.com", options);
-		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
+		if (appSettingsenableSyslog) {
+			this.startsysLog();
+		};
 
 		this.log('End of onInit \nCurrent appSettings :\n', appSettings);
 		this.log('Current appConfig :\n', appConfig);
 	}; // End of onInit()
+
+	// startsysLog
+		startsysLog() {
+		// var Transport = (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp;
+		var syslogOptions = {
+				syslogHostname: hostname,
+				transport: (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp,
+				facility: appSettings.syslogfacility,
+				severity : appSettings.syslogseverity,
+				port: appSettings.syslogPort,
+				rfc3164 : (!appSettings.enablerfc5424),
+				appName : appSettings.syslogappName
+			};
+			this.log('start SysLog Current appSettings :\n', appSettings);
+			this.log('syslogOptions:\n', syslogOptions);
+
+		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
+	};
 
 	// mySysLog
 	mySysLog(logMsg) {syslogClient.log( logMsg );}
@@ -521,14 +542,16 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 actionInputLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( args.log );
 		// Testing ***
-		Homey.app.mySysLog( args.log );
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+			Homey.app.mySysLog( args.log );
+		}
     callback( null, true );
 });
 
 // condition_date_time_log by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 				Homey.app.updateLog(Homey.app.getDateTime(new Date()) + " " + args.log);
-				if (appSettings.enableSyslogAll) {
+				if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 					// console.log('mySysLog ' + args.log );
 					Homey.app.mySysLog( args.log );
 				};
@@ -538,7 +561,7 @@ conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " " + args.log);
-		if (appSettings.enableSyslogAll) {
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			// console.log('mySysLog ' + args.log );
 			Homey.app.mySysLog( args.log );
 		};
@@ -577,8 +600,23 @@ actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 //Get update settings
 Homey.ManagerSettings.on('set', (key) => {
 	if (key === 'settings' ) {
-		appSettings = Homey.ManagerSettings.get('settings');}
+		appSettings = Homey.ManagerSettings.get('settings');
+	};
 	if (key === 'config'  ) {
 		appConfig = Homey.ManagerSettings.get('config');
+	};
+	// appSettingsenableSyslog
+	if (key === 'appSettingsenableSyslog'  ) {
+		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
+		// *** Restart
+		if (appSettingsenableSyslog) {
+			Homey.app.startsysLog();
+			console.log('End of onInit \nCurrent appSettings :\n', appSettings);
+			console.log('Current appConfig :\n', appConfig);
+			console.log('Started' , appSettingsenableSyslog);
+		} else {
+			console.log('stopped' , appSettingsenableSyslog);
+			syslogClient.close();
+		};
 	}
 });
