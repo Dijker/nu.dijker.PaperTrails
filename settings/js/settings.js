@@ -51,6 +51,7 @@ function onHomeyReady( homeyReady ){
     }});
 
   // logtextarea.scrollTop = logtextarea.scrollHeight;
+  show_log();
   showPanel(1);
 };
 
@@ -142,12 +143,13 @@ function show_log(){
           document.getElementById('logtextarea').value = 'Could not get log' + err
           return console.error('Could not get log', err);
         };
+        var snap = ((logtextarea.scrollHeight-logtextarea.scrollTop-logtextarea.clientHeight) < (0.3  *logtextarea.clientHeight));
         if ( _myLog !== myLog ){
             _myLog = myLog
            document.getElementById('logtextarea').value = myLog;
         };
         var scrollToEnd = document.getElementById('scrollToEnd').checked;
-        if ( scrollToEnd ) {
+        if ( scrollToEnd && snap ) {
             logtextarea.scrollTop = logtextarea.scrollHeight;
         };
     });
@@ -158,6 +160,9 @@ function showPanel (panel) {
   $('.panel-button').removeClass('active')
   $('#panel-button-' + panel).addClass('active')
   $('#panel-' + panel).show()
+  if (panel===1 && scrollToEnd) {
+    logtextarea.scrollTop = logtextarea.scrollHeight
+  };
   show_log()
 };
 
@@ -190,7 +195,7 @@ function removePaperTrailsfAllFlows(){
   if (removeAllOccurrences) {
     confirmationMessage += " (Independent from Prefixes)"
   } else {
-    confirmationMessage += " (with same Prefixes)"    
+    confirmationMessage += " (with same Prefixes)"
   }
   Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
     if( !yes ) return;
