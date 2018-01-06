@@ -129,7 +129,7 @@ class paperTrails extends Homey.App {
 				return Homey.error(err)} ;
 			});
 		if ( (+5 + +appSettings.maxLogLength ) < logLength ) {
-			var deleteItems = parseInt( logLength *0.2 );
+			var deleteItems = Math.max( parseInt( logLength *0.2 ) , 20 );
 			var logArray = logNew.split(/\r\n|\r|\n/);
 			var infoMsg = "-=-=- Max. LogLength " + appSettings.maxLogLength  + " reached! Deleting " + deleteItems + " lines at :" + Homey.app.getDateTime(new Date()) + " -=-=-";
 			if ( appConfig.appendLog === true ) {

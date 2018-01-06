@@ -34,11 +34,16 @@ function onHomeyReady( homeyReady ){
           document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
           interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
           migrated = appSettings.migrated;
+          document.getElementById('enableSyslog').checked = appSettings.enableSyslog;
           //syslogServer
           document.getElementById('syslogServer').value = appSettings.syslogServer;
           //syslogPort
           document.getElementById('syslogPort').value = appSettings.syslogPort;
           //enableSyslogAll
+          if (appSettings.transport === 'TCP') {
+            document.getElementById('TCP').checked = true;
+          } else {document.getElementById('UDP').checked = true};
+
           document.getElementById('enableSyslogAll').checked = appSettings.enableSyslogAll;
         }
       }});
@@ -57,6 +62,7 @@ function onHomeyReady( homeyReady ){
     }});
 
   // logtextarea.scrollTop = logtextarea.scrollHeight;
+  show_log();
   showPanel(1);
 };
 
@@ -91,10 +97,14 @@ function saveSettings(){
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
+    appSettings.enableSyslog = document.getElementById('enableSyslog').checked;
     //syslogServer
     appSettings.syslogServer = document.getElementById('syslogServer').value;
-    //syslogPort
+    //syslogPort transport
     appSettings.syslogPort = document.getElementById('syslogPort').value;
+    if (document.getElementById('TCP').checked) {
+      appSettings.transport = 'TCP';
+    } else {appSettings.transport = 'UDP'};
     //enableSyslogAll
     appSettings.enableSyslogAll = document.getElementById('enableSyslogAll').checked;
     Homey.set('settings', appSettings );
@@ -154,12 +164,13 @@ function show_log(){
           document.getElementById('logtextarea').value = 'Could not get log' + err
           return console.error('Could not get log', err);
         };
+        var snap = ((logtextarea.scrollHeight-logtextarea.scrollTop-logtextarea.clientHeight) < (0.3  *logtextarea.clientHeight));
         if ( _myLog !== myLog ){
             _myLog = myLog
            document.getElementById('logtextarea').value = myLog;
         };
         var scrollToEnd = document.getElementById('scrollToEnd').checked;
-        if ( scrollToEnd ) {
+        if ( scrollToEnd && snap ) {
             logtextarea.scrollTop = logtextarea.scrollHeight;
         };
     });
@@ -170,6 +181,9 @@ function showPanel (panel) {
   $('.panel-button').removeClass('active')
   $('#panel-button-' + panel).addClass('active')
   $('#panel-' + panel).show()
+  if (panel===1 && scrollToEnd) {
+    logtextarea.scrollTop = logtextarea.scrollHeight
+  };
   show_log()
 };
 
