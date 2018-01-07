@@ -195,14 +195,14 @@ function show_log(){
     });
 };
 
-function showPanel (panel) {
+function showPanel(panel) {
+  if (panel===1 && scrollToEnd) {
+    logtextarea.scrollTop = logtextarea.scrollHeight;
+  };
   $('.panel').hide()
   $('.panel-button').removeClass('active')
   $('#panel-button-' + panel).addClass('active')
   $('#panel-' + panel).show()
-  if (panel===1 && scrollToEnd) {
-    logtextarea.scrollTop = logtextarea.scrollHeight
-  };
   show_log()
 };
 

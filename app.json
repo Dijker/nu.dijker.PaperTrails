@@ -302,6 +302,123 @@
 					"nl" : "Verwijder het oudste % van de Log. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom."}
 			},
 			{
+				"id": "Send_syslog",
+				"title": {
+					"en": "Send syslog msg.",
+					"nl": "Stuur syslog regel."
+				},
+				"args": [{
+                    "name": "syslogseverity",
+                    "type": "dropdown",
+                    "values": [
+                        {
+                            "id": "4",
+                            "label": {
+                                "en": "Warning"
+                            }
+                        },
+                        {
+                            "id": "5",
+                            "label": {
+                                "en": "Notice"
+                            }
+                        },
+                        {
+                            "id": "6",
+                            "label": {
+                                "en": "Informational"
+                            }
+												},
+                        {
+                            "id": "7",
+                            "label": {
+                                "en": "Debug"
+                            }
+                        }]
+											},
+											{
+		                    "name": "syslogfacility",
+		                    "type": "dropdown",
+		                    "values": [
+		                        {
+		                            "id": "1",
+		                            "label": {
+		                                "en": "User"
+		                            }
+		                        },
+		                        {
+		                            "id": "13",
+		                            "label": {
+		                                "en": "Audit"
+		                            }
+		                        },
+		                        {
+		                            "id": "14",
+		                            "label": {
+		                                "en": "Alert"
+		                            }
+														},
+		                        {
+		                            "id": "16",
+		                            "label": {
+		                                "en": "Local0"
+		                            }
+		                        },
+		                        {
+		                            "id": "17",
+		                            "label": {
+		                                "en": "Local1"
+		                            }
+		                        },
+		                        {
+		                            "id": "18",
+		                            "label": {
+		                                "en": "Local2"
+		                            }
+		                        },
+		                        {
+		                            "id": "19",
+		                            "label": {
+		                                "en": "Local3"
+		                            }
+		                        },
+		                        {
+		                            "id": "20",
+		                            "label": {
+		                                "en": "Local4"
+		                            }
+		                        },
+		                        {
+		                            "id": "21",
+		                            "label": {
+		                                "en": "Local5"
+		                            }
+		                        },
+		                        {
+		                            "id": "22",
+		                            "label": {
+		                                "en": "Local6"
+		                            }
+		                        },
+		                        {
+		                            "id": "23",
+		                            "label": {
+		                                "en": "Local7"
+		                            }
+		                        }]
+													},
+											{
+												"name": "log",
+												"type": "text",
+												"placeholder" : "Text..."
+											}
+										],
+				"hint" : {
+					"en" : "Send the MSG below to the syslog server.  Yourtext ...",
+					"nl" : "Stuur de regel naar de syslog.  Jouw tekst ..."
+				}
+			},
+			{
 				"id": "Input_log",
 				"title": {
 					"en": "[deprecated] Add textline to the log. (without timestamp)",

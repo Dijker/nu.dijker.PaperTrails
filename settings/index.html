@@ -21,9 +21,8 @@
   </head>
   <body>
     <ul class="nav nav-tabs">
-      <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)">PaperTrails</a></li>
+      <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)">PaperTrails &#9660; </a></li>
       <li id="panel-button-2" class="h5 panel-button"><a href="javascript:showPanel(2)">Config</a></li>
-      <!-- <li id="panel-button-4" class="h5 panel-button"><a href="javascript:showPanel(4)">SysLog</a></li> -->
       <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)">Maintenance</a></li>
     </ul>
     <!-- Logging panel -->
@@ -41,15 +40,15 @@
         <fieldset style="top:0px; margin: 5px; width: 96%">
           <div class="field row" style="padding: 5px 10px;">
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
-              <label for="scrollToEnd" style="width:275px" class="left"> Scroll To End </label>
+              <label for="scrollToEnd" style="width:120px" class="left"> Scroll To End </label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
               <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
-              <label for="intervalS" style="width:275px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
+              <label for="intervalS" style="width:180px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
               <br><br><br>
               By default Logs are truncated by 20% each time the maximum is reached.<br>
-              <label for="maxLogLength" style="width:250px; padding: 5px 10px;" > Maximum number of lines for Log</label>
+              <label for="maxLogLength" style="width:180px; padding: 5px 10px;" > Maximum lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=50 max=10240 style="width:80px; padding: 5px 10px;" />
               <br><br>
             </div>
@@ -77,32 +76,32 @@
              Enable log forwarding to this <a rel="nofollow" target="_blank" href="https://en.wikipedia.org/wiki/Syslog">syslog server</a>:
              <input id="enableSyslog" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettingsenableSyslog()"style="width:40px"/><br><br>
              <input id="syslogServer" class="right" value="127.0.0.1" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-             <label for="syslogServer" style="width:130px; padding: 5px 10px;" >SysLog Server:</label><br>
-             <label for="syslogPort" style="width:130px; padding: 5px 10px;" >SysLog Port:</label>
+             <label for="syslogServer" style="width:120px; padding: 5px 10px;" >SysLog Server:</label><br>
+             <label for="syslogPort" style="width:110px; padding: 5px 10px;" >SysLog Port:</label>
              <input type="radio" name="transport" id="UDP" value="UDP" onChange="saveSettings()" style="width:20px"> UDP <input type="radio" name="transport" id="TCP" value="TCP"  onChange="saveSettings()" style="width:20px"> TCP
-             <input id="syslogPort" class="right" value="514" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;"/><br>
+             <input id="syslogPort" class="right" value="514" onChange="saveSettings()" type="text" style="width:60px; padding: 5px 10px;"/><br>
              <label for="enablerfc5424" style="width:240px; padding: 5px 10px;">Enable rfc5424 (default rfc3164)</label>
              <input id="enablerfc5424" class="right" type="checkbox" value="enablerfc5424" onChange="saveSettings()" style="width:40px"/><br>
 
              <legend>Syslog for All Log Additions</legend>
              <label for="enableSyslogAll" style="width:240px; padding: 5px 10px;">Enable Syslog for All Log Additions</label>
              <input id="enableSyslogAll" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettings()" style="width:40px"/><br>
-             <label for="syslogappName" style="width:182px; padding: 5px 10px;" >Syslog application name:</label>
+             <label for="syslogappName" style="width:135px; padding: 5px 10px;" >Application name:</label>
              <input id="syslogappName" class="right" value="PaperTrails" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" /><br>
 
-             <label for="syslogseverity" style="width:140px; padding: 5px 10px;" > Default severity: </label>
+             <label for="syslogseverity" style="width:110px; padding: 5px 10px;" > Severity: </label>
              <select id="syslogseverity" class="right" onChange="saveSettings()">
-               <option value=0>Emergency</option>
+                 <!-- <option value=0>Emergency</option>
                <option value=1>Alert</option>
                <option value=2>Critical</option>
-               <option value=3>Error</option>
+               <option value=3>Error</option> -->
                <option value=4>Warning</option>
                <option value=5>Notice</option>
                <option value=6>Informational</option>
                <option value=7>Debug</option>
              </select><br>
 
-             <label for="syslogfacility" style="width:140px; padding: 5px 10px;" > Default facility: </label>
+             <label for="syslogfacility" style="width:110px; padding: 5px 10px;" > Facility: </label>
              <select id="syslogfacility" class="right" onChange="saveSettings()">
                <option value="1">User</option>
                <option value="13">Audit</option>

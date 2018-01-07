@@ -7,6 +7,8 @@ const syslog = require("syslog-client");
 var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 const actionInputLog = new Homey.FlowCardAction('Input_log');
+const actionSend_syslog = new Homey.FlowCardAction('Send_syslog');
+// Send_syslog
 
 //Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 const actionTruncateLog = new Homey.FlowCardAction('truncate_log');
@@ -50,6 +52,7 @@ class paperTrails extends Homey.App {
 			}
 		};
 		appConfig = Homey.ManagerSettings.get('config');
+		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
 		// this.log('Current appConfig: \n', appConfig);
 		if (appConfig == (null || undefined)) {
 			this.log('Initializing config ...')
@@ -120,14 +123,27 @@ class paperTrails extends Homey.App {
 				rfc3164 : (!appSettings.enablerfc5424),
 				appName : appSettings.syslogappName
 			};
-			this.log('start SysLog Current appSettings :\n', appSettings);
-			this.log('syslogOptions:\n', syslogOptions);
+			// this.log('start SysLog Current appSettings :\n', appSettings);
+			// this.log('syslogOptions:\n', syslogOptions);
 
 		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
+		// this.log('syslogOptions:\n', syslogOptions);
 	};
 
 	// mySysLog
-	mySysLog(logMsg) {syslogClient.log( logMsg );}
+	mySysLog(args) {
+		console.log('args:\n', args);
+		var syslogOptions = { };
+		if (args.syslogfacility != (null || undefined) ) { syslogOptions.facility = parseInt( args.syslogfacility )};
+		if (args.syslogseverity != (null || undefined) ) { syslogOptions.severity = parseInt( args.syslogseverity )};
+		if (args.logDate != (null || undefined) ) { syslogOptions.timestamp = args.logDate };
+		if (!appSettings.enablerfc5424) {args.log = appSettings.syslogappName + " " + args.log };
+		console.log('syslogOptions:\n', syslogOptions);
+		console.log('args.log:\n', args.log);
+		// console.log('syslogClient:\n', syslogClient);
+		syslogClient.log( args.log, syslogOptions );
+	}
+
 	// Add somthing to the Log
 	updateLog( logMsg ) {
 		var logNew = '';
@@ -543,27 +559,45 @@ actionInputLog.register().on('run', ( args, state, callback ) => {
 		Homey.app.updateLog( args.log );
 		// Testing ***
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-			Homey.app.mySysLog( args.log );
+			Homey.app.mySysLog( args );
 		}
     callback( null, true );
 });
 
+actionSend_syslog.register().on('run', ( args, state, callback ) => {
+	if ( appSettingsenableSyslog ) {
+		var logDate = new Date();
+		args.logDate = logDate;
+		// Test
+		args.log += Homey.app.getDateTime(logDate);
+		Homey.app.mySysLog( args );
+	}
+	callback( null, true );
+});
+
 // condition_date_time_log by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-				Homey.app.updateLog(Homey.app.getDateTime(new Date()) + " " + args.log);
+				var logDate = new Date();
+				Homey.app.updateLog(Homey.app.getDateTime(logDate) + " " + args.log);
 				if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+					args.logDate = logDate;
 					// console.log('mySysLog ' + args.log );
-					Homey.app.mySysLog( args.log );
+					Homey.app.mySysLog( args );
 				};
 		    callback( null, true );
 		});
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-		Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " " + args.log);
+	var logDate = new Date();
+		Homey.app.updateLog( Homey.app.getDateTime(logDate) + " " + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			// console.log('mySysLog ' + args.log );
-			Homey.app.mySysLog( args.log );
+			args.logDate = logDate;
+			// Test
+			args.log += Homey.app.getDateTime(logDate);
+
+			Homey.app.mySysLog( args );
 		};
     callback( null, true );
 });
