@@ -112,9 +112,8 @@ class paperTrails extends Homey.App {
 	}; // End of onInit()
 
 	// startsysLog
-		startsysLog() {
-		// var Transport = (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp;
-		var syslogOptions = {
+	startsysLog() {
+	var syslogOptions = {
 				syslogHostname: hostname,
 				transport: (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp,
 				facility: appSettings.syslogfacility,
@@ -123,24 +122,38 @@ class paperTrails extends Homey.App {
 				rfc3164 : (!appSettings.enablerfc5424),
 				appName : appSettings.syslogappName
 			};
-			// this.log('start SysLog Current appSettings :\n', appSettings);
-			// this.log('syslogOptions:\n', syslogOptions);
+		// this.log('start SysLog Current appSettings :\n', appSettings);
+		// this.log('syslogOptions:\n', syslogOptions);
 
 		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
-		// this.log('syslogOptions:\n', syslogOptions);
+		syslogClient.on('error', function (error) {
+		    console.error(error, error.constructor.name  );
+				var logDate = new Date();
+				var msg = " Unknown Error";
+				if (error.constructor.name === 'Error') {
+					var msg = JSON.stringify(error);
+				};
+				Homey.app.updateLog( Homey.app.getDateTime(logDate) + " PaperTrails SysLog Error" + msg );
+				Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " Check the SysLog server and Configuration" );
+		});
 	};
 
 	// mySysLog
 	mySysLog(args) {
-		console.log('args:\n', args);
 		var syslogOptions = { };
 		if (args.syslogfacility != (null || undefined) ) { syslogOptions.facility = parseInt( args.syslogfacility )};
 		if (args.syslogseverity != (null || undefined) ) { syslogOptions.severity = parseInt( args.syslogseverity )};
 		if (args.logDate != (null || undefined) ) { syslogOptions.timestamp = args.logDate };
-		if (!appSettings.enablerfc5424) {args.log = appSettings.syslogappName + " " + args.log };
-		console.log('syslogOptions:\n', syslogOptions);
-		console.log('args.log:\n', args.log);
-		// console.log('syslogClient:\n', syslogClient);
+		if (appSettings.enablerfc5424) {
+			if (args.log[0] === '$') {
+				syslogOptions.appName  = args.log.split(" ")[0].substr(1);
+				args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+			};
+		} else {
+			args.log = appSettings.syslogappName + " " + args.log;
+		}
+		// console.log('syslogOptions:\n', syslogOptions);
+		// console.log('args.log:\n', args.log);
 		syslogClient.log( args.log, syslogOptions );
 	}
 
@@ -547,56 +560,51 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 		var index = logArray.length - parseInt(logArray.length * (args.removePct/100))
 	}
 	if (index > 0) {
-		console.log(' index ' + index );
+		// console.log(' index ' + index );
 		var logNew = truncateLog( logOld, truncMsg, index);
 		Homey.ManagerSettings.set( 'myLog', logNew );
 	};
 	callback( null, true );
 });
 
-// for Original v0.0.5 logging
+// for Original logging without date.
 actionInputLog.register().on('run', ( args, state, callback ) => {
+		var logDate = new Date();
+		args.logDate = logDate;
 		Homey.app.updateLog( args.log );
-		// Testing ***
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			Homey.app.mySysLog( args );
 		}
     callback( null, true );
 });
 
+// Log SysLog only not visible on Homey's PaperTrails Log
 actionSend_syslog.register().on('run', ( args, state, callback ) => {
-	if ( appSettingsenableSyslog ) {
 		var logDate = new Date();
-		args.logDate = logDate;
-		// Test
-		args.log += Homey.app.getDateTime(logDate);
-		Homey.app.mySysLog( args );
-	}
-	callback( null, true );
+		if ( appSettingsenableSyslog ) {
+			args.logDate = logDate;
+			Homey.app.mySysLog( args );
+		}
+		callback( null, true );
 });
 
-// condition_date_time_log by Geurt Dijker
+// Logging from Condition card by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-				var logDate = new Date();
-				Homey.app.updateLog(Homey.app.getDateTime(logDate) + " " + args.log);
-				if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-					args.logDate = logDate;
-					// console.log('mySysLog ' + args.log );
-					Homey.app.mySysLog( args );
-				};
-		    callback( null, true );
-		});
+		var logDate = new Date();
+		Homey.app.updateLog(Homey.app.getDateTime(logDate) + " " + args.log);
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+			args.logDate = logDate;
+			Homey.app.mySysLog( args );
+		};
+    callback( null, true );
+});
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-	var logDate = new Date();
+		var logDate = new Date();
 		Homey.app.updateLog( Homey.app.getDateTime(logDate) + " " + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-			// console.log('mySysLog ' + args.log );
 			args.logDate = logDate;
-			// Test
-			args.log += Homey.app.getDateTime(logDate);
-
 			Homey.app.mySysLog( args );
 		};
     callback( null, true );
@@ -612,7 +620,6 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
 							 			'infoMsg': logNew };
 		logCleared.trigger( tokens, null,  function(err, result) {});
   	Homey.ManagerSettings.set( 'myLog', logNew );
-  	console.log(' Action.Clear_log     The log data is cleared.');
   	callback( null, true );
 });
 
@@ -623,7 +630,6 @@ actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 		var tokens = { 	'logLength': logLength,
 									 	'Log': logOld,
 							 			'infoMsg': infoMsg };
-
 		programmatic_trigger.trigger( tokens, null,  function(err, result){
   	if( err ) {
  				return Homey.error(err)}
@@ -639,17 +645,15 @@ Homey.ManagerSettings.on('set', (key) => {
 	if (key === 'config'  ) {
 		appConfig = Homey.ManagerSettings.get('config');
 	};
-	// appSettingsenableSyslog
 	if (key === 'appSettingsenableSyslog'  ) {
 		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
-		// *** Restart
 		if (appSettingsenableSyslog) {
 			Homey.app.startsysLog();
-			console.log('End of onInit \nCurrent appSettings :\n', appSettings);
-			console.log('Current appConfig :\n', appConfig);
-			console.log('Started' , appSettingsenableSyslog);
+			// console.log('Current appSettings :\n', appSettings);
+			// console.log('Current appConfig :\n', appConfig);
+			// console.log('Started' , appSettingsenableSyslog);
 		} else {
-			console.log('stopped' , appSettingsenableSyslog);
+			// console.log('stopped' , appSettingsenableSyslog);
 			syslogClient.close();
 		};
 	}

@@ -40,15 +40,15 @@
         <fieldset style="top:0px; margin: 5px; width: 96%">
           <div class="field row" style="padding: 5px 10px;">
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
-              <label for="scrollToEnd" style="width:120px" class="left"> Scroll To End </label>
+              <label for="scrollToEnd" style="width:120px" class="left">Scroll To End</label>
               <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
               <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
-              <label for="intervalS" style="width:180px; padding: 5px 10px;" class="left"> Seconds Refresh interval</label>
+              <label for="intervalS" style="width:180px; padding: 5px 10px;" class="left">Seconds Refresh interval</label>
               <br><br><br>
-              By default Logs are truncated by 20% each time the maximum is reached.<br>
-              <label for="maxLogLength" style="width:180px; padding: 5px 10px;" > Maximum lines for Log</label>
+              By default Logs are truncated by 20% each time the maximum is reached.<br><br>
+              <label for="maxLogLength" style="width:180px; padding: 5px 10px;" >Maximum lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=50 max=10240 style="width:80px; padding: 5px 10px;" />
               <br><br>
             </div>
@@ -59,9 +59,9 @@
               Choose your prefered logging direction and date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.
               Reversing the direction is handled on a restart of the App.<br><br>
               <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
-              <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left"> Append logging</label>
+              <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left">Append logging</label>
               <br><br><br>
-              <label for="timeStampFormat" style="width:140px; padding: 5px 10px;" > Timestamp format: </label>
+              <label for="timeStampFormat" style="width:140px; padding: 5px 10px;" >Timestamp format: </label>
               <select id="timeStampFormat" class="right" onChange="">
                 <option value="Sec">Normal Seconds</option>
                 <option value="mSec">Precise mSec.</option>
@@ -87,9 +87,9 @@
              <label for="enableSyslogAll" style="width:240px; padding: 5px 10px;">Enable Syslog for All Log Additions</label>
              <input id="enableSyslogAll" class="right" type="checkbox" value="enableSyslogAll" onChange="saveSettings()" style="width:40px"/><br>
              <label for="syslogappName" style="width:135px; padding: 5px 10px;" >Application name:</label>
-             <input id="syslogappName" class="right" value="PaperTrails" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" /><br>
-
-             <label for="syslogseverity" style="width:110px; padding: 5px 10px;" > Severity: </label>
+             <input id="syslogappName" class="right" value="PaperTrails" onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" /><br><br>
+             Set a custom application name by prefixing the first word of the message with $<br><br>
+             <label for="syslogseverity" style="width:110px; padding: 5px 10px;">Severity: </label>
              <select id="syslogseverity" class="right" onChange="saveSettings()">
                  <!-- <option value=0>Emergency</option>
                <option value=1>Alert</option>
@@ -101,7 +101,7 @@
                <option value=7>Debug</option>
              </select><br>
 
-             <label for="syslogfacility" style="width:110px; padding: 5px 10px;" > Facility: </label>
+             <label for="syslogfacility" style="width:110px; padding: 5px 10px;" >Facility: </label>
              <select id="syslogfacility" class="right" onChange="saveSettings()">
                <option value="1">User</option>
                <option value="13">Audit</option>
@@ -144,9 +144,9 @@
           This option adds a "Add to the Log" card to the ...Then Column of every flow and every Else when in use. (Unless there already is a Card added) <br>
           The text will be the Name of the Flow, with the prefix below.<br>
           <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-          <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >  Prefix for Then </label><br>
+          <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >Prefix for Then </label><br>
           <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
-          <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >  Prefix for Else </label>
+          <label for="autoPrefixElse" style="width:350px; padding: 5px 10px;" >Prefix for Else </label>
           <br><br>
           <button id="addPaperTrails2AllFlows" class="button" style= "float: right;" onclick="addPaperTrails2AllFlows()">Add PaperTrails to AllFlows</button>
           <br><br>
