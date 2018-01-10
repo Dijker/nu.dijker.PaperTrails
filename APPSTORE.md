@@ -11,7 +11,7 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
-## Version 0.5.0 alpha
+## Version 0.4.1 (Alpha)
 * Added option to send to syslog.
 
 ## Version 0.3.7
