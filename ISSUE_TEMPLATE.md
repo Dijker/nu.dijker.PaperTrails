@@ -2,7 +2,7 @@
 
 Homey x.x.x
 PaperTrails 0.x.x
-
+Send Log to Developer: xxx-xxxx-xxxx
 
 **What did you try to achieve?**
 *Please include detailed steps how we can reproduce the issue*
