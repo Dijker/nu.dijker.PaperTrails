@@ -2,7 +2,7 @@
 
 This app makes it possible to add time based logging to your flow's.
 
-Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
+Use it fe with the Email sender to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
 _// Trigger Logging to PaperTrails from HomeyScript_

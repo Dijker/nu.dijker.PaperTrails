@@ -65,6 +65,12 @@ function onHomeyReady( homeyReady ){
         console.log( appConfig );
         document.getElementById('timeStampFormat').value = appConfig.timeStampFormat;
         document.getElementById('appendLog').checked = appConfig.appendLog;
+        // panel-button-1
+        if (appConfig.appendLog) {
+          document.getElementById('panel-button-1').innerHTML = '<a href="javascript:showPanel(1)">Log &#9660; </a>';
+        } else {
+          document.getElementById('panel-button-1').innerHTML = '<a href="javascript:showPanel(1)">Log &#9650; </a>';
+        };
         Homey.ready();
       }
     }});
