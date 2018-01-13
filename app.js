@@ -71,8 +71,8 @@ class paperTrails extends Homey.App {
 		};
 		// Update afer migrations
 		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" };
-		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' };
-		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' };
+		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'Flow executed:' };
+		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'Flow executed:' };
 		if (appSettings.syslogServer  == (null || undefined)) {appSettings.syslogServer  = '127.0.0.1' };
 		if (appSettings.syslogPort  == (null || undefined)) {appSettings.syslogPort  = '514' };
 		if (appSettings.transport  == (null || undefined)) {appSettings.transport  = 'UDP' };
@@ -237,7 +237,7 @@ class paperTrails extends Homey.App {
 								&& (modFlow.actions[ myIndex ].uri != 'homey:app:nu.dijker.papertrails' )
 								&& !ThenPPT ) {
             modFlow.actions.splice( myIndex, 0, newLogCardT );
-            modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixThen + modFlow.title;
+            modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixThen + " " + modFlow.title + " (...then)";
             ThenPPT = true;
             modFlowChanged = true;
             this.log( 'Then added '+  myIndex);
@@ -248,10 +248,10 @@ class paperTrails extends Homey.App {
 						&& (modFlow.actions[ myIndex ].uri != 'homey:app:nu.dijker.papertrails' )
 						&& !ElsePPT) {
 							modFlow.actions.splice( myIndex, 0, newLogCardE );
-							modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixElse + modFlow.title ;
+							modFlow.actions[ myIndex ].args.log = appSettings.autoPrefixElse + " " + modFlow.title + " (...else)";
 							ElsePPT = true;
 							modFlowChanged = true;
-							this.log( 'Else  added '+  myIndex);
+							this.log( 'Else added '+  myIndex);
 						}
 					}
 				}
