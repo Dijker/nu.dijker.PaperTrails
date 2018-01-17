@@ -5,7 +5,7 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
@@ -251,6 +251,15 @@
 				"hint" : {
 					"en" : "Trigger a Flow with a 'PaperTrails-This Flow is Triggerd' card in the 'When...' column.",
 					"nl" : "Activeer een Flow met een 'PaperTrails-Deze Flow is geactiveerd' kaartje in de 'Als...' kolom."}
+			},
+			{
+				"id": "import_zWave_Log",
+				"title": {
+					"en" : "Import Z-Wave Logs",
+					"nl" : "Importeer Z-Wave Log" },
+				"hint" : {
+					"en" : "Import Z-Wave Logs from Homey in PaperTrails.",
+					"nl" : "Importeer Z-Wave Logs van Homey in PaperTrails."}
 			},
 			{
 				"id": "Clear_log",

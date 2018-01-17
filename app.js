@@ -25,6 +25,9 @@ const actionClearLog = new Homey.FlowCardAction('Clear_log');
 // Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 const actionProgrammaticTrigger = new Homey.FlowCardAction('programmatic_trigger');
 
+// Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
+const actionImport_zWave_Log = new Homey.FlowCardAction('import_zWave_Log');
+
 // conditionInputDateTimeLog
 const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_time_log');
 
@@ -32,6 +35,7 @@ var appSettings = {};
 var appConfig = {};
 var appSettingsenableSyslog ;
 var syslogClient;
+var lastImportedzWaveLog;
 var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
@@ -136,6 +140,94 @@ class paperTrails extends Homey.App {
 				Homey.app.updateLog( Homey.app.getDateTime(logDate) + " PaperTrails SysLog Error" + msg );
 				Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " Check the SysLog server and Configuration" );
 		});
+	};
+
+	getApi() {
+		if (!this.api) {
+			this.api = HomeyAPI.forCurrentHomey();
+		}
+		return this.api;
+	};
+
+  async importZWaveLog() {
+		const api = await this.getApi();
+		// var allFlows = await api.flow.getFlows();
+		var zWaveLog = await api.zwave.getLog();
+		var eventDate;
+		var startIndex = 0;
+		var logIndex = 1;
+		var newLastImportedzWaveLog  = zWaveLog[zWaveLog.length-1];
+		var syslogOptions = {
+			facility : syslog.Facility.Local7,
+			severity : syslog.Severity.Debug
+		};
+
+		//console.log ("zWaveLog.length: " , zWaveLog.length );
+		//console.log ("zWaveLog: " , zWaveLog[zWaveLog.length-1] );
+		//console.log("lastImportedzWaveLog:" , lastImportedzWaveLog);
+		//console.log("newLastImportedzWaveLog:" , newLastImportedzWaveLog);
+		// loop 1
+		for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
+			if (lastImportedzWaveLog && (zWaveLog[myIndex].date == lastImportedzWaveLog.date)) {
+				startIndex = myIndex;
+				//console.log( startIndex	);
+			};
+			zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
+			zWaveLog[myIndex].syslogDate = new Date( Date.parse( zWaveLog[myIndex].date ));
+		};
+		//console.log ("zWaveLog[myIndex]:" + JSON.stringify( zWaveLog[myIndex]))
+		//console.log ("zWaveLog[myIndex]:" + JSON.stringify( zWaveLog[myIndex+1]))
+
+		// console.log ("startIndex ", startIndex, zWaveLog[startIndex].logDate);
+		// var logNew = '';
+		var logArray = Homey.ManagerSettings.get( 'myLog' ).split(/\n/);
+		var logLength = logArray.length;
+		// zWaveLog[startIndex].date
+		// loop 2 in append mode !!!
+		for(var myIndex = logArray.length-1 ; (logIndex===1) && (myIndex < 0)  ; myIndex-- ) {
+			// console.log ("Loop 2: ", myIndex, logArray[myIndex].substring(0,25) );
+			if (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25)) {
+				// console.log ("insert from ", logArray[myIndex] );
+				logIndex = myIndex;
+			};
+			//[2018-01-11T19:49:14.106Z]	.length = 26
+			//if (zWaveLog[startIndex].logDate > logArray[logIndex].substring(0,25) ) {
+			//};
+		};
+
+		// console.log ("logArray.length, insert after logIndex " , logArray.length , logIndex );
+		// loop 3
+		for(var myIndex = logIndex ; (myIndex < logArray.length-2) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
+			// Object.values(zWaveLog).forEach(log => {
+			// eventDate = Date(zWaveLog[myIndex].date);
+			//console.log ("Loop3 ", myIndex,logArray.length, startIndex, zWaveLog.length );
+			//console.log ( "zWaveLog date:" + zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+			//console.log ( "myLog    date:" + logArray[myIndex+1] );
+			while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
+				//console.log ( "zWaveLog date:" + zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+				startIndex++
+			}
+		};
+		while (startIndex < zWaveLog.length) {
+			// console.log ("Loop3b", myIndex,logArray.length, startIndex, zWaveLog.length );
+			logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+			if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+				var sysLogArg = {};
+				sysLogArg.logDate = zWaveLog[startIndex].syslogDate;
+				console.log ("syslogdate " + sysLogArg.logDate);
+				sysLogArg.log = zWaveLog[startIndex].log;
+				Homey.app.mySysLog( sysLogArg );
+			};
+
+			startIndex++ ; myIndex++
+		}
+		var logNew =logArray.join('\n');
+		// Check Max Length tbd
+		Homey.ManagerSettings.set( 'myLog', logNew );
+
+		lastImportedzWaveLog = newLastImportedzWaveLog;
+		this.log( "lastImportedzWaveLog" + lastImportedzWaveLog );
 	};
 
 	// mySysLog
@@ -320,13 +412,6 @@ class paperTrails extends Homey.App {
           }
 	    }
 	    return modFlowChanged;
-	};
-
-	getApi() {
-		if (!this.api) {
-			this.api = HomeyAPI.forCurrentHomey();
-		}
-		return this.api;
 	};
 
 	// addPaperTrails2AllFlows
@@ -623,6 +708,12 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
   	callback( null, true );
 });
 
+//actionImport_zWave_Log
+actionImport_zWave_Log.register().on('run', ( args, state, callback ) => {
+	Homey.app.importZWaveLog();
+});
+
+
 actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + Homey.app.getDateTime(new Date()) +" -=-=- " ;
 	  var logOld = Homey.ManagerSettings.get( 'myLog' );
@@ -649,11 +740,7 @@ Homey.ManagerSettings.on('set', (key) => {
 		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
 		if (appSettingsenableSyslog) {
 			Homey.app.startsysLog();
-			// console.log('Current appSettings :\n', appSettings);
-			// console.log('Current appConfig :\n', appConfig);
-			// console.log('Started' , appSettingsenableSyslog);
 		} else {
-			// console.log('stopped' , appSettingsenableSyslog);
 			syslogClient.close();
 		};
 	}

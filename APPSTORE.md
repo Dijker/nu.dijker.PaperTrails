@@ -11,8 +11,12 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
-## Version 0.4.2 (Alpha)
+## Version 0.4.3 (Alpha)
 * Added option to send to syslog.
+* Added option to Import Z-Wave Log.
+** Warning **
+Only use Import Z-Wave Log on Append Logging (Top-Down) and with Geek- Zulu Time.
+Will continue working on that after 2 weeks off...
 
 ## Version 0.3.7
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.
