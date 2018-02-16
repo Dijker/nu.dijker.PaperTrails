@@ -654,6 +654,7 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 
 // for Original logging without date.
 actionInputLog.register().on('run', ( args, state, callback ) => {
+	if (args.log != '0') {
 		var logDate = new Date();
 		args.logDate = logDate;
 		Homey.app.updateLog( args.log );
@@ -661,6 +662,7 @@ actionInputLog.register().on('run', ( args, state, callback ) => {
 			Homey.app.mySysLog( args );
 		}
     callback( null, true );
+	};
 });
 
 // Log SysLog only not visible on Homey's PaperTrails Log
@@ -675,6 +677,7 @@ actionSend_syslog.register().on('run', ( args, state, callback ) => {
 
 // Logging from Condition card by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
+	if (args.log != '0') {
 		var logDate = new Date();
 		Homey.app.updateLog(Homey.app.getDateTime(logDate) + " " + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
@@ -682,17 +685,20 @@ conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 			Homey.app.mySysLog( args );
 		};
     callback( null, true );
+	};
 });
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
+	if (args.log != '0') {
 		var logDate = new Date();
 		Homey.app.updateLog( Homey.app.getDateTime(logDate) + " " + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			args.logDate = logDate;
 			Homey.app.mySysLog( args );
 		};
-    callback( null, true );
+		callback( null, true );
+	};
 });
 
 // action.Clear_log
