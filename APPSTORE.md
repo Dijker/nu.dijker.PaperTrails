@@ -11,6 +11,13 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
+## Version 0.4.4 (Alpha)
+* Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
+* fixed aometing with the Z-Wave import.
+* Changed separator between time and log to <Tab>
+* Added an App name, Prefix first word with $ to have a App Name
+    Time - AppName - Message
+
 ## Version 0.4.3 (Alpha)
 * Added option to send to syslog.
 * Added option to Import Z-Wave Log.

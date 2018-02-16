@@ -46,6 +46,7 @@ class paperTrails extends Homey.App {
 		this.log('Start init paperTrails');
 		this.log('HostName: ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
+		lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
 		//this.log('Current appSettings: \n', appSettings);
 		if (appSettings == (null || undefined)) {
 			this.log('Initializing settings ...')
@@ -168,8 +169,8 @@ class paperTrails extends Homey.App {
 		//console.log("newLastImportedzWaveLog:" , newLastImportedzWaveLog);
 		// loop 1
 		for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
-			if (lastImportedzWaveLog && (zWaveLog[myIndex].date == lastImportedzWaveLog.date)) {
-				startIndex = myIndex;
+			if (lastImportedzWaveLog && (zWaveLog[myIndex].date === lastImportedzWaveLog.date)) {
+				startIndex = myIndex+1;
 				//console.log( startIndex	);
 			};
 			zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
@@ -197,7 +198,7 @@ class paperTrails extends Homey.App {
 
 		// console.log ("logArray.length, insert after logIndex " , logArray.length , logIndex );
 		// loop 3
-		for(var myIndex = logIndex ; (myIndex < logArray.length-2) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
+		for(var myIndex = logIndex ; (myIndex < logArray.length-1) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
 			// Object.values(zWaveLog).forEach(log => {
 			// eventDate = Date(zWaveLog[myIndex].date);
 			//console.log ("Loop3 ", myIndex,logArray.length, startIndex, zWaveLog.length );
@@ -205,13 +206,13 @@ class paperTrails extends Homey.App {
 			//console.log ( "myLog    date:" + logArray[myIndex+1] );
 			while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
 				//console.log ( "zWaveLog date:" + zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
-				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
 				startIndex++
 			}
 		};
 		while (startIndex < zWaveLog.length) {
 			// console.log ("Loop3b", myIndex,logArray.length, startIndex, zWaveLog.length );
-			logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
+			logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
 			if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 				var sysLogArg = {};
 				sysLogArg.logDate = zWaveLog[startIndex].syslogDate;
@@ -227,7 +228,9 @@ class paperTrails extends Homey.App {
 		Homey.ManagerSettings.set( 'myLog', logNew );
 
 		lastImportedzWaveLog = newLastImportedzWaveLog;
-		this.log( "lastImportedzWaveLog" + lastImportedzWaveLog );
+ 		Homey.ManagerSettings.set('lastImportedzWaveLog', lastImportedzWaveLog);
+
+		this.log( "lastImportedzWaveLog" + lastImportedzWaveLog.logDate );
 	};
 
 	// mySysLog
@@ -242,7 +245,7 @@ class paperTrails extends Homey.App {
 				args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
 			};
 		} else {
-			args.log = appSettings.syslogappName + " " + args.log;
+			args.log = appSettings.syslogappName + "\t" + args.log;
 		}
 		// console.log('syslogOptions:\n', syslogOptions);
 		// console.log('args.log:\n', args.log);
@@ -661,8 +664,8 @@ actionInputLog.register().on('run', ( args, state, callback ) => {
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			Homey.app.mySysLog( args );
 		}
-    callback( null, true );
 	};
+	callback( null, true );
 });
 
 // Log SysLog only not visible on Homey's PaperTrails Log
@@ -678,27 +681,41 @@ actionSend_syslog.register().on('run', ( args, state, callback ) => {
 // Logging from Condition card by Geurt Dijker
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 	if (args.log != '0') {
+	  args.appName = '';
+		if (args.log[0] === '$') {
+			args.appName = args.log.split(" ")[0].substr(1);
+			args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+		};
+
+
 		var logDate = new Date();
-		Homey.app.updateLog(Homey.app.getDateTime(logDate) + " " + args.log);
+		Homey.app.updateLog(Homey.app.getDateTime(logDate) + "\t" + args.appName + "\t" + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			args.logDate = logDate;
 			Homey.app.mySysLog( args );
 		};
-    callback( null, true );
 	};
+	callback( null, true );
 });
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 	if (args.log != '0') {
+		args.appName = '';
+		if (args.log[0] === '$') {
+			args.appName = args.log.split(" ")[0].substr(1);
+			args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+		};
+
+
 		var logDate = new Date();
-		Homey.app.updateLog( Homey.app.getDateTime(logDate) + " " + args.log);
+		Homey.app.updateLog( Homey.app.getDateTime(logDate) + "\t" + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			args.logDate = logDate;
 			Homey.app.mySysLog( args );
 		};
-		callback( null, true );
 	};
+	callback( null, true );
 });
 
 // action.Clear_log
@@ -717,6 +734,7 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
 //actionImport_zWave_Log
 actionImport_zWave_Log.register().on('run', ( args, state, callback ) => {
 	Homey.app.importZWaveLog();
+  callback( null, true );
 });
 
 
