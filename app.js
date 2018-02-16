@@ -709,7 +709,7 @@ actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 
 
 		var logDate = new Date();
-		Homey.app.updateLog( Homey.app.getDateTime(logDate) + "\t" + args.log);
+		Homey.app.updateLog( Homey.app.getDateTime(logDate) + "\t" + args.appName + "\t" + args.log);
 		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 			args.logDate = logDate;
 			Homey.app.mySysLog( args );
