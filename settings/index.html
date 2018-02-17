@@ -61,7 +61,6 @@
               <!-- <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
               <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left">Append logging</label>
             -->
-              <br><br><br>
               <label for="timeStampFormat" style="width:140px; padding: 5px 10px;" >Timestamp format: </label>
               <select id="timeStampFormat" class="right" onChange="">
                 <option value="Sec">Normal Seconds</option>
@@ -144,6 +143,7 @@
           <legend>Flow Management</legend>
           This option adds a "Add to the Log" card to the ...Then Column of every flow and every Else when in use. (Unless there already is a Card added) <br>
           The text will be the Name of the Flow, with the prefix below.<br>
+          Selectively disable logging by changing the LogText to just a [0    ] <br>
           <input id="autoPrefixThen" class="right" value="AL! Then - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
           <label for="autoPrefixThen" style="width:350px; padding: 5px 10px;" >Prefix for Then </label><br>
           <input id="autoPrefixElse" class="right" value="AL! Else - " onChange="saveSettings()" type="text" style="width:180px; padding: 5px 10px;" />
