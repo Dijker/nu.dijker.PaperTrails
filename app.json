@@ -5,7 +5,7 @@
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"compatibility": "1.x >=1.5.0",
 	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
@@ -220,8 +220,8 @@
 					}
 				],
 				"hint" : {
-					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
+					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log YYYY-MM-DD HH:MM.ss Yourtext ...",
+					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
 				}
 		}],
 		"actions": [
@@ -239,8 +239,8 @@
 					}
 				],
 				"hint" : {
-					"en" : "Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
+					"en" : "Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ... (enter 0 to stop logging.)",
+					"nl" : "Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ... (alleen 0 om niet meer te loggen)"
 				}
 			},
 			{
