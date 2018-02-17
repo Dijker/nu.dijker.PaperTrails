@@ -41,7 +41,7 @@
           <div class="field row" style="padding: 5px 10px;">
               <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
               <label for="scrollToEnd" style="width:120px" class="left">Scroll To End</label>
-              <button id="clear_simpleLOG" class="button" style= "float: right;" onclick="clear_simpleLOG()">Clear Log</button>
+              <button id="clear_LOG" class="button" style= "float: right;" onclick="clear_LOG()">Clear Log</button>
               <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
               <br><br><br>
               <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
@@ -55,11 +55,12 @@
           </fieldset>
           <fieldset style="top:0px; margin: 5px; width: 96%">
             <div class="field row" style="padding: 5px 10px;">
-              <legend>Configuration (Restart App required)</legend>
-              Choose your prefered logging direction and date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.
-              Reversing the direction is handled on a restart of the App.<br><br>
-              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
+              <legend>Configuration</legend>
+              Choose your prefered date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.
+              <br><br>
+              <!-- <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
               <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left">Append logging</label>
+            -->
               <br><br><br>
               <label for="timeStampFormat" style="width:140px; padding: 5px 10px;" >Timestamp format: </label>
               <select id="timeStampFormat" class="right" onChange="">

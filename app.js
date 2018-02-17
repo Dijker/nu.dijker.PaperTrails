@@ -8,27 +8,12 @@ var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.pa
 
 const actionInputLog = new Homey.FlowCardAction('Input_log');
 const actionSend_syslog = new Homey.FlowCardAction('Send_syslog');
-// Send_syslog
-
-//Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
 const actionTruncateLog = new Homey.FlowCardAction('truncate_log');
-
-// Homey.manager('flow').on('action.truncate_log_pct', function( callback, args ) {
 const actionTruncateLogPct = new Homey.FlowCardAction('truncate_log_pct');
-
-// Homey.manager('flow').on('action.Input_date_time_log', function( callback, args ) {
 const actionInputDateTimeLog = new Homey.FlowCardAction('Input_date_time_log');
-
-// Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 const actionClearLog = new Homey.FlowCardAction('Clear_log');
-
-// Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 const actionProgrammaticTrigger = new Homey.FlowCardAction('programmatic_trigger');
-
-// Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 const actionImport_zWave_Log = new Homey.FlowCardAction('import_zWave_Log');
-
-// conditionInputDateTimeLog
 const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_time_log');
 
 var appSettings = {};
@@ -47,18 +32,16 @@ class paperTrails extends Homey.App {
 		this.log('HostName: ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
 		lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
-		//this.log('Current appSettings: \n', appSettings);
 		if (appSettings == (null || undefined)) {
 			this.log('Initializing settings ...')
 			appSettings = {
-				'refresh': '5',
+				'refresh': '1',
 				'maxLogLength': '10123',
 				'migrated': false
 			}
 		};
 		appConfig = Homey.ManagerSettings.get('config');
 		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
-		// this.log('Current appConfig: \n', appConfig);
 		if (appConfig == (null || undefined)) {
 			this.log('Initializing config ...')
 			appConfig = {
@@ -66,7 +49,9 @@ class paperTrails extends Homey.App {
 				'appendLog': true
 			}
 		};
-
+		// from 0.4.5 always append
+		appConfig.newAppendLog = true;
+		// appConfig.appendLog
 		if (!appSettings.migrated) {
 			this.log('Migrating App Settings ....');
 			appSettings.maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
@@ -74,7 +59,7 @@ class paperTrails extends Homey.App {
 			appConfig.timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
 			appConfig.appendLog = Homey.ManagerSettings.get( 'appendLog' );
 		};
-		// Update afer migrations
+		// Update afer migrations 0.2.x / 0.3.x
 		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" };
 		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' };
 		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' };
@@ -88,17 +73,16 @@ class paperTrails extends Homey.App {
 		if (appSettings.syslogappName  == (null || undefined)) {appSettings.syslogappName  = 'PaperTrials' };
 		if (appSettings.syslogseverity  == (null || undefined)) {appSettings.syslogseverity  = '6' };
 		if (appSettings.syslogfacility  == (null || undefined)) {appSettings.syslogfacility  = '6' };
+		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
 
 		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' };
 		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true };
 
-		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
-
-		// save if updated / Just save!
+		//  Just save!
 		Homey.ManagerSettings.set('settings', appSettings);
 		Homey.ManagerSettings.set('config', appConfig);
 
-		// Reverse Log !!
+		// Reverse Log !! changeing to always append in 0.4.5
 		if ((appConfig.newAppendLog != (null || undefined) )
 				&&(appConfig.appendLog != appConfig.newAppendLog)) {
 			this.log('Reversing Log... Append:' , appConfig.appendLog )
@@ -118,17 +102,15 @@ class paperTrails extends Homey.App {
 
 	// startsysLog
 	startsysLog() {
-	var syslogOptions = {
-				syslogHostname: hostname,
-				transport: (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp,
-				facility: appSettings.syslogfacility,
-				severity : appSettings.syslogseverity,
-				port: appSettings.syslogPort,
-				rfc3164 : (!appSettings.enablerfc5424),
-				appName : appSettings.syslogappName
-			};
-		// this.log('start SysLog Current appSettings :\n', appSettings);
-		// this.log('syslogOptions:\n', syslogOptions);
+		var syslogOptions = {
+					syslogHostname: hostname,
+					transport: (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp,
+					facility: appSettings.syslogfacility,
+					severity : appSettings.syslogseverity,
+					port: appSettings.syslogPort,
+					rfc3164 : (!appSettings.enablerfc5424),
+					appName : appSettings.syslogappName
+				};
 
 		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
 		syslogClient.on('error', function (error) {
@@ -152,7 +134,6 @@ class paperTrails extends Homey.App {
 
   async importZWaveLog() {
 		const api = await this.getApi();
-		// var allFlows = await api.flow.getFlows();
 		var zWaveLog = await api.zwave.getLog();
 		var eventDate;
 		var startIndex = 0;
@@ -163,55 +144,32 @@ class paperTrails extends Homey.App {
 			severity : syslog.Severity.Debug
 		};
 
-		//console.log ("zWaveLog.length: " , zWaveLog.length );
-		//console.log ("zWaveLog: " , zWaveLog[zWaveLog.length-1] );
-		//console.log("lastImportedzWaveLog:" , lastImportedzWaveLog);
-		//console.log("newLastImportedzWaveLog:" , newLastImportedzWaveLog);
-		// loop 1
+		// loop 1 - find lastImportedzWaveLog lines
 		for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
 			if (lastImportedzWaveLog && (zWaveLog[myIndex].date === lastImportedzWaveLog.date)) {
 				startIndex = myIndex+1;
-				//console.log( startIndex	);
 			};
 			zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
 			zWaveLog[myIndex].syslogDate = new Date( Date.parse( zWaveLog[myIndex].date ));
 		};
-		//console.log ("zWaveLog[myIndex]:" + JSON.stringify( zWaveLog[myIndex]))
-		//console.log ("zWaveLog[myIndex]:" + JSON.stringify( zWaveLog[myIndex+1]))
-
-		// console.log ("startIndex ", startIndex, zWaveLog[startIndex].logDate);
-		// var logNew = '';
 		var logArray = Homey.ManagerSettings.get( 'myLog' ).split(/\n/);
 		var logLength = logArray.length;
-		// zWaveLog[startIndex].date
-		// loop 2 in append mode !!!
+		// Loop 2 - find Merge position
 		for(var myIndex = logArray.length-1 ; (logIndex===1) && (myIndex < 0)  ; myIndex-- ) {
-			// console.log ("Loop 2: ", myIndex, logArray[myIndex].substring(0,25) );
 			if (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25)) {
-				// console.log ("insert from ", logArray[myIndex] );
 				logIndex = myIndex;
 			};
-			//[2018-01-11T19:49:14.106Z]	.length = 26
-			//if (zWaveLog[startIndex].logDate > logArray[logIndex].substring(0,25) ) {
-			//};
 		};
 
-		// console.log ("logArray.length, insert after logIndex " , logArray.length , logIndex );
-		// loop 3
+		// loop 3 - merge the logs part 1
 		for(var myIndex = logIndex ; (myIndex < logArray.length-1) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
-			// Object.values(zWaveLog).forEach(log => {
-			// eventDate = Date(zWaveLog[myIndex].date);
-			//console.log ("Loop3 ", myIndex,logArray.length, startIndex, zWaveLog.length );
-			//console.log ( "zWaveLog date:" + zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
-			//console.log ( "myLog    date:" + logArray[myIndex+1] );
 			while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
-				//console.log ( "zWaveLog date:" + zWaveLog[startIndex].logDate + " " + zWaveLog[startIndex].log );
 				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
 				startIndex++
 			}
 		};
+		// loop 4 merge remaining
 		while (startIndex < zWaveLog.length) {
-			// console.log ("Loop3b", myIndex,logArray.length, startIndex, zWaveLog.length );
 			logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
 			if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
 				var sysLogArg = {};
@@ -224,7 +182,7 @@ class paperTrails extends Homey.App {
 			startIndex++ ; myIndex++
 		}
 		var logNew =logArray.join('\n');
-		// Check Max Length tbd
+		// Check Max Length tbd TODO !!
 		Homey.ManagerSettings.set( 'myLog', logNew );
 
 		lastImportedzWaveLog = newLastImportedzWaveLog;
@@ -233,7 +191,6 @@ class paperTrails extends Homey.App {
 		this.log( "lastImportedzWaveLog" + lastImportedzWaveLog.logDate );
 	};
 
-	// mySysLog
 	mySysLog(args) {
 		var syslogOptions = { };
 		if (args.syslogfacility != (null || undefined) ) { syslogOptions.facility = parseInt( args.syslogfacility )};
@@ -247,8 +204,6 @@ class paperTrails extends Homey.App {
 		} else {
 			args.log = appSettings.syslogappName + "\t" + args.log;
 		}
-		// console.log('syslogOptions:\n', syslogOptions);
-		// console.log('args.log:\n', args.log);
 		syslogClient.log( args.log, syslogOptions );
 	}
 
@@ -260,11 +215,7 @@ class paperTrails extends Homey.App {
 			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
 		};
 		var logLength = logOld.split(/\r\n|\r|\n/).length;
-		if ( appConfig.appendLog === true ) {
-			logNew = logOld + "\n" + logMsg;
-		} else {
-			logNew = logMsg + "\n" + logOld;
-		};
+		logNew = logOld + "\n" + logMsg;
 		var logLength = logNew.split(/\r\n|\r|\n/).length;
 		var tokens = { 'logLength': logLength,
 									 'Log': logNew };
@@ -277,24 +228,20 @@ class paperTrails extends Homey.App {
 			var deleteItems = Math.max( parseInt( logLength *0.2 ) , 20 );
 			var logArray = logNew.split(/\r\n|\r|\n/);
 			var infoMsg = "-=-=- Max. LogLength " + appSettings.maxLogLength  + " reached! Deleting " + deleteItems + " lines at :" + Homey.app.getDateTime(new Date()) + " -=-=-";
-			if ( appConfig.appendLog === true ) {
-				var removedLog = logArray.splice(0,deleteItems, infoMsg );
-			} else {
-				var removedLog = logArray.splice(-1* deleteItems, deleteItems, infoMsg );
-			}
+			var removedLog = logArray.splice(0,deleteItems, infoMsg );
 			logNew = logArray.join('\n');
 		};
 
+		Homey.ManagerSettings.set( 'myLog', logNew );
 		// Check for Max logLength to trigger
 		if (logLength > (appSettings.maxLogLength)) {
 				max_loglines.trigger(tokens, state, function(err, result){
 					if( err ) {return Homey.error(err)} ;
-				})
-			}
-		Homey.ManagerSettings.set( 'myLog', logNew );
+				});
+			};
 	};
 
-	// two Global functions:
+	// Global functions:
 	objectLength(obj) {
 	    var result = 0;
 	    for(var prop in obj) {
@@ -304,7 +251,7 @@ class paperTrails extends Homey.App {
 
 	updateFlow( modFlow ) {
 	    // This is the JSON of the Card we add to all Flows
-	    var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
+	    // ** On Top Global !! var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 	    // Create an Object for the Then and Else groups
 	    var newLogCardT = JSON.parse(newLogCardJSON);
@@ -357,7 +304,7 @@ class paperTrails extends Homey.App {
 // migrate2PaperTrailsFlow
 	migrate2PaperTrailsFlow( modFlow ) {
 		// This is the JSON of the Card we add to all Flows
-		var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
+		//  Global on Top!! var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 		var oldLogCardID  = "Input_log" ;
 		var oldLogCardURI  ='homey:app:nl.nielsdeklerk.log' ;
@@ -492,27 +439,26 @@ class paperTrails extends Homey.App {
 			// Main Loop over al Flows
 			for(var myIndex in allFlows ) {
 			    // if ( allFlows[ myIndex ].title  === 'Test123' ) {
-						this.log( allFlows[ myIndex ].title )
-						this.log( myIndex )
-			        this.log('='.repeat(30));
-			        let mymodFlowChanged = this.removePaperTrailsfFlow( allFlows[ myIndex ], removeAllOccurrences );
-			        this.log( 'Number of Actions: ' + this.objectLength( allFlows[ myIndex ].actions )) ;
+					this.log( allFlows[ myIndex ].title )
+					this.log( myIndex )
+	        this.log('='.repeat(30));
+	        let mymodFlowChanged = this.removePaperTrailsfFlow( allFlows[ myIndex ], removeAllOccurrences );
+	        this.log( 'Number of Actions: ' + this.objectLength( allFlows[ myIndex ].actions )) ;
 
-			        // only update flow if changed.
-			        if (mymodFlowChanged) {
-									this.log(myIndex);
-									this.log( JSON.stringify(allFlows[ myIndex ]) );
-									// fix folder eq false to folder = "";
-									if (allFlows[ myIndex ].folder  === false ) { allFlows[ myIndex ].folder = "" };
-			            let result = await api.flow.updateFlow({id: myIndex , flow: allFlows[ myIndex ] });
-			            this.log('Flow Updated');
-			        } else { this.log('Flow unchanged') }
+	        // only update flow if changed.
+	        if (mymodFlowChanged) {
+							this.log(myIndex);
+							this.log( JSON.stringify(allFlows[ myIndex ]) );
+							// fix folder eq false to folder = "";
+							if (allFlows[ myIndex ].folder  === false ) { allFlows[ myIndex ].folder = "" };
+	            let result = await api.flow.updateFlow({id: myIndex , flow: allFlows[ myIndex ] });
+	            this.log('Flow Updated');
+	        } else { this.log('Flow unchanged') }
 			}
 			return allFlows;
 	};
 
 	getDateTime(date) {
-	    //var date = new Date();
 			// toISOString
 			if (appConfig.timeStampFormat === "Zulu") {
 				return '[' + date.toISOString() + ']';
@@ -528,6 +474,7 @@ class paperTrails extends Homey.App {
 		}
 	};
 
+	// remove from 0.5.x and on...
 	reverseLog(logOld) {
 		var logArray = logOld.split(/\n/);
 		var logLength = logArray.length;
@@ -543,13 +490,13 @@ let programmatic_trigger = new Homey.FlowCardTrigger('programmatic_trigger');
 		.register()
 		.registerRunListener((args,state) => Promise.resolve(true) )
 
-// logTruncated
+// Trigger on logTruncated
 let logTruncated = new  Homey.FlowCardTrigger('logTruncated');
 	logTruncated
 		.register()
 		.registerRunListener((args,state) => Promise.resolve(true) )
 
-// logCleared
+// Trigger on logCleared
 let logCleared = new  Homey.FlowCardTrigger('logCleared');
 	logCleared
 		.register()
@@ -575,7 +522,7 @@ function onCustom_LogLines( args, state, callback ) {
 		}
 };
 
-// onMax_loglines ??
+// Trigger on onMax_loglines
 function onMax_loglines( args, state, callback) {
 			callback( null, true ) // If true, this flow should run. The callback is (err, result)-style.
 };
@@ -587,18 +534,13 @@ Date.prototype.addHours = function(h) {
    return this;
 }
 
-// truncateLog
+// Trigger on truncateLog
 function truncateLog(logOld, infoMsg,  index) {
 	var logArray = logOld.split(/\n/);
 	var logLength = logArray.length;
-	if ( appConfig.appendLog ) {
-		var removedLog = logArray.splice(0,index, infoMsg );
-		var logNew = logArray.join('\n');
-	} else {                        // *******
-		var removedLog = logArray.splice(index, (logLength - index), infoMsg );
-		var logNew = logArray.join('\n');
-	}
-	// var logNew = Homey.ManagerSettings.get( 'myLog' );
+	var removedLog = logArray.splice(0,index, infoMsg );
+	var logNew = logArray.join('\n');
+
 	var logLength = removedLog.length;
 	var removedLog2 = removedLog.join('\n');
 	var tokens = { 'logLength': logLength,
@@ -623,7 +565,7 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	var strStart = cutDate.substring(0, 3);
 
 	var logline = logArray.find(function (el) {
-	    return ((el.substring(0, 3) === strStart) && (((el > cutDate)&& appConfig.appendLog) || ((el < cutDate)&& !appConfig.appendLog)));
+	    return ((el.substring(0, 3) === strStart) && (el > cutDate));
 	});
 	var nr = logArray.indexOf( logline );
 	if (nr > 0) {
@@ -639,14 +581,10 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 	var date1 = new Date();
 	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removePct  + " % from Flow at: " + Homey.app.getDateTime(date1)+" -=-=- " ;
 	var logOld = Homey.ManagerSettings.get( 'myLog' );
-	var timeNow =Homey.app.getDateTime( date1 );
+	var timeNow = Homey.app.getDateTime( date1 );
 	var logArray = logOld.split(/\n/);
 
-	if (appConfig.appendLog) {
-		var index = logArray.length * (args.removePct/100)
-	} else {
-		var index = logArray.length - parseInt(logArray.length * (args.removePct/100))
-	}
+	var index = logArray.length * (args.removePct/100)
 	if (index > 0) {
 		// console.log(' index ' + index );
 		var logNew = truncateLog( logOld, truncMsg, index);
@@ -678,7 +616,7 @@ actionSend_syslog.register().on('run', ( args, state, callback ) => {
 		callback( null, true );
 });
 
-// Logging from Condition card by Geurt Dijker
+// Logging from Condition card
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 	if (args.log != '0') {
 	  args.appName = '';
@@ -686,7 +624,6 @@ conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
 			args.appName = args.log.split(" ")[0].substr(1);
 			args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
 		};
-
 
 		var logDate = new Date();
 		Homey.app.updateLog(Homey.app.getDateTime(logDate) + "\t" + args.appName + "\t" + args.log);

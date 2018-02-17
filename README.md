@@ -3,6 +3,9 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
+## Version 0.4.5 (Alpha)
+* cleanup some code
+
 ## Version 0.4.4 (Alpha)
 * Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
 * fixed aometing with the Z-Wave import.

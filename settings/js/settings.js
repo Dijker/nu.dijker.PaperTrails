@@ -5,7 +5,7 @@ var intervalS = 3;
 var interval;
 var timeStampFormat = 'Sec';
 var appSettings = {
-        'refresh': "5",
+        'refresh': "1",
         'maxLogLength': "10239",
         'autoPrefixThen':'!',
         'autoPrefixElse':'!',
@@ -64,8 +64,8 @@ function onHomeyReady( homeyReady ){
         console.log('appConfig-in2' );
         console.log( appConfig );
         document.getElementById('timeStampFormat').value = appConfig.timeStampFormat;
-        document.getElementById('appendLog').checked = appConfig.appendLog;
-        // panel-button-1
+        /* document.getElementById('appendLog').checked = appConfig.appendLog;
+        */ // panel-button-1
         if (appConfig.appendLog) {
           document.getElementById('panel-button-1').innerHTML = '<a href="javascript:showPanel(1)">Log &#9660; </a>';
         } else {
@@ -75,7 +75,6 @@ function onHomeyReady( homeyReady ){
       }
     }});
 
-  // logtextarea.scrollTop = logtextarea.scrollHeight;
   show_log();
   showPanel(1);
 };
@@ -117,9 +116,7 @@ function saveSettings(){
     appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
     appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
-    //syslogServer
     appSettings.syslogServer = document.getElementById('syslogServer').value;
-    //syslogPort transport
     appSettings.syslogPort = document.getElementById('syslogPort').value;
     if (document.getElementById('TCP').checked) {
       appSettings.transport = 'TCP';
@@ -144,17 +141,17 @@ function saveConfig(){
     if (lastAppendLogSetting != appConfig.newAppendLog) {
       confirmationMessage = "Click OK to Reverse PaperTrails Logging and Restart the App.";
     } else {
-      confirmationMessage = "Click OK to Change Configuration and Restart the App.";
+      confirmationMessage = "Click OK to Change the default Time and Date notation";
     };
     Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
       if( !yes ) return yes;
       Homey.set('config', appConfig );
-      setTimeout( function() { post('/api/manager/apps/app/nu.dijker.papertrails/restart', {enabled:true}) },3000 )
+      //setTimeout( function() { post('/api/manager/apps/app/nu.dijker.papertrails/restart', {enabled:true}) },3000 )
     });
 };
 
 
-function clear_simpleLOG(){
+function clear_LOG(){
   var confirmationMessage = "Click OK to clear the Logfile on Homey.";
   Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
     if( !yes ) return;
@@ -165,7 +162,6 @@ function clear_simpleLOG(){
 
 function download_PaperTrails(){
     var date = new Date();
-    // date.yyyymmddHHMMss();
     download('PaperTrails-'+ date.yyyymmddHHMMss() +'.txt',document.getElementById('logtextarea').value);
 };
 

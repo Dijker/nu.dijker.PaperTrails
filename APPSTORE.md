@@ -11,7 +11,10 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
-## Version 0.4.4 (Alpha )
+## Version 0.4.5 (Alpha)
+* cleanup some code
+
+## Version 0.4.4 (Alpha)
 * Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
 * fixed aometing with the Z-Wave import.
 * Changed separator between time and log to <Tab>
