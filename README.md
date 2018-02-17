@@ -5,6 +5,7 @@ For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu
 
 ## Version 0.4.5 (Alpha)
 * cleanup some code
+* Remove option to choose not to append!
 
 ## Version 0.4.4 (Alpha)
 * Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
