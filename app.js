@@ -133,62 +133,73 @@ class paperTrails extends Homey.App {
 	};
 
   async importZWaveLog() {
-		const api = await this.getApi();
-		var zWaveLog = await api.zwave.getLog();
-		var eventDate;
-		var startIndex = 0;
-		var logIndex = 1;
-		var newLastImportedzWaveLog  = zWaveLog[zWaveLog.length-1];
-		var syslogOptions = {
-			facility : syslog.Facility.Local7,
-			severity : syslog.Severity.Debug
-		};
-
-		// loop 1 - find lastImportedzWaveLog lines
-		for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
-			if (lastImportedzWaveLog && (zWaveLog[myIndex].date === lastImportedzWaveLog.date)) {
-				startIndex = myIndex+1;
+		if (appConfig.timeStampFormat === "Zulu") {
+			const api = await this.getApi();
+			let result = await api.zwave.setLogEnabled({enabled:true });
+			var zWaveLog = await api.zwave.getLog();
+			var eventDate;
+			var startIndex = 0;
+			var logIndex = 1;
+			var newLastImportedzWaveLog  = zWaveLog[zWaveLog.length-1];
+			var syslogOptions = {
+				facility : syslog.Facility.Local7,
+				severity : syslog.Severity.Debug
 			};
-			zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
-			zWaveLog[myIndex].syslogDate = new Date( Date.parse( zWaveLog[myIndex].date ));
-		};
-		var logArray = Homey.ManagerSettings.get( 'myLog' ).split(/\n/);
-		var logLength = logArray.length;
-		// Loop 2 - find Merge position
-		for(var myIndex = logArray.length-1 ; (logIndex===1) && (myIndex < 0)  ; myIndex-- ) {
-			if (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25)) {
-				logIndex = myIndex;
-			};
-		};
 
-		// loop 3 - merge the logs part 1
-		for(var myIndex = logIndex ; (myIndex < logArray.length-1) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
-			while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
+			// loop 1 - find lastImportedzWaveLog lines
+			for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
+				if (lastImportedzWaveLog && (zWaveLog[myIndex].date === lastImportedzWaveLog.date)) {
+					startIndex = myIndex+1;
+				};
+				zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
+				zWaveLog[myIndex].syslogDate = new Date( Date.parse( zWaveLog[myIndex].date ));
+			};
+			var logArray = Homey.ManagerSettings.get( 'myLog' ).split(/\n/);
+			var logLength = logArray.length;
+			// Loop 2 - find Merge position
+			for(var myIndex = logArray.length-1 ; (logIndex===1) && (myIndex < 0)  ; myIndex-- ) {
+				if (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25)) {
+					logIndex = myIndex;
+				};
+			};
+
+			// loop 3 - merge the logs part 1
+			for(var myIndex = logIndex ; (myIndex < logArray.length-1) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
+				while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
+					logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
+					startIndex++
+				}
+			};
+			// loop 4 merge remaining
+			while (startIndex < zWaveLog.length) {
 				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
-				startIndex++
+				if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+					var sysLogArg = {};
+					sysLogArg.logDate = zWaveLog[startIndex].syslogDate;
+					console.log ("syslogdate " + sysLogArg.logDate);
+					sysLogArg.log = zWaveLog[startIndex].log;
+					Homey.app.mySysLog( sysLogArg );
+				};
+
+				startIndex++ ; myIndex++
 			}
-		};
-		// loop 4 merge remaining
-		while (startIndex < zWaveLog.length) {
-			logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
+			var logNew =logArray.join('\n');
+			// Check Max Length tbd TODO !!
+			Homey.ManagerSettings.set( 'myLog', logNew );
+
+			lastImportedzWaveLog = newLastImportedzWaveLog;
+	 		Homey.ManagerSettings.set('lastImportedzWaveLog', lastImportedzWaveLog);
+
+			this.log( "lastImportedzWaveLog" + lastImportedzWaveLog.logDate );
+		} else {
+			var args = { 	log: "Warning: Import Z-Wave Log disabled, change PaperTrails setting to Geek [Zulu Time] notation!",
+										appName: '[PaperTrails]' };
+					args.logDate = new Date();
+			Homey.app.updateLog(Homey.app.getDateTime(args.logDate) + "\t" + args.appName + "\t" + args.log);
 			if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-				var sysLogArg = {};
-				sysLogArg.logDate = zWaveLog[startIndex].syslogDate;
-				console.log ("syslogdate " + sysLogArg.logDate);
-				sysLogArg.log = zWaveLog[startIndex].log;
-				Homey.app.mySysLog( sysLogArg );
+				Homey.app.mySysLog( args );
 			};
-
-			startIndex++ ; myIndex++
-		}
-		var logNew =logArray.join('\n');
-		// Check Max Length tbd TODO !!
-		Homey.ManagerSettings.set( 'myLog', logNew );
-
-		lastImportedzWaveLog = newLastImportedzWaveLog;
- 		Homey.ManagerSettings.set('lastImportedzWaveLog', lastImportedzWaveLog);
-
-		this.log( "lastImportedzWaveLog" + lastImportedzWaveLog.logDate );
+		};
 	};
 
 	mySysLog(args) {
@@ -214,7 +225,7 @@ class paperTrails extends Homey.App {
 		if ((logOld === null ) || (logOld.length === 0)) {
 			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
 		};
-		var logLength = logOld.split(/\r\n|\r|\n/).length;
+		// var logLength = logOld.split(/\r\n|\r|\n/).length;
 		logNew = logOld + "\n" + logMsg;
 		var logLength = logNew.split(/\r\n|\r|\n/).length;
 		var tokens = { 'logLength': logLength,

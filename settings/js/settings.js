@@ -134,15 +134,10 @@ function saveSettings(){
 
 function saveConfig(){
     var lastAppendLogSetting = appConfig.appendLog;
-    appConfig.newAppendLog = document.getElementById('appendLog').checked;
+    // appConfig.newAppendLog = document.getElementById('appendLog').checked;
     appConfig.timeStampFormat = document.getElementById('timeStampFormat').value;
-    var confirmationMessage ;
     var yes = false;
-    if (lastAppendLogSetting != appConfig.newAppendLog) {
-      confirmationMessage = "Click OK to Reverse PaperTrails Logging and Restart the App.";
-    } else {
-      confirmationMessage = "Click OK to Change the default Time and Date notation";
-    };
+    var confirmationMessage = "Click OK to Change the default Time and Date notation";
     Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
       if( !yes ) return yes;
       Homey.set('config', appConfig );

@@ -10,8 +10,7 @@
 	"author": { "name": "Geurt Dijker.", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
   "developers": [
-      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"},
-			{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
+      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"}]},
 	"contributing": {
     "donate": {
         "paypal": {
@@ -258,8 +257,8 @@
 					"en" : "Import Z-Wave Logs",
 					"nl" : "Importeer Z-Wave Log" },
 				"hint" : {
-					"en" : "Import Z-Wave Logs from Homey in PaperTrails.",
-					"nl" : "Importeer Z-Wave Logs van Homey in PaperTrails."}
+					"en" : "Import Z-Wave Logs from Homey in PaperTrails. This works only in [Zulu Time] format!",
+					"nl" : "Importeer Z-Wave Logs van Homey in PaperTrails.  Dit werkt alleen in [Zulu Time] formaat!"}
 			},
 			{
 				"id": "Clear_log",
