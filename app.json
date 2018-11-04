@@ -1,17 +1,16 @@
 {
 	"id": "nu.dijker.papertrails",
 	"sdk": 2,
-	"name": { "en": "PaperTrails"},
+	"name": { "en": "PaperTrails Log"},
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.3.7",
-	"compatibility": "1.x >=1.5.0",
-	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
+	"version": "0.5.1",
+	"compatibility": ">=1.5.0",
+	"author": { "name": "Geurt Dijker.", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
-  "developers": [
-      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"},
-			{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
+  	"developers": [
+      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"}]},
 	"contributing": {
     "donate": {
         "paypal": {
@@ -19,8 +18,14 @@
         }
     }
   },
-  "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"],
-						"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"] },
+  "bugs": {
+      "url": "https://github.com/Dijker/nu.dijker.PaperTrails/issues"
+  },
+  "athomForumDiscussionId": 3473,
+	"homeyCommunityTopicId" : 40,
+	"brandColor": "#03498F",
+  "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring", "syslog", "PaperTrailsApp"],
+	"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring", "syslog", "PaperTrailsApp"] },
 	"permissions": [ "homey:manager:api" ],
 	"flow": {
 		"triggers": [
@@ -220,8 +225,8 @@
 					}
 				],
 				"hint" : {
-					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
+					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log YYYY-MM-DD HH:MM.ss Yourtext ...",
+					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
 				}
 		}],
 		"actions": [
@@ -239,8 +244,8 @@
 					}
 				],
 				"hint" : {
-					"en" : "Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
+					"en" : "Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ... (enter 0 to stop logging.)",
+					"nl" : "Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ... (alleen 0 om niet meer te loggen)"
 				}
 			},
 			{
@@ -251,6 +256,15 @@
 				"hint" : {
 					"en" : "Trigger a Flow with a 'PaperTrails-This Flow is Triggerd' card in the 'When...' column.",
 					"nl" : "Activeer een Flow met een 'PaperTrails-Deze Flow is geactiveerd' kaartje in de 'Als...' kolom."}
+			},
+			{
+				"id": "import_zWave_Log",
+				"title": {
+					"en" : "Import Z-Wave Logs",
+					"nl" : "Importeer Z-Wave Log" },
+				"hint" : {
+					"en" : "Import Z-Wave Logs from Homey in PaperTrails. This works only in [Zulu Time] format!",
+					"nl" : "Importeer Z-Wave Logs van Homey in PaperTrails.  Dit werkt alleen in [Zulu Time] formaat!"}
 			},
 			{
 				"id": "Clear_log",
@@ -300,6 +314,123 @@
 				"hint" : {
 					"en" : "Remove the oldest % of the Log. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column.",
 					"nl" : "Verwijder het oudste % van de Log. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom."}
+			},
+			{
+				"id": "Send_syslog",
+				"title": {
+					"en": "Send syslog msg.",
+					"nl": "Stuur syslog regel."
+				},
+				"args": [{
+                    "name": "syslogseverity",
+                    "type": "dropdown",
+                    "values": [
+                        {
+                            "id": "4",
+                            "label": {
+                                "en": "Warning"
+                            }
+                        },
+                        {
+                            "id": "5",
+                            "label": {
+                                "en": "Notice"
+                            }
+                        },
+                        {
+                            "id": "6",
+                            "label": {
+                                "en": "Informational"
+                            }
+												},
+                        {
+                            "id": "7",
+                            "label": {
+                                "en": "Debug"
+                            }
+                        }]
+											},
+											{
+		                    "name": "syslogfacility",
+		                    "type": "dropdown",
+		                    "values": [
+		                        {
+		                            "id": "1",
+		                            "label": {
+		                                "en": "User"
+		                            }
+		                        },
+		                        {
+		                            "id": "13",
+		                            "label": {
+		                                "en": "Audit"
+		                            }
+		                        },
+		                        {
+		                            "id": "14",
+		                            "label": {
+		                                "en": "Alert"
+		                            }
+														},
+		                        {
+		                            "id": "16",
+		                            "label": {
+		                                "en": "Local0"
+		                            }
+		                        },
+		                        {
+		                            "id": "17",
+		                            "label": {
+		                                "en": "Local1"
+		                            }
+		                        },
+		                        {
+		                            "id": "18",
+		                            "label": {
+		                                "en": "Local2"
+		                            }
+		                        },
+		                        {
+		                            "id": "19",
+		                            "label": {
+		                                "en": "Local3"
+		                            }
+		                        },
+		                        {
+		                            "id": "20",
+		                            "label": {
+		                                "en": "Local4"
+		                            }
+		                        },
+		                        {
+		                            "id": "21",
+		                            "label": {
+		                                "en": "Local5"
+		                            }
+		                        },
+		                        {
+		                            "id": "22",
+		                            "label": {
+		                                "en": "Local6"
+		                            }
+		                        },
+		                        {
+		                            "id": "23",
+		                            "label": {
+		                                "en": "Local7"
+		                            }
+		                        }]
+													},
+											{
+												"name": "log",
+												"type": "text",
+												"placeholder" : "Text..."
+											}
+										],
+				"hint" : {
+					"en" : "Send the MSG below to the syslog server.  Yourtext ...",
+					"nl" : "Stuur de regel naar de syslog.  Jouw tekst ..."
+				}
 			},
 			{
 				"id": "Input_log",
