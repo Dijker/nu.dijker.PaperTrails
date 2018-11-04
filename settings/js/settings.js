@@ -213,6 +213,9 @@ function showPanel(panel) {
   $('.panel-button').removeClass('active')
   $('#panel-button-' + panel).addClass('active')
   $('#panel-' + panel).show()
+  if (panel===1 && scrollToEnd) {
+    logtextarea.scrollTop = logtextarea.scrollHeight
+  };
   show_log()
 };
 
