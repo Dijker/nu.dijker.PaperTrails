@@ -1,8 +1,9 @@
 # PaperTrails - Advanced Logging and Log management.
 
-This app makes it possible to add time based logging to your flow's.
+This app makes it possible to add time based logging to your flow's and send logs to a standard SysLog server.
 
-Use it fe with the Email sender to send plain text logs.
+
+Use it for example  with the Email sender to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
 _// Trigger Logging to PaperTrails from HomeyScript_
