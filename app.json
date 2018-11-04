@@ -1,15 +1,15 @@
 {
 	"id": "nu.dijker.papertrails",
 	"sdk": 2,
-	"name": { "en": "PaperTrails"},
+	"name": { "en": "PaperTrails Log"},
   "description": { "en": "This app creates a text log trail" },
   "category": "tools",
   "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.4.6",
-	"compatibility": "1.x >=1.5.0",
+	"version": "0.5.0",
+	"compatibility": ">=1.5.0",
 	"author": { "name": "Geurt Dijker.", "email": "Homey.Apps@dijker.nu" },
 	"contributors": {
-  "developers": [
+  	"developers": [
       { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"}]},
 	"contributing": {
     "donate": {
@@ -21,7 +21,9 @@
   "bugs": {
       "url": "https://github.com/Dijker/nu.dijker.PaperTrails/issues"
   },
-  "athomForumDiscussionId": 3473,	
+  "athomForumDiscussionId": 3473,
+	"homeyCommunityTopicId" : 40,
+	"brandColor": "#03498F",
   "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring", "syslog", "PaperTrailsApp"],
 	"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring", "syslog", "PaperTrailsApp"] },
 	"permissions": [ "homey:manager:api" ],

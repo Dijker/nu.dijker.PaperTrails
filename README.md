@@ -3,6 +3,9 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
+## Version 0.5.0
+* add Filter option on Log viewer
+
 ## Version 0.4.5 (Alpha)
 * cleanup some code
 * Remove option to choose not to append!
@@ -19,7 +22,7 @@ For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu
 * Added option to Import Z-Wave Log.
 ** Warning **
 Only use Import Z-Wave Log on Append Logging (Top-Down) and with Geek- Zulu Time.
-Will continue working on that after 2 weeks off...
+Will continue working on that after ... When I have enough time ..... (sorry)
 
 ## Version 0.3.7
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.

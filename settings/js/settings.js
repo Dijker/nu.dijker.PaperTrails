@@ -175,22 +175,35 @@ function download(filename, text) {
 };
 
 function show_log(){
+  var input, filter, myLogArr, myFilterdLog;
     Homey.get('myLog', function(err, myLog){
         if( err ) {
           document.getElementById('logtextarea').value = 'Could not get log' + err
           return console.error('Could not get log', err);
         };
+        input = document.getElementById("filterSearch");
+        filter = input.value.toUpperCase();
+        myLogArr = myLog.split('\n')
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = myLogArr.length-1; i > 0 ; i--) {
+          if (myLogArr[i].toUpperCase().indexOf(filter) === -1) {
+            myLogArr.splice(i,1);
+          }
+        }
+        if (myLogArr.length == 1) {myLogArr.push("-=-=-=- [ Nothing found! ] -=-=-=-") }
+        myFilterdLog = myLogArr.join('\n');
         var snap = ((logtextarea.scrollHeight-logtextarea.scrollTop-logtextarea.clientHeight) < (0.3  *logtextarea.clientHeight));
-        if ( _myLog !== myLog ){
-            _myLog = myLog
-           document.getElementById('logtextarea').value = myLog;
+        if ( _myLog !== myFilterdLog ){
+          _myLog = myFilterdLog
+          document.getElementById('logtextarea').value = myFilterdLog;
         };
         var scrollToEnd = document.getElementById('scrollToEnd').checked;
         if ( scrollToEnd && snap ) {
-            logtextarea.scrollTop = logtextarea.scrollHeight;
+          logtextarea.scrollTop = logtextarea.scrollHeight;
         };
     });
 };
+
 
 function showPanel(panel) {
   if (panel===1 && scrollToEnd) {
