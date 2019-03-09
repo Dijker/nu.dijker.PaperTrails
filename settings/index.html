@@ -21,16 +21,16 @@
   </head>
   <body>
     <ul class="nav nav-tabs">
-      <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)">Log &#9660; </a></li>
-      <li id="panel-button-2" class="h5 panel-button"><a href="javascript:showPanel(2)">Config</a></li>
-      <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)">Maintenance</a></li>
+      <li id="panel-button-1" class="h5 panel-button"><a href="javascript:showPanel(1)" data-i18n="settings.panels.log">Log &#9660; </a></li>
+      <li id="panel-button-2" class="h5 panel-button"><a href="javascript:showPanel(2)" data-i18n="settings.panels.config">Config</a></li>
+      <li id="panel-button-3" class="h5 panel-button"><a href="javascript:showPanel(3)" data-i18n="settings.panels.maintenance">Maintenance</a></li>
     </ul>
     <!-- Logging panel -->
     <div id="panel-1" class="panel">
         <fieldset style="top:0; margin: 5px">
           <input type="text" id="filterSearch" onkeyup="show_log()" placeholder="Filter ..." title="Only show log with your filterd text.">
           <legend style="margin-bottom: 1px;">Log</legend>
-           <textarea id="logtextarea" style="margin: 2px;  width: -webkit-fill-available; height: 74vh"></textarea>
+           <textarea id="logtextarea" style="margin: 2px;  width: -webkit-fill-available; height: 74vh" wrap="soft" cols="999"></textarea>
          </fieldset>
     </div>
     <!-- Configuration panel -->
@@ -39,26 +39,27 @@
         &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
           <div class="field row" style="padding: 5px 10px;">
-              <input id="scrollToEnd" class="left" type="checkbox" onChange="saveSettings()" value="scrollToEnd" style="width:40px"/>
-              <label for="scrollToEnd" style="width:120px" class="left">Scroll To End</label>
-              <button id="clear_LOG" class="button" style= "float: right;" onclick="clear_LOG()">Clear Log</button>
-              <button id="download_PaperTrails" class="button"  style= "float: right;" onclick="download_PaperTrails()">Download</button>
+              <button id="download_PaperTrails" class="button"  style= "float: left;" onclick="download_PaperTrails()" data-i18n="settings.panel2.download">Download</button>
+              <div id="noDownload" data-i18n="settings.panel2.no_download_mobile">Download doesn't work on your Mobile, pls check the Developer Dashboard /tools/app-settings here: https://developer.athom.com/tools/app-settings!</div>
+              <br><br>
+              <label for="intervalS" style="width:180px; padding: 5px 10px;" class="left" data-i18n="settings.panel2.sec_refresh">Seconds Refresh interval</label>
+              <input id="intervalS" class="right" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
               <br><br><br>
-              <input id="intervalS" class="left" type="number" step=1 min=1 max=99 style="width:55px; padding: 5px 10px;" onChange="updateResfresh(appSettings)"/>
-              <label for="intervalS" style="width:180px; padding: 5px 10px;" class="left">Seconds Refresh interval</label>
-              <br><br><br>
-              By default Logs are truncated by 20% each time the maximum is reached.<br><br>
-              <label for="maxLogLength" style="width:180px; padding: 5px 10px;" >Maximum lines for Log</label>
+              <div data-i18n="settings.panel2.msg1">By default Logs are truncated by 20% each time the maximum is reached.</div><br><br>
+              <label for="maxLogLength" style="width:180px; padding: 5px 10px;" data-i18n="settings.panel2.max_lines">Maximum lines for Log</label>
               <input id="maxLogLength" class="right" value="1024" onChange="saveSettings()" type="number" step=1 min=50 max=10240 style="width:80px; padding: 5px 10px;" />
+              <br><br>
+              <button id="clear_LOG" class="button" style= "float: left;" onclick="clear_LOG()" data-i18n="settings.panel2.clear_log">Clear Log</button><br>
               <br><br>
             </div>
           </fieldset>
           <fieldset style="top:0px; margin: 5px; width: 96%">
             <div class="field row" style="padding: 5px 10px;">
-              <legend>Configuration</legend>
-              Choose your prefered date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.<br>
+              <legend data-i18n="settings.panel2.configuration">Configuration</legend>
+              <div data-i18n="settings.panel2.msg2">Choose your prefered date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.</div><br>
+              <!--
               <b>Note:</b> for import of Z-Wave logs you need to choose <b>Geek [Zulu Time]</b><br>
-              <!-- <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
+              <input id="appendLog"  class="left" type="checkbox" onChange="saveSettings()" value="appendLog"  style="width:40px; padding: 5px 10px;"/>
               <label for="appendLog" style="width:128px; padding: 5px 10px;" class="left">Append logging</label>
             -->
               <label for="timeStampFormat" style="width:140px; padding: 5px 10px;" >Timestamp format: </label>
@@ -123,6 +124,11 @@
     </div>
     <!-- Maintenance panel -->
     <div id="panel-3" class="panel">
+      <div id="panel-3-removed" data-i18n="settings.panel3.msg1_v2">
+        Temporary removed !!!...
+      </div>
+
+      <div id="panel-3-orgv15x">
       &nbsp;&nbsp;
         <fieldset style="top:0px; margin: 5px; width: 96%">
         <div class="field row" style="padding: 5px 10px;">
@@ -136,7 +142,7 @@
            <button id="sendLogtoDeveloper" class="button" style= "float: right;" onclick="sendLogtoDeveloper()">Send Log to Developer</button>
            or Go to Settings - Apps: Hold the ALT key and click <i>Send Log to Developer</i>
        </div>
-       </fieldset>
+     </fieldset>
        <br>
       <fieldset style="top:0px; margin: 5px; width: 96%">
          <div class="field row" style="padding: 5px 10px;">

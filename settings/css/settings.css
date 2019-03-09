@@ -25,12 +25,18 @@ body {
   width: 440px;
 }
 
+textarea {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
 #filterSearch {
   background-image: url('../filtericon.png');
   background-position: 10px 12px;
   background-repeat: no-repeat;
   width: 100%;
-  font-size: 10px;
+  font-size: 12px;
   padding: 10px 20px 10px 40px;
   border: 1px solid #ddd;
   margin-bottom: 4px;

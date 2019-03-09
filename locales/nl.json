@@ -1,1 +1,26 @@
-{}
+{
+  "settings":{
+    "title_sounds":"Your sounds",
+    "panels":{
+      "log":"Logboek &#9660; ",
+      "config":"Configuratie",
+      "maintenance":"Onderhoud"
+    },
+    "panel2":{
+      "download":"Download",
+      "no_download_mobile":"Downloaden werkt niet op uw mobiel, bekijk hier de ontwikkelaarsdashboard / tools / app-instellingen: https://developer.athom.com/tools/app-settings!",
+      "sec_refresh":"Seconden Vernieuw interval",
+      "msg1":"Standaard worden logs telkens met 20% ingekort wanneer het maximum wordt bereikt.",
+      "max_lines":"Maximum aantal regels voor Log",
+      "clear_log":"Wis Logboek",
+      "configuration":"Configuratie",
+      "msg2":"Kies de gewenste datum-/tijdnotatie. Voor de beste ervaring met het inkorten van de Log moet u het logboek wissen bij het wijzigen van het formaat.",
+      "max_":"Maximum",
+      "max_":"Maximum",
+      "maintenance":"Onderhoud"
+    },
+    "panel3":{
+      "msg1_v2":"Tijdelijk verwijderd vanwege beperkte machtigingen in Homey 2.0.0 om stromen uit een app te wijzigen."
+    }
+  }
+}

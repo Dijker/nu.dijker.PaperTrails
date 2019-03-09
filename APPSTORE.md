@@ -12,6 +12,10 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
+## Version 0.6.0
+* Removed option to Import Z-Wave Log.
+
+
 ## Version 0.5.0
 * add Filter option on Log viewer
 * cleanup some code
@@ -22,7 +26,6 @@ _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 * Added an App name, Prefix first word with $ to have a App Name
     Time - AppName - Message
 * Added option to send to syslog.
-* Added option to Import Z-Wave Log.
 
 ** Warning **
 Only use Import Z-Wave Log on Append Logging (Top-Down) and with Geek- Zulu Time.
