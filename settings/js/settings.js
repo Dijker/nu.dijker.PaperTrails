@@ -15,6 +15,7 @@ var appConfig = {
   'appendLog': true };
 var migrated;
 var scrollToEnd;
+var mobileSettings;
 
 function onHomeyReady( homeyReady ){
   Homey = homeyReady;
@@ -28,13 +29,9 @@ function onHomeyReady( homeyReady ){
           appSettings = appSettings1;
           document.getElementById('intervalS').value = appSettings.refresh;
           document.getElementById('maxLogLength').value = appSettings.maxLogLength;
-          document.getElementById('scrollToEnd').checked = appSettings.scrollToEnd;
           scrollToEnd = appSettings.scrollToEnd;
-          document.getElementById('autoPrefixThen').value = appSettings.autoPrefixThen;
-          document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
           interval = setInterval( function(){ show_log() } , appSettings.refresh * 1000);
           migrated = appSettings.migrated;
-          // document.getElementById('enableSyslog').checked = appSettingsenableSyslog;
           //syslogServer
           document.getElementById('syslogServer').value = appSettings.syslogServer;
           //syslogPort
@@ -71,10 +68,33 @@ function onHomeyReady( homeyReady ){
         } else {
           document.getElementById('panel-button-1').innerHTML = '<a href="javascript:showPanel(1)">Log &#9650; </a>';
         };
+        // homeyMajorVersion
+        console.log( 'appConfig' , appConfig );
+        var panel_3_removed = document.getElementById('panel-3-removed');
+        var panel_3_orgv15x = document.getElementById('panel-3-orgv15x');
+        if (appConfig.homeyMajorVersion === 2) {
+          panel_3_removed.style.display = "block"
+          panel_3_orgv15x.style.display = "none"
+          console.log( 'v === 2 ' );
+        } else {
+          panel_3_removed.style.display = "none"
+          panel_3_orgv15x.style.display = "block"
+          console.log( 'v !== 2 ' );
+        }
         Homey.ready();
       }
     }});
-
+  mobileSettings = window.location.href.indexOf('webview=1') !== -1;
+  var downloadButton = document.getElementById('download_PaperTrails');
+  var noDownloadMsg = document.getElementById('noDownload');
+  if (mobileSettings) {
+    downloadButton.style.display = "none"
+    noDownloadMsg.style.display = "block"
+  } else {
+    downloadButton.style.display = "block"
+    noDownloadMsg.style.display = "none"
+  }
+  // document.getElementById('right').innerHTML = window.location.href;
   show_log();
   showPanel(1);
 };
@@ -111,10 +131,10 @@ function saveSettingsenableSyslog(){
 function saveSettings(){
     appSettings.refresh = document.getElementById('intervalS').value;
     appSettings.maxLogLength = document.getElementById('maxLogLength').value;
-    appSettings.scrollToEnd = document.getElementById('scrollToEnd').checked;
-    scrollToEnd = document.getElementById('scrollToEnd').checked;
-    appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
-    appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
+    // appSettings.scrollToEnd = document.getElementById('scrollToEnd').checked;
+    scrollToEnd = true // document.getElementById('scrollToEnd').checked;
+    //appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
+    //appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
     appSettings.migrated = migrated;
     appSettings.syslogServer = document.getElementById('syslogServer').value;
     appSettings.syslogPort = document.getElementById('syslogPort').value;
@@ -197,7 +217,7 @@ function show_log(){
           _myLog = myFilterdLog
           document.getElementById('logtextarea').value = myFilterdLog;
         };
-        var scrollToEnd = document.getElementById('scrollToEnd').checked;
+        var scrollToEnd = true;// document.getElementById('scrollToEnd').checked;
         if ( scrollToEnd && snap ) {
           logtextarea.scrollTop = logtextarea.scrollHeight;
         };

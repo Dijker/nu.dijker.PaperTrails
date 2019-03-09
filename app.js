@@ -13,14 +13,14 @@ const actionTruncateLogPct = new Homey.FlowCardAction('truncate_log_pct');
 const actionInputDateTimeLog = new Homey.FlowCardAction('Input_date_time_log');
 const actionClearLog = new Homey.FlowCardAction('Clear_log');
 const actionProgrammaticTrigger = new Homey.FlowCardAction('programmatic_trigger');
-const actionImport_zWave_Log = new Homey.FlowCardAction('import_zWave_Log');
+// const actionImport_zWave_Log = new Homey.FlowCardAction('import_zWave_Log');
 const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_time_log');
 
 var appSettings = {};
 var appConfig = {};
 var appSettingsenableSyslog ;
 var syslogClient;
-var lastImportedzWaveLog;
+// var lastImportedzWaveLog;
 var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
@@ -28,7 +28,7 @@ class paperTrails extends Homey.App {
 		this.log('Start init paperTrails');
 		this.log('HostName: ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
-		lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
+		// lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
 		if (appSettings == (null || undefined)) {
 			this.log('Initializing settings ...')
 			appSettings = {
@@ -74,7 +74,21 @@ class paperTrails extends Homey.App {
 
 		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' };
 		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true };
-
+		const api = await this.getApi();
+		var sysInfo = await api.system.getInfo();
+		appConfig.homeyMajorVersion = 0;
+		if (!sysInfo.homeyVersion && sysInfo.homey_version ) {
+		        appConfig.homeyMajorVersion = 1;
+		    		this.log ( "Version ", appConfig.homeyMajorVersion, sysInfo.homey_version )
+		} else {
+		    if (sysInfo.homeyVersion && !sysInfo.homey_version ) {
+		        appConfig.homeyMajorVersion = 2;
+		        this.log ( "Version ", appConfig.homeyMajorVersion, sysInfo.homeyVersion );
+		    }  else {
+		        appConfig.homeyMajorVersion = 999;
+		        this.log( "Error!! no known homeyMajorVersion!",  homeyMajorVersion )
+		    }
+		};
 		//  Just save!
 		Homey.ManagerSettings.set('settings', appSettings);
 		Homey.ManagerSettings.set('config', appConfig);
@@ -95,6 +109,7 @@ class paperTrails extends Homey.App {
 
 		this.log('End of onInit \nCurrent appSettings :\n', appSettings);
 		this.log('Current appConfig :\n', appConfig);
+		this.log('Current sysInfo :\n', sysInfo);
 	}; // End of onInit()
 
 	// startsysLog
@@ -129,75 +144,6 @@ class paperTrails extends Homey.App {
 		return this.api;
 	};
 
-  async importZWaveLog() {
-		if (appConfig.timeStampFormat === "Zulu") {
-			const api = await this.getApi();
-			let result = await api.zwave.setLogEnabled({enabled:true });
-			var zWaveLog = await api.zwave.getLog();
-			var eventDate;
-			var startIndex = 0;
-			var logIndex = 1;
-			var newLastImportedzWaveLog  = zWaveLog[zWaveLog.length-1];
-			var syslogOptions = {
-				facility : syslog.Facility.Local7,
-				severity : syslog.Severity.Debug
-			};
-
-			// loop 1 - find lastImportedzWaveLog lines
-			for(var myIndex = zWaveLog.length-1 ; (startIndex===0) && (myIndex >= 0) ; myIndex-- ) {
-				if (lastImportedzWaveLog && (zWaveLog[myIndex].date === lastImportedzWaveLog.date)) {
-					startIndex = myIndex+1;
-				};
-				zWaveLog[myIndex].logDate = "[" + zWaveLog[myIndex].date + "]";
-				zWaveLog[myIndex].syslogDate = new Date( Date.parse( zWaveLog[myIndex].date ));
-			};
-			var logArray = Homey.ManagerSettings.get( 'myLog' ).split(/\n/);
-			var logLength = logArray.length;
-			// Loop 2 - find Merge position
-			for(var myIndex = logArray.length-1 ; (logIndex===1) && (myIndex < 0)  ; myIndex-- ) {
-				if (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25)) {
-					logIndex = myIndex;
-				};
-			};
-
-			// loop 3 - merge the logs part 1
-			for(var myIndex = logIndex ; (myIndex < logArray.length-1) && (startIndex < zWaveLog.length-1) ; myIndex++ ) {
-				while ((startIndex < zWaveLog.length ) && (zWaveLog[startIndex].logDate < logArray[myIndex].substring(0,25))) {
-					logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
-					startIndex++
-				}
-			};
-			// loop 4 merge remaining
-			while (startIndex < zWaveLog.length) {
-				logArray.splice(myIndex,0, zWaveLog[startIndex].logDate + "\t[System][Z-Wave]\t" + zWaveLog[startIndex].log );
-				if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-					var sysLogArg = {};
-					sysLogArg.logDate = zWaveLog[startIndex].syslogDate;
-					console.log ("syslogdate " + sysLogArg.logDate);
-					sysLogArg.log = zWaveLog[startIndex].log;
-					Homey.app.mySysLog( sysLogArg );
-				};
-
-				startIndex++ ; myIndex++
-			}
-			var logNew =logArray.join('\n');
-			// Check Max Length tbd TODO !!
-			Homey.ManagerSettings.set( 'myLog', logNew );
-
-			lastImportedzWaveLog = newLastImportedzWaveLog;
-	 		Homey.ManagerSettings.set('lastImportedzWaveLog', lastImportedzWaveLog);
-
-			this.log( "lastImportedzWaveLog" + lastImportedzWaveLog.logDate );
-		} else {
-			var args = { 	log: "Warning: Import Z-Wave Log disabled, change PaperTrails setting to Geek [Zulu Time] notation!",
-										appName: '[PaperTrails]' };
-					args.logDate = new Date();
-			Homey.app.updateLog(Homey.app.getDateTime(args.logDate) + "\t" + args.appName + "\t" + args.log);
-			if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
-				Homey.app.mySysLog( args );
-			};
-		};
-	};
 
 	mySysLog(args) {
 		var syslogOptions = { };
@@ -675,13 +621,6 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
   	Homey.ManagerSettings.set( 'myLog', logNew );
   	callback( null, true );
 });
-
-//actionImport_zWave_Log
-actionImport_zWave_Log.register().on('run', ( args, state, callback ) => {
-	Homey.app.importZWaveLog();
-  callback( null, true );
-});
-
 
 actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 		var infoMsg = "-=-=-" + hostname +": PaperTrails-Trigger a Flow at: " + Homey.app.getDateTime(new Date()) +" -=-=- " ;

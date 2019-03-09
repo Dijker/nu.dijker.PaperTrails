@@ -25,6 +25,12 @@ body {
   width: 440px;
 }
 
+textarea {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
 #filterSearch {
   background-image: url('../filtericon.png');
   background-position: 10px 12px;
