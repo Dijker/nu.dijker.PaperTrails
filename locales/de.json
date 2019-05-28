@@ -2,9 +2,9 @@
   "settings":{
     "title_sounds":"Your sounds",
     "panels":{
-      "log":"Log &#9660; ",
-      "config":"Config",
-      "maintenance":"Maintenance"
+      "log":"Logbuch &#9660; ",
+      "config":"Konfig",
+      "maintenance":"Wartung"
     },
     "panel2":{
       "download":"Download",

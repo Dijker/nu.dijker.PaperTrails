@@ -1,324 +1,516 @@
 {
-	"id": "nu.dijker.papertrails",
-	"sdk": 2,
-	"name": { "en": "PaperTrails"},
-  "description": { "en": "This app creates a text log trail" },
-  "category": "tools",
-  "images": { "large": "assets/images/large.jpg", "small": "assets/images/small.jpg" },
-	"version": "0.3.7",
-	"compatibility": "1.x >=1.5.0",
-	"author": { "name": "Geurt Dijker", "email": "Homey.Apps@dijker.nu" },
-	"contributors": {
-  "developers": [
-      { "name": "Geurt Dijker" , "email": "Homey.Apps@dijker.nu"},
-			{ "name": "Niels de Klerk", "email": "mail@nielsdeklerk.nl" }]},
-	"contributing": {
-    "donate": {
-        "paypal": {
-            "username": "Dijker"
-        }
+  "id":"nu.dijker.papertrails",
+  "sdk":2,
+  "name":{
+    "en":"PaperTrails Log",
+    "nl":"PaperTrails Logboek",
+    "de":"PaperTrails Logbuch"
+  },
+  "description":{
+    "en":"This app creates a text log",
+    "nl":"Deze app maakt een logboek aan",
+    "de":"Diese App erstellt ein Logbuch"
+  },
+  "category":"tools",
+  "images":{
+    "large":"assets/images/large.jpg",
+    "small":"assets/images/small.jpg"
+  },
+  "version":"0.5.10",
+  "compatibility":">=1.5.0",
+  "author":{
+    "name":"Geurt Dijker",
+    "email":"Homey.Apps@dijker.nu"
+  },
+  "contributors":{
+    "developers":[
+      {
+        "name":"Geurt Dijker",
+        "email":"Homey.Apps@dijker.nu"
+      }
+    ]
+  },
+  "contributing":{
+    "donate":{
+      "paypal":{
+        "username":"Dijker"
+      }
     }
   },
-  "tags": { "en": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"],
-						"nl": [ "Log", "Tools", "log", "tools", "Logging", "monitoring"] },
-	"permissions": [ "homey:manager:api" ],
-	"flow": {
-		"triggers": [
-					{
-						"id": "programmatic_trigger",
-						"title": {
-							"en" : "PaperTrails-This Flow is triggered.",
-							"nl" : "PaperTrails-Deze Flow is geactiveerd."
-						},
-						"hint": { "en": "Use this card to create a Flow that can be triggered from another Flow. Use the PaperTrails-'Trigger a Flow' card in the 'Then' column in the other Flow." ,
-							"nl" : "Gebruik dit kaartje om een Flow te maken die geactiveerd kan worden vanuit een andere Flow. Gebruik in de andere Flow het PaperTrials-'Activeer een Flow' kaartje in de 'Dan' kolom."},
-						"tokens": [
-							{
-								"name": "logLength",
-								"type": "number",
-								"title": {
-									"en": "length",
-									"nl": "lengte"
-								},
-								"example": 1024
-							},
-							{
-								"name": "Log",
-								"type": "string",
-								"title": {
-									"en": "Logfile",
-									"nl": "Logbestand"
-								},
-								"example": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue. Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy."
-							},
-							{
-								"name": "infoMsg",
-								"type": "string",
-								"title": {
-									"en": "Info Message",
-									"nl": "Info bericht."
-								},
-								"example": "Why do you test this 'PaperTrails-This Flow is triggered.'"
-							}
-						]
-					},
-					{
-						"id": "logCleared",
-						"title": {
-							"en" : "PaperTrails-The Log is Cleared.",
-							"nl" : "PaperTrails-De log is gewist."
-						},
-						"hint": { "en": "The log is Cleared from a Flow. Use the PaperTrails-'Clear Log data' card in the 'Then' column in the other Flow. The tokens contains the removed Log content.",
-							"nl" : "De log is gewist door een Flow. Gebruik in de andere Flow het PaperTrials-'Wis de Log' kaartje in de 'Dan' kolom. Det tokens bevatten de verwijderde Log data."},
-						"tokens": [
-							{
-								"name": "logLength",
-								"type": "number",
-								"title": {
-									"en": "length",
-									"nl": "lengte"
-								},
-								"example": 1024
-							},
-							{
-								"name": "Log",
-								"type": "string",
-								"title": {
-									"en": "Logfile",
-									"nl": "Logbestand"
-								},
-								"example": "Log File content"
-							},
-							{
-								"name": "infoMsg",
-								"type": "string",
-								"title": {
-									"en": "Info Message",
-									"nl": "Info bericht."
-								},
-								"example": "Why do you test this"
-							}
-						]
-					},
-					{
-						"id": "logTruncated",
-						"title": {
-							"en" : "PaperTrails-The Log is Truncated.",
-							"nl" : "PaperTrails-De log is ingekort."
-						},
-						"hint": { "en": "The log is Truncated from a Flow. Use the PaperTrails-'Truncated Log...' card in the 'Then' column in the other Flow. The token contains the removed Log content.",
-							"nl" : "De log is ingekort vanuit de Flow. Gebruik in de andere Flow het PaperTrials-'Kort de Log in' kaartje in de 'Dan' kolom. Det token bevat de verwijderde Log data."},
-						"tokens": [
-							{
-								"name": "logLength",
-								"type": "number",
-								"title": {
-									"en": "length",
-									"nl": "lengte"
-								},
-								"example": 1024
-							},
-							{
-								"name": "Log",
-								"type": "string",
-								"title": {
-									"en": "Logfile",
-									"nl": "Logbestand"
-								},
-								"example": "Log File content"
-							},
-							{
-								"name": "infoMsg",
-								"type": "string",
-								"title": {
-									"en": "Info Message",
-									"nl": "Info bericht."
-								},
-								"example": "Why do you test this"
-							}
-						]
-					},
-					{
-          	"id": "max_loglines",
-          	"title": {
-							"en" : "PaperTrails at max configured Lines",
-							"nl" : "De log heeft max. aantal regels"
+  "bugs":{
+    "url":"https://github.com/Dijker/nu.dijker.PaperTrails/issues"
+  },
+  "homeyCommunityTopicId":40,
+  "brandColor":"#03498F",
+  "tags":{
+    "en":[
+      "Log",
+      "Tools",
+      "log",
+      "tools",
+      "Logging",
+      "monitoring",
+      "syslog",
+      "PaperTrailsApp"
+    ],
+    "nl":[
+      "Log",
+      "Tools",
+      "log",
+      "tools",
+      "Logging",
+      "monitoring",
+      "syslog",
+      "PaperTrailsApp",
+      "logboek"
+    ],
+    "de":[
+      "Log",
+      "Tools",
+      "log",
+      "tools",
+      "Logging",
+      "monitoring",
+      "syslog",
+      "PaperTrailsApp",
+      "Logbuch"
+    ]
+  },
+  "permissions":[
+    "homey:manager:api"
+  ],
+  "flow":{
+    "triggers":[
+      {
+        "id":"programmatic_trigger",
+        "title":{
+          "en":"PaperTrails-This Flow is triggered",
+          "nl":"PaperTrails-Deze Flow is geactiveerd"
+        },
+        "hint":{
+          "en":"Use this card to create a Flow that can be triggered from another Flow. Use the PaperTrails-'Trigger a Flow' card in the 'Then' column in the other Flow",
+          "nl":"Gebruik dit kaartje om een Flow te maken die geactiveerd kan worden vanuit een andere Flow. Gebruik in de andere Flow het PaperTrials-'Activeer een Flow' kaartje in de 'Dan' kolom"
+        },
+        "tokens":[
+          {
+            "name":"logLength",
+            "type":"number",
+            "title":{
+              "en":"length",
+              "nl":"lengte"
             },
-						"tokens": [
-            	{
-            		"name": "logLength",
-                "type": "number",
-                "title": {
-                  "en": "length",
-									"nl": "lengte"
-              	},
-                "example": 1024
+            "example":1024
+          },
+          {
+            "name":"Log",
+            "type":"string",
+            "title":{
+              "en":"Logfile",
+              "nl":"Logbestand"
+            },
+            "example":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue. Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy"
+          },
+          {
+            "name":"infoMsg",
+            "type":"string",
+            "title":{
+              "en":"Info Message",
+              "nl":"Info bericht"
+            },
+            "example":"Why do you test this 'PaperTrails-This Flow is triggered.'"
+          }
+        ]
+      },
+      {
+        "id":"logCleared",
+        "title":{
+          "en":"PaperTrails-The Log is Cleared",
+          "nl":"PaperTrails-De log is gewist"
+        },
+        "hint":{
+          "en":"The log is Cleared from a Flow. Use the PaperTrails-'Clear Log data' card in the 'Then' column in the other Flow. The tokens contains the removed Log content",
+          "nl":"De log is gewist door een Flow. Gebruik in de andere Flow het PaperTrials-'Wis de Log' kaartje in de 'Dan' kolom. Det tokens bevatten de verwijderde Log data"
+        },
+        "tokens":[
+          {
+            "name":"logLength",
+            "type":"number",
+            "title":{
+              "en":"length",
+              "nl":"lengte"
+            },
+            "example":1024
+          },
+          {
+            "name":"Log",
+            "type":"string",
+            "title":{
+              "en":"Logfile",
+              "nl":"Logbestand"
+            },
+            "example":"Log File content"
+          },
+          {
+            "name":"infoMsg",
+            "type":"string",
+            "title":{
+              "en":"Info Message",
+              "nl":"Info bericht"
+            },
+            "example":"Why do you test this"
+          }
+        ]
+      },
+      {
+        "id":"logTruncated",
+        "title":{
+          "en":"PaperTrails-The Log is Truncated",
+          "nl":"PaperTrails-De log is ingekort"
+        },
+        "hint":{
+          "en":"The log is Truncated from a Flow. Use the PaperTrails-'Truncated Log...' card in the 'Then' column in the other Flow. The token contains the removed Log content",
+          "nl":"De log is ingekort vanuit de Flow. Gebruik in de andere Flow het PaperTrials-'Kort de Log in' kaartje in de 'Dan' kolom. Det token bevat de verwijderde Log data"
+        },
+        "tokens":[
+          {
+            "name":"logLength",
+            "type":"number",
+            "title":{
+              "en":"length",
+              "nl":"lengte"
+            },
+            "example":1024
+          },
+          {
+            "name":"Log",
+            "type":"string",
+            "title":{
+              "en":"Logfile",
+              "nl":"Logbestand"
+            },
+            "example":"Log File content"
+          },
+          {
+            "name":"infoMsg",
+            "type":"string",
+            "title":{
+              "en":"Info Message",
+              "nl":"Info bericht"
+            },
+            "example":"Why do you test this"
+          }
+        ]
+      },
+      {
+        "id":"max_loglines",
+        "title":{
+          "en":"PaperTrails at max configured Lines",
+          "nl":"De log heeft max. aantal regels"
+        },
+        "tokens":[
+          {
+            "name":"logLength",
+            "type":"number",
+            "title":{
+              "en":"length",
+              "nl":"lengte"
+            },
+            "example":1024
+          },
+          {
+            "name":"Log",
+            "type":"string",
+            "title":{
+              "en":"Logfile",
+              "nl":"Logbestand"
+            },
+            "example":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. etc. etc. "
+          }
+        ],
+        "hint":{
+          "en":"Configure the maximum number of lines for PaperTrails at the Settings-Pappertrails. Without your intervention Papertrails will truncate 20% if it grows beyond",
+          "nl":"Configureer het maximale aantal regels van de Log in Instellingen-Papertrails. Zonder tussenkomst van Flows verwijdert Papertrails automatisch 20% als de log te groot groeit"
+        }
+      },
+      {
+        "id":"Custom_LogLines",
+        "title":{
+          "en":"Log greater than # lines",
+          "nl":"De log groter dan # regels"
+        },
+        "tokens":[
+          {
+            "name":"logLength",
+            "type":"number",
+            "title":{
+              "en":"length",
+              "nl":"lengte"
+            },
+            "example":1024
+          },
+          {
+            "name":"Log",
+            "type":"string",
+            "title":{
+              "en":"Logfile",
+              "nl":"Logbestand"
+            },
+            "example":"Log File content"
+          }
+        ],
+        "args":[
+          {
+            "name":"logLength",
+            "type":"number"
+          }
+        ],
+        "hint":{
+          "en":"Trigger when the Log is greater than # lines",
+          "nl":"Trigger als de Loglanger is dan #regels"
+        }
+      }
+    ],
+    "conditions":[
+      {
+        "id":"condition_date_time_log",
+        "title":{
+          "en":"Add to the log",
+          "nl":"Voeg toe aan de log"
+        },
+        "args":[
+          {
+            "name":"log",
+            "type":"text",
+            "placeholder":"Text... "
+          }
+        ],
+        "hint":{
+          "en":"This condition is always true and adds the line below prefixed with the date/time to the log YYYY-MM-DD HH:MM.ss Yourtext ... ",
+          "nl":"Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log JJJJ-MM-DD UU:MM.ss Jouw tekst ... "
+        }
+      }
+    ],
+    "actions":[
+      {
+        "id":"Input_date_time_log",
+        "title":{
+          "en":"Add to the log",
+          "nl":"Voeg toe aan de log"
+        },
+        "args":[
+          {
+            "name":"log",
+            "type":"text",
+            "placeholder":"Text... "
+          }
+        ],
+        "hint":{
+          "en":"Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ... (enter 0 to stop logging.)",
+          "nl":"Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ... (alleen 0 om niet meer te loggen)"
+        }
+      },
+      {
+        "id":"programmatic_trigger",
+        "title":{
+          "en":"PaperTrails-Trigger a Flow",
+          "nl":"PaperTrails-Activeer een Flow"
+        },
+        "hint":{
+          "en":"Trigger a Flow with a 'PaperTrails-This Flow is Triggerd' card in the 'When...' column",
+          "nl":"Activeer een Flow met een 'PaperTrails-Deze Flow is geactiveerd' kaartje in de 'Als...' kolom"
+        }
+      },
+      {
+        "id":"Clear_log",
+        "title":{
+          "en":"Clear log data",
+          "nl":"Wis de log"
+        },
+        "hint":{
+          "en":"Clear the PaperTrails Log. A Trigger 'Log is Cleared' in the 'When...' column is Triggerd",
+          "nl":"Wis de PaperTrails Log. Een flow met 'Log is gewist' in de 'Als...' kolom wordt geactiveerd"
+        }
+      },
+      {
+        "id":"truncate_log",
+        "title":{
+          "en":"Truncate Log older than (hours)",
+          "nl":"Verwijder Log ouder dan (uren)"
+        },
+        "args":[
+          {
+            "name":"removeHours",
+            "type":"number",
+            "example":"24",
+            "min":1,
+            "max":999,
+            "step":1
+          }
+        ],
+        "hint":{
+          "en":"Remove the lines older than ## hours. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column",
+          "nl":"Verwijder de regels ouder dan ## uren. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom"
+        }
+      },
+      {
+        "id":"truncate_log_pct",
+        "title":{
+          "en":"Remove oldest ## % of Log",
+          "nl":"Verwijderoudste ## % Log"
+        },
+        "args":[
+          {
+            "name":"removePct",
+            "type":"number",
+            "example":20,
+            "min":1,
+            "max":99,
+            "step":1
+          }
+        ],
+        "hint":{
+          "en":"Remove the oldest % of the Log. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column",
+          "nl":"Verwijder het oudste % van de Log. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom"
+        }
+      },
+      {
+        "id":"Send_syslog",
+        "title":{
+          "en":"Send syslog msg",
+          "nl":"Stuur syslog regel"
+        },
+        "args":[
+          {
+            "name":"syslogseverity",
+            "type":"dropdown",
+            "values":[
+              {
+                "id":"4",
+                "label":{
+                  "en":"Warning"
+                }
               },
-							{
-								"name": "Log",
-								"type": "string",
-								"title": {
-									"en": "Logfile",
-									"nl": "Logbestand"
-								},
-								"example": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. etc. etc. "
-							}
-						],
-						"hint" : {
-								"en" : "Configure the maximum number of lines for PaperTrails at the Settings-Pappertrails. Without your intervention Papertrails will truncate 20% if it grows beyond.",
-								"nl" : "Configureer het maximale aantal regels van de Log in Instellingen-Papertrails. Zonder tussenkomst van Flows verwijdert Papertrails automatisch 20% als de log te groot groeit."
-							}
-					},
-						{
-            	"id": "Custom_LogLines",
-            	"title": {
-								"en" : "Log greater than # lines",
-								"nl" : "De log groter dan # regels"
-	            },
-							"tokens": [
-              	{
-                	"name": "logLength",
-                  "type": "number",
-                  "title": {
-                  	"en": "length",
-										"nl": "lengte"
-                	},
-                	"example": 1024
-                },
-								{
-									"name": "Log",
-									"type": "string",
-									"title": {
-										"en": "Logfile",
-										"nl": "Logbestand"
-									},
-									"example": "Log File content"
-								}
-	        		],
-              "args": [
-              	{ "name": "logLength",
-                  "type": "number" }
-              ],
-							"hint" : {
-								"en" : "Trigger when the Log is greater than # lines.",
-								"nl" : "Trigger als de Loglanger is dan #regels."
-							}
-						}
-		],
-    "conditions": [
-		{
-				"id": "condition_date_time_log",
-				"title": {
-					"en": "Add to the log.",
-					"nl": "Voeg toe aan de log."
-				},
-				"args": [
-					{
-						"name": "log",
-						"type": "text",
-						"placeholder" : "Text..."
-					}
-				],
-				"hint" : {
-					"en" : "This condition is always true and adds the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Deze conditie is altijd waar en voegt onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
-				}
-		}],
-		"actions": [
-			{
-				"id": "Input_date_time_log",
-				"title": {
-					"en": "Add to the log.",
-					"nl": "Voeg toe aan de log."
-				},
-				"args": [
-					{
-						"name": "log",
-						"type": "text",
-						"placeholder" : "Text..."
-					}
-				],
-				"hint" : {
-					"en" : "Add the line below prefixed with the date/time to the log   YYYY-MM-DD HH:MM.ss Yourtext ...",
-					"nl" : "Voeg onderstaande regel voorafgegaan door datum en tijd toe aan de log   JJJJ-MM-DD UU:MM.ss Jouw tekst ..."
-				}
-			},
-			{
-				"id": "programmatic_trigger",
-				"title": {
-					"en" : "PaperTrails-Trigger a Flow",
-					"nl" : "PaperTrails-Activeer een Flow" },
-				"hint" : {
-					"en" : "Trigger a Flow with a 'PaperTrails-This Flow is Triggerd' card in the 'When...' column.",
-					"nl" : "Activeer een Flow met een 'PaperTrails-Deze Flow is geactiveerd' kaartje in de 'Als...' kolom."}
-			},
-			{
-				"id": "Clear_log",
-				"title": {
-					"en": "Clear log data.",
-					"nl": "Wis de log." },
-				"hint": {
-					"en": "Clear the PaperTrails Log. A Trigger 'Log is Cleared' in the 'When...' column is Triggerd.",
-					"nl" : "Wis de PaperTrails Log. Een flow met 'Log is gewist' in de 'Als...' kolom wordt geactiveerd." }
-			},
-			{
-				"id": "truncate_log",
-				"title": {
-					"en": "Truncate Log older than (hours)",
-					"nl": "Verwijder Log ouder dan (uren)"
-				},
-				"args": [
-					{
-						"name": "removeHours",
-						"type":"number",
-						"example": "24",
-						"min": 1,
-			 			"max": 999,
-			 			"step": 1
-					}
-				],
-				"hint" : {
-					"en" : "Remove the lines older than ## hours. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column.",
-					"nl" : "Verwijder de regels ouder dan ## uren. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom."}
-			},
-			{
-				"id": "truncate_log_pct",
-				"title": {
-					"en" : "Remove oldest ## % of Log",
-					"nl" : "Verwijderoudste ## % Log"
-				},
-				"args": [
-					{
-						"name" : "removePct",
-						"type" :"number",
-						"example" : 20,
-						"min" : 1,
-			 			"max" : 99,
-			 			"step" : 1
-					}
-				],
-				"hint" : {
-					"en" : "Remove the oldest % of the Log. This will trigger a flow with a 'PaperTrails-Log is Trucated' card in the 'When...' column.",
-					"nl" : "Verwijder het oudste % van de Log. Dit activeerd een Flow met een 'PaperTrails-De log is ingekort' kaartje in de 'Als...' kolom."}
-			},
-			{
-				"id": "Input_log",
-				"title": {
-					"en": "[deprecated] Add textline to the log. (without timestamp)",
-					"nl": "[verouderd] Voeg tekstregel toe aan de log. (Zonder tijd)"
-				},
-				"args": [
-					{
-						"name": "log",
-						"type": "text",
-						"placeholder" : "Text..."
-					}
-				],
-				"hint" : {
-					"en" : "[deprecated] Add the line below to the log.  Yourtext ...",
-					"nl" : "[verouderd] Voeg de regel toe aan de log.  Jouw tekst ..."
-				}
-			}
-		]
-	}
+              {
+                "id":"5",
+                "label":{
+                  "en":"Notice"
+                }
+              },
+              {
+                "id":"6",
+                "label":{
+                  "en":"Informational"
+                }
+              },
+              {
+                "id":"7",
+                "label":{
+                  "en":"Debug"
+                }
+              }
+            ]
+          },
+          {
+            "name":"syslogfacility",
+            "type":"dropdown",
+            "values":[
+              {
+                "id":"1",
+                "label":{
+                  "en":"User"
+                }
+              },
+              {
+                "id":"13",
+                "label":{
+                  "en":"Audit"
+                }
+              },
+              {
+                "id":"14",
+                "label":{
+                  "en":"Alert"
+                }
+              },
+              {
+                "id":"16",
+                "label":{
+                  "en":"Local0"
+                }
+              },
+              {
+                "id":"17",
+                "label":{
+                  "en":"Local1"
+                }
+              },
+              {
+                "id":"18",
+                "label":{
+                  "en":"Local2"
+                }
+              },
+              {
+                "id":"19",
+                "label":{
+                  "en":"Local3"
+                }
+              },
+              {
+                "id":"20",
+                "label":{
+                  "en":"Local4"
+                }
+              },
+              {
+                "id":"21",
+                "label":{
+                  "en":"Local5"
+                }
+              },
+              {
+                "id":"22",
+                "label":{
+                  "en":"Local6"
+                }
+              },
+              {
+                "id":"23",
+                "label":{
+                  "en":"Local7"
+                }
+              }
+            ]
+          },
+          {
+            "name":"log",
+            "type":"text",
+            "placeholder":"Text... "
+          }
+        ],
+        "hint":{
+          "en":"Send the MSG below to the syslog server.  Yourtext ... ",
+          "nl":"Stuur de regel naar de syslog.  Jouw tekst ... "
+        }
+      },
+      {
+        "id":"Input_log",
+        "title":{
+          "en":"[deprecated] Add textline to the log. (without timestamp)",
+          "nl":"[verouderd] Voeg tekstregel toe aan de log. (Zonder tijd)"
+        },
+        "args":[
+          {
+            "name":"log",
+            "type":"text",
+            "placeholder":"Text... "
+          }
+        ],
+        "hint":{
+          "en":"[deprecated] Add the line below to the log.  Yourtext ... ",
+          "nl":"[verouderd] Voeg de regel toe aan de log.  Jouw tekst ... "
+        }
+      }
+    ]
+  }
 }

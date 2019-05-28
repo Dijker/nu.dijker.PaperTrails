@@ -3,6 +3,33 @@
 This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
+## Version 0.6.0
+* several updates to Fix on Homey firmware v2.0
+* Removed option to import Z-wave logs
+* Hide Download Button on Mobile Interface (pls Go to Developers site)
+* Temporary hide Maintenance panel (as it doesn't work in 2.0)
+
+## Version 0.5.0
+* add Filter option on Log viewer
+
+## Version 0.4.5 (Alpha)
+* cleanup some code
+* Remove option to choose not to append!
+
+## Version 0.4.4 (Alpha)
+* Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
+* fixed someting with the Z-Wave import.
+* Changed separator between time and log to <Tab>
+* Added an App name, Prefix first word with $ to have a App Name
+    Time - AppName - Message
+
+## Version 0.4.3 (Alpha)
+* Added option to send to syslog.
+* Added option to Import Z-Wave Log.
+** Warning **
+Only use Import Z-Wave Log on Append Logging (Top-Down) and with Geek- Zulu Time.
+Will continue working on that after ... When I have enough time ..... (sorry)
+
 ## Version 0.3.7
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.
 * Migrating Flows from Simple Log

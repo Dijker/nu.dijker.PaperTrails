@@ -1,8 +1,9 @@
 # PaperTrails - Advanced Logging and Log management.
 
-This app makes it possible to add time based logging to your flow's.
+This app makes it possible to add time based logging to your flow's and send logs to a standard SysLog server.
 
-Use it fe with the updated Email.sender v0.1.6 to send plain text logs.
+
+Use it for example  with the Email sender to send plain text logs.
 ( https://apps.athom.com/app/email.sender )
 
 _// Trigger Logging to PaperTrails from HomeyScript_
@@ -11,11 +12,29 @@ _let HomeyScript = await Homey.apps.getApp({ id: 'nu.dijker.papertrails' } );_
 
 _HomeyScript.apiPost('log', { log:'Hello  World  of HomeyScript!'} );_
 
+## Version 0.6.0
+* Removed option to Import Z-Wave Log.
+
+
+## Version 0.5.0
+* add Filter option on Log viewer
+* cleanup some code
+* Remove option to choose not to append!
+* Enter only one 0 to ignore or stop logging (after adding Logging to all flows).
+* fixed someting with the Z-Wave import.
+* Changed separator between time and log to <Tab>
+* Added an App name, Prefix first word with $ to have a App Name
+    Time - AppName - Message
+* Added option to send to syslog.
+
+** Warning **
+Only use Import Z-Wave Log on Append Logging (Top-Down) and with Geek- Zulu Time.
+Will continue working on that later ...
 
 ## Version 0.3.7
 * Added Magic! Adding & Removing Logging to All Flows with a PreFix.
 * Migrating Flows from Simple Log
-* Added api /log to Log something from fe HomeyScript
+* Added api/log to Log something from fe HomeyScript
 * Converted Settings to two Objects & some Cleanup
 * Fixed "Report an issue" Link to Own GitHub
 * Magnetic Snap on Scroll to end

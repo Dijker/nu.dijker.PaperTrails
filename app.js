@@ -1,32 +1,26 @@
 "use strict";
 const { HomeyAPI } = require('athom-api');
 const Homey = require('homey');
+const syslog = require("syslog-client");
 
 // Define new Log Card to Add to All Flows in Then and Else
 var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 const actionInputLog = new Homey.FlowCardAction('Input_log');
-
-//Homey.manager('flow').on('action.truncate_log', function( callback, args ) {
+const actionSend_syslog = new Homey.FlowCardAction('Send_syslog');
 const actionTruncateLog = new Homey.FlowCardAction('truncate_log');
-
-// Homey.manager('flow').on('action.truncate_log_pct', function( callback, args ) {
 const actionTruncateLogPct = new Homey.FlowCardAction('truncate_log_pct');
-
-// Homey.manager('flow').on('action.Input_date_time_log', function( callback, args ) {
 const actionInputDateTimeLog = new Homey.FlowCardAction('Input_date_time_log');
-
-// Homey.manager('flow').on('action.Clear_log', function( callback, args ) {
 const actionClearLog = new Homey.FlowCardAction('Clear_log');
-
-// Homey.manager('flow').on('action.programmatic_trigger', function( callback, args ) {
 const actionProgrammaticTrigger = new Homey.FlowCardAction('programmatic_trigger');
-
-// conditionInputDateTimeLog
+// const actionImport_zWave_Log = new Homey.FlowCardAction('import_zWave_Log');
 const conditionInputDateTimeLog = new Homey.FlowCardCondition('condition_date_time_log');
 
 var appSettings = {};
 var appConfig = {};
+var appSettingsenableSyslog ;
+var syslogClient;
+// var lastImportedzWaveLog;
 var hostname = require('os').hostname();
 
 class paperTrails extends Homey.App {
@@ -34,17 +28,17 @@ class paperTrails extends Homey.App {
 		this.log('Start init paperTrails');
 		this.log('HostName: ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
-		//this.log('Current appSettings: \n', appSettings);
+		// lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
 		if (appSettings == (null || undefined)) {
 			this.log('Initializing settings ...')
 			appSettings = {
-				'refresh': '5',
+				'refresh': '1',
 				'maxLogLength': '10123',
 				'migrated': false
 			}
 		};
 		appConfig = Homey.ManagerSettings.get('config');
-		// this.log('Current appConfig: \n', appConfig);
+		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
 		if (appConfig == (null || undefined)) {
 			this.log('Initializing config ...')
 			appConfig = {
@@ -52,7 +46,9 @@ class paperTrails extends Homey.App {
 				'appendLog': true
 			}
 		};
-
+		// from 0.4.5 always append
+		appConfig.newAppendLog = true;
+		// appConfig.appendLog
 		if (!appSettings.migrated) {
 			this.log('Migrating App Settings ....');
 			appSettings.maxLogLength = Homey.ManagerSettings.get( 'maxLogLength' );
@@ -60,18 +56,44 @@ class paperTrails extends Homey.App {
 			appConfig.timeStampFormat = Homey.ManagerSettings.get( 'timeStampFormat' );
 			appConfig.appendLog = Homey.ManagerSettings.get( 'appendLog' );
 		};
-		// Update afer migrations
+		// Update afer migrations 0.2.x / 0.3.x
 		if (appSettings.maxLogLength  == (null || undefined)) {appSettings.maxLogLength  = "10240" };
 		if (appSettings.autoPrefixThen  == (null || undefined)) {appSettings.autoPrefixThen  = 'AL! Then - ' };
 		if (appSettings.autoPrefixElse  == (null || undefined)) {appSettings.autoPrefixElse  = 'AL! Else - ' };
+		if (appSettings.syslogServer  == (null || undefined)) {appSettings.syslogServer  = '127.0.0.1' };
+		if (appSettings.syslogPort  == (null || undefined)) {appSettings.syslogPort  = '514' };
+		if (appSettings.transport  == (null || undefined)) {appSettings.transport  = 'UDP' };
+		if (appSettings.enablerfc5424  == (null || undefined)) {appSettings.enablerfc5424  = false };
+
+		if (appSettingsenableSyslog  == (null || undefined)) {appSettingsenableSyslog  = false };
+
+		if (appSettings.syslogappName  == (null || undefined)) {appSettings.syslogappName  = 'PaperTrials' };
+		if (appSettings.syslogseverity  == (null || undefined)) {appSettings.syslogseverity  = '6' };
+		if (appSettings.syslogfacility  == (null || undefined)) {appSettings.syslogfacility  = '6' };
+		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
+
 		if (appConfig.timeStampFormat  == (null || undefined)) {appConfig.timeStampFormat  = 'Sec' };
 		if (appConfig.appendLog  == (null || undefined)) {appConfig.appendLog  = true };
-
-		// save if updated / Just save!
+		const api = await this.getApi();
+		var sysInfo = await api.system.getInfo();
+		appConfig.homeyMajorVersion = 0;
+		if (!sysInfo.homeyVersion && sysInfo.homey_version ) {
+		        appConfig.homeyMajorVersion = 1;
+		    		this.log ( "Version ", appConfig.homeyMajorVersion, sysInfo.homey_version )
+		} else {
+		    if (sysInfo.homeyVersion && !sysInfo.homey_version ) {
+		        appConfig.homeyMajorVersion = 2;
+		        this.log ( "Version ", appConfig.homeyMajorVersion, sysInfo.homeyVersion );
+		    }  else {
+		        appConfig.homeyMajorVersion = 999;
+		        this.log( "Error!! no known homeyMajorVersion!",  homeyMajorVersion )
+		    }
+		};
+		//  Just save!
 		Homey.ManagerSettings.set('settings', appSettings);
 		Homey.ManagerSettings.set('config', appConfig);
 
-		// Reverse Log !!
+		// Reverse Log !! changeing to always append in 0.4.5
 		if ((appConfig.newAppendLog != (null || undefined) )
 				&&(appConfig.appendLog != appConfig.newAppendLog)) {
 			this.log('Reversing Log... Append:' , appConfig.appendLog )
@@ -81,9 +103,63 @@ class paperTrails extends Homey.App {
 			appConfig.appendLog = appConfig.newAppendLog;
 			Homey.ManagerSettings.set('config', appConfig)
 		};
+		if (appSettingsenableSyslog) {
+			this.startsysLog();
+		};
+
 		this.log('End of onInit \nCurrent appSettings :\n', appSettings);
 		this.log('Current appConfig :\n', appConfig);
+		this.log('Current sysInfo :\n', sysInfo);
 	}; // End of onInit()
+
+	// startsysLog
+	startsysLog() {
+		var syslogOptions = {
+					syslogHostname: hostname,
+					transport: (appSettings.transport === 'UDP') ? syslog.Transport.Udp:syslog.Transport.Tcp,
+					facility: appSettings.syslogfacility,
+					severity : appSettings.syslogseverity,
+					port: appSettings.syslogPort,
+					rfc3164 : (!appSettings.enablerfc5424),
+					appName : appSettings.syslogappName
+				};
+
+		syslogClient = syslog.createClient(appSettings.syslogServer, syslogOptions);
+		syslogClient.on('error', function (error) {
+		    console.error(error, error.constructor.name  );
+				var logDate = new Date();
+				var msg = " Unknown Error";
+				if (error.constructor.name === 'Error') {
+					var msg = JSON.stringify(error);
+				};
+				Homey.app.updateLog( Homey.app.getDateTime(logDate) + " PaperTrails SysLog Error" + msg );
+				Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " Check the SysLog server and Configuration" );
+		});
+	};
+
+	getApi() {
+		if (!this.api) {
+			this.api = HomeyAPI.forCurrentHomey();
+		}
+		return this.api;
+	};
+
+
+	mySysLog(args) {
+		var syslogOptions = { };
+		if (args.syslogfacility != (null || undefined) ) { syslogOptions.facility = parseInt( args.syslogfacility )};
+		if (args.syslogseverity != (null || undefined) ) { syslogOptions.severity = parseInt( args.syslogseverity )};
+		if (args.logDate != (null || undefined) ) { syslogOptions.timestamp = args.logDate };
+		if (appSettings.enablerfc5424) {
+			if (args.log[0] === '$') {
+				syslogOptions.appName  = args.log.split(" ")[0].substr(1);
+				args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+			};
+		} else {
+			args.log = appSettings.syslogappName + "\t" + args.log;
+		}
+		syslogClient.log( args.log, syslogOptions );
+	}
 
 	// Add somthing to the Log
 	updateLog( logMsg ) {
@@ -92,12 +168,8 @@ class paperTrails extends Homey.App {
 		if ((logOld === null ) || (logOld.length === 0)) {
 			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
 		};
-		var logLength = logOld.split(/\r\n|\r|\n/).length;
-		if ( appConfig.appendLog === true ) {
-			logNew = logOld + "\n" + logMsg;
-		} else {
-			logNew = logMsg + "\n" + logOld;
-		};
+		// var logLength = logOld.split(/\r\n|\r|\n/).length;
+		logNew = logOld + "\n" + logMsg;
 		var logLength = logNew.split(/\r\n|\r|\n/).length;
 		var tokens = { 'logLength': logLength,
 									 'Log': logNew };
@@ -107,27 +179,23 @@ class paperTrails extends Homey.App {
 				return Homey.error(err)} ;
 			});
 		if ( (+5 + +appSettings.maxLogLength ) < logLength ) {
-			var deleteItems = parseInt( logLength *0.2 );
+			var deleteItems = Math.max( parseInt( logLength *0.2 ) , 20 );
 			var logArray = logNew.split(/\r\n|\r|\n/);
 			var infoMsg = "-=-=- Max. LogLength " + appSettings.maxLogLength  + " reached! Deleting " + deleteItems + " lines at :" + Homey.app.getDateTime(new Date()) + " -=-=-";
-			if ( appConfig.appendLog === true ) {
-				var removedLog = logArray.splice(0,deleteItems, infoMsg );
-			} else {
-				var removedLog = logArray.splice(-1* deleteItems, deleteItems, infoMsg );
-			}
+			var removedLog = logArray.splice(0,deleteItems, infoMsg );
 			logNew = logArray.join('\n');
 		};
 
+		Homey.ManagerSettings.set( 'myLog', logNew );
 		// Check for Max logLength to trigger
 		if (logLength > (appSettings.maxLogLength)) {
 				max_loglines.trigger(tokens, state, function(err, result){
 					if( err ) {return Homey.error(err)} ;
-				})
-			}
-		Homey.ManagerSettings.set( 'myLog', logNew );
+				});
+			};
 	};
 
-	// two Global functions:
+	// Global functions:
 	objectLength(obj) {
 	    var result = 0;
 	    for(var prop in obj) {
@@ -137,7 +205,7 @@ class paperTrails extends Homey.App {
 
 	updateFlow( modFlow ) {
 	    // This is the JSON of the Card we add to all Flows
-	    var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
+	    // ** On Top Global !! var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 	    // Create an Object for the Then and Else groups
 	    var newLogCardT = JSON.parse(newLogCardJSON);
@@ -190,7 +258,7 @@ class paperTrails extends Homey.App {
 // migrate2PaperTrailsFlow
 	migrate2PaperTrailsFlow( modFlow ) {
 		// This is the JSON of the Card we add to all Flows
-		var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
+		//  Global on Top!! var newLogCardJSON  = '{"id":"Input_date_time_log","uri":"homey:app:nu.dijker.papertrails","uriObj":{"type":"app","id":"nu.dijker.papertrails","icon":"/app/nu.dijker.papertrails/assets/icon.svg","name":"PaperTrails"},"args":{"log":"$$"},"droptoken":false,"group":"then","delay":{"number":"0","multiplier":"1"},"duration":{"number":"0","multiplier":"1"}}'
 
 		var oldLogCardID  = "Input_log" ;
 		var oldLogCardURI  ='homey:app:nl.nielsdeklerk.log' ;
@@ -248,13 +316,6 @@ class paperTrails extends Homey.App {
           }
 	    }
 	    return modFlowChanged;
-	};
-
-	getApi() {
-		if (!this.api) {
-			this.api = HomeyAPI.forCurrentHomey();
-		}
-		return this.api;
 	};
 
 	// addPaperTrails2AllFlows
@@ -332,27 +393,26 @@ class paperTrails extends Homey.App {
 			// Main Loop over al Flows
 			for(var myIndex in allFlows ) {
 			    // if ( allFlows[ myIndex ].title  === 'Test123' ) {
-						this.log( allFlows[ myIndex ].title )
-						this.log( myIndex )
-			        this.log('='.repeat(30));
-			        let mymodFlowChanged = this.removePaperTrailsfFlow( allFlows[ myIndex ], removeAllOccurrences );
-			        this.log( 'Number of Actions: ' + this.objectLength( allFlows[ myIndex ].actions )) ;
+					this.log( allFlows[ myIndex ].title )
+					this.log( myIndex )
+	        this.log('='.repeat(30));
+	        let mymodFlowChanged = this.removePaperTrailsfFlow( allFlows[ myIndex ], removeAllOccurrences );
+	        this.log( 'Number of Actions: ' + this.objectLength( allFlows[ myIndex ].actions )) ;
 
-			        // only update flow if changed.
-			        if (mymodFlowChanged) {
-									this.log(myIndex);
-									this.log( JSON.stringify(allFlows[ myIndex ]) );
-									// fix folder eq false to folder = "";
-									if (allFlows[ myIndex ].folder  === false ) { allFlows[ myIndex ].folder = "" };
-			            let result = await api.flow.updateFlow({id: myIndex , flow: allFlows[ myIndex ] });
-			            this.log('Flow Updated');
-			        } else { this.log('Flow unchanged') }
+	        // only update flow if changed.
+	        if (mymodFlowChanged) {
+							this.log(myIndex);
+							this.log( JSON.stringify(allFlows[ myIndex ]) );
+							// fix folder eq false to folder = "";
+							if (allFlows[ myIndex ].folder  === false ) { allFlows[ myIndex ].folder = "" };
+	            let result = await api.flow.updateFlow({id: myIndex , flow: allFlows[ myIndex ] });
+	            this.log('Flow Updated');
+	        } else { this.log('Flow unchanged') }
 			}
 			return allFlows;
 	};
 
 	getDateTime(date) {
-	    //var date = new Date();
 			// toISOString
 			if (appConfig.timeStampFormat === "Zulu") {
 				return '[' + date.toISOString() + ']';
@@ -368,6 +428,7 @@ class paperTrails extends Homey.App {
 		}
 	};
 
+	// remove from 0.5.x and on...
 	reverseLog(logOld) {
 		var logArray = logOld.split(/\n/);
 		var logLength = logArray.length;
@@ -383,13 +444,13 @@ let programmatic_trigger = new Homey.FlowCardTrigger('programmatic_trigger');
 		.register()
 		.registerRunListener((args,state) => Promise.resolve(true) )
 
-// logTruncated
+// Trigger on logTruncated
 let logTruncated = new  Homey.FlowCardTrigger('logTruncated');
 	logTruncated
 		.register()
 		.registerRunListener((args,state) => Promise.resolve(true) )
 
-// logCleared
+// Trigger on logCleared
 let logCleared = new  Homey.FlowCardTrigger('logCleared');
 	logCleared
 		.register()
@@ -415,7 +476,7 @@ function onCustom_LogLines( args, state, callback ) {
 		}
 };
 
-// onMax_loglines ??
+// Trigger on onMax_loglines
 function onMax_loglines( args, state, callback) {
 			callback( null, true ) // If true, this flow should run. The callback is (err, result)-style.
 };
@@ -427,18 +488,13 @@ Date.prototype.addHours = function(h) {
    return this;
 }
 
-// truncateLog
+// Trigger on truncateLog
 function truncateLog(logOld, infoMsg,  index) {
 	var logArray = logOld.split(/\n/);
 	var logLength = logArray.length;
-	if ( appConfig.appendLog ) {
-		var removedLog = logArray.splice(0,index, infoMsg );
-		var logNew = logArray.join('\n');
-	} else {                        // *******
-		var removedLog = logArray.splice(index, (logLength - index), infoMsg );
-		var logNew = logArray.join('\n');
-	}
-	// var logNew = Homey.ManagerSettings.get( 'myLog' );
+	var removedLog = logArray.splice(0,index, infoMsg );
+	var logNew = logArray.join('\n');
+
 	var logLength = removedLog.length;
 	var removedLog2 = removedLog.join('\n');
 	var tokens = { 'logLength': logLength,
@@ -463,7 +519,7 @@ actionTruncateLog.register().on('run', ( args, state, callback ) => {
 	var strStart = cutDate.substring(0, 3);
 
 	var logline = logArray.find(function (el) {
-	    return ((el.substring(0, 3) === strStart) && (((el > cutDate)&& appConfig.appendLog) || ((el < cutDate)&& !appConfig.appendLog)));
+	    return ((el.substring(0, 3) === strStart) && (el > cutDate));
 	});
 	var nr = logArray.indexOf( logline );
 	if (nr > 0) {
@@ -479,38 +535,78 @@ actionTruncateLogPct.register().on('run', ( args, state, callback ) => {
 	var date1 = new Date();
 	var truncMsg = "-=-=- " + hostname +": Truncate Log for "  + args.removePct  + " % from Flow at: " + Homey.app.getDateTime(date1)+" -=-=- " ;
 	var logOld = Homey.ManagerSettings.get( 'myLog' );
-	var timeNow =Homey.app.getDateTime( date1 );
+	var timeNow = Homey.app.getDateTime( date1 );
 	var logArray = logOld.split(/\n/);
 
-	if (appConfig.appendLog) {
-		var index = logArray.length * (args.removePct/100)
-	} else {
-		var index = logArray.length - parseInt(logArray.length * (args.removePct/100))
-	}
+	var index = logArray.length * (args.removePct/100)
 	if (index > 0) {
-		console.log(' index ' + index );
+		// console.log(' index ' + index );
 		var logNew = truncateLog( logOld, truncMsg, index);
 		Homey.ManagerSettings.set( 'myLog', logNew );
 	};
 	callback( null, true );
 });
 
-// for Original v0.0.5 logging
+// for Original logging without date.
 actionInputLog.register().on('run', ( args, state, callback ) => {
+	if (args.log != '0') {
+		var logDate = new Date();
+		args.logDate = logDate;
 		Homey.app.updateLog( args.log );
-    callback( null, true );
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+			Homey.app.mySysLog( args );
+		}
+	};
+	callback( null, true );
 });
 
-// condition_date_time_log by Geurt Dijker
+// Log SysLog only not visible on Homey's PaperTrails Log
+actionSend_syslog.register().on('run', ( args, state, callback ) => {
+		var logDate = new Date();
+		if ( appSettingsenableSyslog ) {
+			args.logDate = logDate;
+			Homey.app.mySysLog( args );
+		}
+		callback( null, true );
+});
+
+// Logging from Condition card
 conditionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-				Homey.app.updateLog(Homey.app.getDateTime(new Date()) + " " + args.log);
-		    callback( null, true );
-		});
+	if (args.log != '0') {
+	  args.appName = '';
+		if (args.log[0] === '$') {
+			args.appName = args.log.split(" ")[0].substr(1);
+			args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+		};
+
+		var logDate = new Date();
+		Homey.app.updateLog(Homey.app.getDateTime(logDate) + "\t" + args.appName + "\t" + args.log);
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+			args.logDate = logDate;
+			Homey.app.mySysLog( args );
+		};
+	};
+	callback( null, true );
+});
 
 // Input_date_time_log by Geurt Dijker
 actionInputDateTimeLog.register().on('run', ( args, state, callback ) => {
-		Homey.app.updateLog( Homey.app.getDateTime(new Date()) + " " + args.log);
-    callback( null, true );
+	if (args.log != '0') {
+		args.appName = '';
+		if (args.log[0] === '$') {
+			args.appName = args.log.split(" ")[0].substr(1);
+			args.log = args.log.replace((args.log.split(" ")[0]+" "),"");
+		};
+
+
+		var logDate = new Date();
+		Homey.app.updateLog( Homey.app.getDateTime(logDate) + "\t" + args.appName + "\t" + args.log);
+		if ( appSettingsenableSyslog && appSettings.enableSyslogAll) {
+			args.logDate = logDate;
+			Homey.app.mySysLog( args );
+		};
+	};
+	callback( null, true );
 });
 
 // action.Clear_log
@@ -523,7 +619,6 @@ actionClearLog.register().on('run', ( args, state, callback ) => {
 							 			'infoMsg': logNew };
 		logCleared.trigger( tokens, null,  function(err, result) {});
   	Homey.ManagerSettings.set( 'myLog', logNew );
-  	console.log(' Action.Clear_log     The log data is cleared.');
   	callback( null, true );
 });
 
@@ -534,7 +629,6 @@ actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 		var tokens = { 	'logLength': logLength,
 									 	'Log': logOld,
 							 			'infoMsg': infoMsg };
-
 		programmatic_trigger.trigger( tokens, null,  function(err, result){
   	if( err ) {
  				return Homey.error(err)}
@@ -545,8 +639,17 @@ actionProgrammaticTrigger.register().on('run', ( args, state, callback ) => {
 //Get update settings
 Homey.ManagerSettings.on('set', (key) => {
 	if (key === 'settings' ) {
-		appSettings = Homey.ManagerSettings.get('settings');}
+		appSettings = Homey.ManagerSettings.get('settings');
+	};
 	if (key === 'config'  ) {
 		appConfig = Homey.ManagerSettings.get('config');
+	};
+	if (key === 'appSettingsenableSyslog'  ) {
+		appSettingsenableSyslog = Homey.ManagerSettings.get('appSettingsenableSyslog');
+		if (appSettingsenableSyslog) {
+			Homey.app.startsysLog();
+		} else {
+			syslogClient.close();
+		};
 	}
 });
