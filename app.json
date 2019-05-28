@@ -16,7 +16,7 @@
     "large":"assets/images/large.jpg",
     "small":"assets/images/small.jpg"
   },
-  "version":"0.5.10",
+  "version":"0.6.0",
   "compatibility":">=1.5.0",
   "author":{
     "name":"Geurt Dijker",
@@ -27,6 +27,11 @@
       {
         "name":"Geurt Dijker",
         "email":"Homey.Apps@dijker.nu"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇩🇪 Philipp Schnittger"
       }
     ]
   },

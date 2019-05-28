@@ -4,10 +4,14 @@ This app makes it possible to add time based logging to your flow's.
 For details see the APPSTORE.md or Athom App Store https://apps.athom.com/app/nu.dijker.papertrails
 
 ## Version 0.6.0
+* German translation by PhilSniff
+
+## Version 0.5.10
 * several updates to Fix on Homey firmware v2.0
 * Removed option to import Z-wave logs
 * Hide Download Button on Mobile Interface (pls Go to Developers site)
 * Temporary hide Maintenance panel (as it doesn't work in 2.0)
+* Started migration to i18n and translating from en to nl and de
 
 ## Version 0.5.0
 * add Filter option on Log viewer
@@ -74,4 +78,4 @@ Will continue working on that after ... When I have enough time ..... (sorry)
 * Maximize the Log length (lines)
 
 Feedback:
-Any requests please post them in the [PaperTrails topic on the Athom Forum] (https://forum.athom.com/discussion/3473/)
+Any requests please post them in the [PaperTrails topic on the Athom Forum] (https://community.athom.com/t/40)
