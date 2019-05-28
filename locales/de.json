@@ -1,6 +1,6 @@
 {
   "settings":{
-    "title_sounds":"Your sounds",
+    "title_sounds":"Ihre Sounds",
     "panels":{
       "log":"Logbuch &#9660; ",
       "config":"Konfig",
@@ -8,19 +8,19 @@
     },
     "panel2":{
       "download":"Download",
-      "no_download_mobile":"Download doesn't work on your Mobile, pls check the Developer Dashboard /tools/app-settings here: https://developer.athom.com/tools/app-settings!",
-      "sec_refresh":"Seconds Refresh interval",
-      "msg1":"By default Logs are truncated by 20% each time the maximum is reached.",
-      "max_lines":"Maximum lines for Log",
-      "clear_log":"Clear Log",
-      "configuration":"Configuration",
-      "msg2":"Choose your preferred date/time format. For best experience with the truncation of Log you should clear the Log when changing the format.",
+      "no_download_mobile":"Das Herunterladen funktioniert auf Ihrem Handy nicht. Überprüfen Sie das Entwickler-Dashboard / tools / app-settings hier: https://developer.athom.com/tools/app-settings!",
+      "sec_refresh":"Aktualisierungsintervall in Sekunden",
+      "msg1":"Standardmäßig werden Protokolle bei jedem Erreichen des Maximums um 20% gekürzt",
+      "max_lines":"Maximum an Zeilen des Logs",
+      "clear_log":"Log löschen",
+      "configuration":"Konfiguration",
+      "msg2":"Wählen Sie Ihr bevorzugtes Datums- / Uhrzeitformat. Um die beste Erfahrung mit dem Kürzen von Log zu machen, sollten Sie das Log löschen, wenn Sie das Format ändern.",
       "max_":"Maximum",
       "max_":"Maximum",
-      "maintenance":"Maintenance"
+      "maintenance":"Wartung"
     },
     "panel3":{
-      "msg1_v2":"Temporary removed due to restricted Permissions in Homey 2.0.0 to modify Flows from an App."
+      "msg1_v2":"Kurzzeitig entfernt aufgrund eingeschränkter Berechtigungen in Homey 2.0.0 zum Ändern von Flows aus einer App."
     }
   }
 }
