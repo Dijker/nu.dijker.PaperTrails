@@ -280,7 +280,7 @@
             "title":{
               "en":"Logfile",
               "nl":"Logbestand",
-              "de":"Logfile",
+              "de":"Logfile"
             },
             "example":"Log File content"
           }
@@ -547,7 +547,7 @@
         "title":{
           "en":"[deprecated] Add textline to the log. (without timestamp)",
           "nl":"[verouderd] Voeg tekstregel toe aan de log. (Zonder tijd)",
-          "de":"[veraltet] Fügen Sie dem Log eine Textzeile hinzu. (ohne Zeitstempel) ",
+          "de":"[veraltet] Fügen Sie dem Log eine Textzeile hinzu. (ohne Zeitstempel) "
         },
         "args":[
           {
