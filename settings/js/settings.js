@@ -47,6 +47,9 @@ function onHomeyReady( homeyReady ){
           document.getElementById('syslogappName').value = appSettings.syslogappName;
           document.getElementById('syslogseverity').value = appSettings.syslogseverity;
           document.getElementById('syslogfacility').value = appSettings.syslogfacility;
+
+          document.getElementById('autoPrefixThen').value = appSettings.autoPrefixThen;
+          document.getElementById('autoPrefixElse').value = appSettings.autoPrefixElse;
         }
       }});
     Homey.get('appSettingsenableSyslog', function(err, appSettingsenableSyslog) {
@@ -133,8 +136,8 @@ function saveSettings(){
     appSettings.maxLogLength = document.getElementById('maxLogLength').value;
     // appSettings.scrollToEnd = document.getElementById('scrollToEnd').checked;
     scrollToEnd = true // document.getElementById('scrollToEnd').checked;
-    //appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value;
-    //appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value;
+    appSettings.autoPrefixThen = document.getElementById('autoPrefixThen').value; // ****
+    appSettings.autoPrefixElse = document.getElementById('autoPrefixElse').value; // ****
     appSettings.migrated = migrated;
     appSettings.syslogServer = document.getElementById('syslogServer').value;
     appSettings.syslogPort = document.getElementById('syslogPort').value;
@@ -217,7 +220,7 @@ function show_log(){
           _myLog = myFilterdLog
           document.getElementById('logtextarea').value = myFilterdLog;
         };
-        var scrollToEnd = true;// document.getElementById('scrollToEnd').checked;
+        var scrollToEnd = true; // document.getElementById('scrollToEnd').checked;
         if ( scrollToEnd && snap ) {
           logtextarea.scrollTop = logtextarea.scrollHeight;
         };
@@ -272,7 +275,7 @@ function removePaperTrailsfAllFlows(){
   }
   Homey.confirm( confirmationMessage, 'warning', function( err, yes ){
     if( !yes ) return;
-    Homey.api('DELETE', '/removePaperTrailsfAllFlows',  { 'removeAllOccurrences': removeAllOccurrences }, function( err, result ) {
+    Homey.api('DELETE', '/removePaperTrailsfAllFlows', {'removeAllOccurrences': removeAllOccurrences}, function( err, result ) {
       if( err ) return Homey.alert(err);
     })
   })
@@ -280,7 +283,7 @@ function removePaperTrailsfAllFlows(){
 
 // sendLogtoDeveloper
 function sendLogtoDeveloper(){
-  //  Homey.api( 'POST', '../../manager/apps/app/nu.dijker.papertrails/crashlog',  { }, function( err, result ) {
+  // Homey.api( 'POST', '../../manager/apps/app/nu.dijker.papertrails/crashlog',  { }, function( err, result ) {
   post('/api/manager/apps/app/nu.dijker.papertrails/crashlog', {});
 };
 
@@ -292,14 +295,12 @@ function post(path, params, method) {
     var form = document.createElement("form");
     form.setAttribute("method", method);
     form.setAttribute("action", path);
-
     for(var key in params) {
         if(params.hasOwnProperty(key)) {
             var hiddenField = document.createElement("input");
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", key);
             hiddenField.setAttribute("value", params[key]);
-
             form.appendChild(hiddenField);
         }
     }
