@@ -67,7 +67,7 @@ class paperTrails extends Homey.App {
 
 		if (appSettingsenableSyslog  == (null || undefined)) {appSettingsenableSyslog  = false };
 
-		if (appSettings.syslogappName  == (null || undefined)) {appSettings.syslogappName  = 'PaperTrials' };
+		if (appSettings.syslogappName  == (null || undefined)) {appSettings.syslogappName  = 'PaperTrails' };
 		if (appSettings.syslogseverity  == (null || undefined)) {appSettings.syslogseverity  = '6' };
 		if (appSettings.syslogfacility  == (null || undefined)) {appSettings.syslogfacility  = '6' };
 		if (appSettings.enableSyslogAll  == (null || undefined)) {appSettings.enableSyslogAll  = false };
