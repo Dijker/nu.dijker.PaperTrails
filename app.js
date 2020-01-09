@@ -26,9 +26,14 @@ var hostname = require('os').hostname();
 class paperTrails extends Homey.App {
 	async onInit() {
 		this.log('Start init paperTrails');
-		this.log('HostName: ' + hostname );
+		this.log('HostName : ' + hostname );
 		appSettings = Homey.ManagerSettings.get('settings');
 		// lastImportedzWaveLog = Homey.ManagerSettings.get('lastImportedzWaveLog');
+		var logOld = Homey.ManagerSettings.get( 'myLog' );
+		if ((logOld === null ) || (logOld.length === 0)) {
+			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
+			Homey.ManagerSettings.set( 'myLog', logOld );
+		};
 		if (appSettings == (null || undefined)) {
 			this.log('Initializing settings ...')
 			appSettings = {
@@ -89,6 +94,7 @@ class paperTrails extends Homey.App {
 		        this.log( "Error!! no known homeyMajorVersion!",  homeyMajorVersion )
 		    }
 		};
+
 		//  Just save!
 		Homey.ManagerSettings.set('settings', appSettings);
 		Homey.ManagerSettings.set('config', appConfig);
@@ -165,9 +171,9 @@ class paperTrails extends Homey.App {
 	updateLog( logMsg ) {
 		var logNew = '';
 		var logOld = Homey.ManagerSettings.get( 'myLog' );
-		if ((logOld === null ) || (logOld.length === 0)) {
-			logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
-		};
+		// if ((logOld === null ) || (logOld.length === 0)) {
+		//   logOld = "-=-=- Log for " + hostname + " New from install -=-=- " + Homey.app.getDateTime(new Date()) ;
+		// };
 		// var logLength = logOld.split(/\r\n|\r|\n/).length;
 		logNew = logOld + "\n" + logMsg;
 		var logLength = logNew.split(/\r\n|\r|\n/).length;
