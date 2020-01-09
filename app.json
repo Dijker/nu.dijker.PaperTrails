@@ -7,16 +7,16 @@
     "de":"PaperTrails Logbuch"
   },
   "description":{
-    "en":"This app creates a text log",
-    "nl":"Deze app maakt een logboek aan",
-    "de":"Diese App erstellt ein Logbuch"
+    "en":"Advanced Logging and Log management",
+    "nl":"Geavanceerd loggen en logbeheer",
+    "de":"Erweiterte Protokollierung und Protokollverwaltung"
   },
   "category":"tools",
   "images":{
     "large":"assets/images/large.jpg",
     "small":"assets/images/small.jpg"
   },
-  "version":"0.6.1",
+  "version":"0.6.2",
   "compatibility":">=1.5.0",
   "author":{
     "name":"Geurt Dijker",
