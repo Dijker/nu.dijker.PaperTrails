@@ -1,5 +1,8 @@
 {
   "0.6.1": {
     "en": "• Fix type by triblondon. • Updated for new Athom AppStore"
+  },
+  "0.6.2": {
+    "en": "Cleanup and Appstore update"
   }
 }
