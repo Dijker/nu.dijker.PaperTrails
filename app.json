@@ -346,7 +346,9 @@
             "type":"dropdown",
             "name":"enabled",
             "title": {
-              "en": "Enabled"
+              "en": "Log enabled",
+              "nl": "Log ingeschakeld",
+              "de": "Log aktiviert"
             },
             "values": [
               {
@@ -371,23 +373,25 @@
             "type":"dropdown",
             "name":"autoupdate",
             "title": {
-              "en": "Autoupdate"
+              "en": "Auto update"
+              "nl": "Automatische update"
+              "de": "Automatische Aktualisierung"
             },
             "values": [
-              {
-                "id": "true",
-                "label": {
-                  "en": "Auto update Enabled",
-                  "nl": "automatische update ingeschakeld",
-                  "de": "Automatische Aktualisierung aktiviert"
-                }
-              },
               {
                 "id": "false",
                 "label": {
                   "en": "Auto update disabled",
-                  "nl": "automatische update uitgeschakeld",
+                  "nl": "Automatische update uitgeschakeld",
                   "de": "Automatische Aktualisierung deaktiviert"
+                }
+              },
+              {
+                "id": "true",
+                "label": {
+                  "en": "Auto update Enabled",
+                  "nl": "Automatische update ingeschakeld",
+                  "de": "Automatische Aktualisierung aktiviert"
                 }
               }
             ]
