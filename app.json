@@ -373,8 +373,8 @@
             "type":"dropdown",
             "name":"autoupdate",
             "title": {
-              "en": "Auto update"
-              "nl": "Automatische update"
+              "en": "Auto update",
+              "nl": "Automatische update",
               "de": "Automatische Aktualisierung"
             },
             "values": [
