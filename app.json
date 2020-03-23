@@ -328,11 +328,69 @@
           "nl":"Voeg toe aan de log",
           "de":"zum Log hinzufügen"
         },
+        "titleFormatted": {
+          "en":"[[enabled]] - Add to the log: [[log]] - ([[autoupdate]])",
+          "nl":"[[enabled]] - Voeg toe aan de log: [[log]] - ([[autoupdate]])",
+          "de":"[[enabled]] - zum Log hinzufügen: [[log]] - ([[autoupdate]])"
+        },
         "args":[
           {
             "name":"log",
             "type":"text",
+            "title": {
+              "en": "Log"
+            },
             "placeholder":"Text... "
+          },
+          {
+            "type":"dropdown",
+            "name":"enabled",
+            "title": {
+              "en": "Enabled"
+            },
+            "values": [
+              {
+                "id": "true",
+                "label": {
+                  "en": "Log enabled",
+                  "nl": "Log ingeschakeld",
+                  "de": "Log aktiviert"
+                }
+              },
+              {
+                "id": "false",
+                "label": {
+                  "en": "Log disabled",
+                  "nl": "Log uitgeschakeld",
+                  "de": "Log deaktiviert"
+                }
+              }
+            ]
+          },
+          {
+            "type":"dropdown",
+            "name":"autoupdate",
+            "title": {
+              "en": "Autoupdate"
+            },
+            "values": [
+              {
+                "id": "true",
+                "label": {
+                  "en": "Auto update Enabled",
+                  "nl": "automatische update ingeschakeld",
+                  "de": "Automatische Aktualisierung aktiviert"
+                }
+              },
+              {
+                "id": "false",
+                "label": {
+                  "en": "Auto update disabled",
+                  "nl": "automatische update uitgeschakeld",
+                  "de": "Automatische Aktualisierung deaktiviert"
+                }
+              }
+            ]
           }
         ],
         "hint":{
@@ -544,6 +602,7 @@
       },
       {
         "id":"Input_log",
+        "deprecated": true,
         "title":{
           "en":"[deprecated] Add textline to the log. (without timestamp)",
           "nl":"[verouderd] Voeg tekstregel toe aan de log. (Zonder tijd)",
